@@ -93,14 +93,14 @@ Pod::Spec.new do |s|
   # all targets that depend on this library.
   s.user_target_xcconfig = {
     "ENABLE_BITCODE" => "NO",
-    "SUPPORTS_MACCATALYST" => "NO",
-    "VALID_ARCHS[sdk=iphoneos*]" => "arm64",
-    "VALID_ARCHS[sdk=iphonesimulator*]" => "x86_64",
+    "SUPPORTS_MACCATALYST" => "YES",
+    # "VALID_ARCHS[sdk=iphoneos*]" => "arm64",
+    # "VALID_ARCHS[sdk=iphonesimulator*]" => "x86_64",
     # changes after we get M1 & Catalyst Support
     # "SUPPORTS_MACCATALYST" => "YES",
-    # "VALID_ARCHS[sdk=iphoneos*]" => "arm64",
-    # "VALID_ARCHS[sdk=iphonesimulator*]" => "x86_64 arm64",
-    # "VALID_ARCHS[sdk=macosx*]" => "x86_64 arm64",
+    "VALID_ARCHS[sdk=iphoneos*]" => "arm64",
+    "VALID_ARCHS[sdk=iphonesimulator*]" => "x86_64 arm64",
+    "VALID_ARCHS[sdk=macosx*]" => "x86_64 arm64",
   }
 
 end
