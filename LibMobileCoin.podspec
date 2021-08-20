@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
   # ―――  Spec Metadata  ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   s.name         = "LibMobileCoin"
-  s.version      = "1.1.1"
+  s.version      = "1.1.2"
   s.summary      = "A library for communicating with MobileCoin network"
 
   s.author       = "MobileCoin"
@@ -85,8 +85,8 @@ Pod::Spec.new do |s|
     # "VALID_ARCHS[sdk=iphoneos*]" => "arm64",
     # "VALID_ARCHS[sdk=iphonesimulator*]" => "x86_64 arm64",
     # "VALID_ARCHS[sdk=macosx*]" => "x86_64 arm64",
-    "VALID_ARCHS[sdk=iphoneos*]" => "arm64",
-    "VALID_ARCHS[sdk=iphonesimulator*]" => "x86_64",
+    "ARCHS[sdk=iphoneos*]" => "arm64",
+    "ARCHS[sdk=iphonesimulator*]" => "x86_64",
   }
 
   # `user_target_xcconfig` should only be set when the setting needs to propogate to
