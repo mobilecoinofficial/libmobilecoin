@@ -35,7 +35,7 @@ Pod::Spec.new do |s|
 
   # ――― Dependencies ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  s.dependency "gRPC-Swift", "~> 1.39"
+  s.dependency "gRPC-Swift", "~> 1.3"
   s.dependency "SwiftProtobuf", "~> 1.5"
 
 
