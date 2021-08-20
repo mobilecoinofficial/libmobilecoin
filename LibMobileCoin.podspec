@@ -84,7 +84,7 @@ Pod::Spec.new do |s|
     # changes after we get M1 & Catalyst Support
     "ARCHS[sdk=iphoneos*]" => "arm64",
     "ARCHS[sdk=iphonesimulator*]" => "x86_64 arm64",
-    "EXCLUDED_ARCHS[sdk=iphonesimulator*]" => 'i386'
+    "EXCLUDED_ARCHS[sdk=iphonesimulator*]" => "i386",
     "ARCHS[sdk=macosx*]" => "x86_64 arm64",
 
     # "ARCHS[sdk=iphoneos*]" => "arm64",
