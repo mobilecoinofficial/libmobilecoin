@@ -31,6 +31,7 @@ build:
 	# Create arch specific folders for each lib
 	$(foreach arch,$(IOS_TARGETS),mkdir -p $(ARTIFACTS_DIR)/$(arch);) 
 	$(foreach arch,$(IOS_TARGETS),cp $(LIBMOBILECOIN_ARTIFACTS_DIR)/$(arch)/libmobilecoin_stripped.a $(ARTIFACTS_DIR)/$(arch);)
+	$(foreach arch,$(IOS_TARGETS),cp $(LIBMOBILECOIN_ARTIFACTS_DIR)/$(arch)/libmobilecoin.a $(ARTIFACTS_DIR)/$(arch);)
 	cp -R "$(LIBMOBILECOIN_ARTIFACTS_HEADERS)" "$(ARTIFACTS_DIR)"
 
 
