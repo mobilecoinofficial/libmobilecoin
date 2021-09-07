@@ -26,14 +26,14 @@ Pod::Spec.new do |s|
     "Sources/Generated/Proto/*.{grpc,pb}.swift",
   ]
 
-#  s.preserve_paths = [
-#    'Artifacts/**/libmobilecoin_stripped.a'
-#    'Artifacts/**/libmobilecoin.a'
-#  ]
-
   s.preserve_paths = [
+    'Artifacts/**/libmobilecoin_stripped.a',
     'Artifacts/**/libmobilecoin.a'
   ]
+
+#  s.preserve_paths = [
+#    'Artifacts/**/libmobilecoin.a'
+#  ]
 
   # ――― Dependencies ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
