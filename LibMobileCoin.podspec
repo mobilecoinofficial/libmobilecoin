@@ -26,9 +26,13 @@ Pod::Spec.new do |s|
     "Sources/Generated/Proto/*.{grpc,pb}.swift",
   ]
 
+#  s.preserve_paths = [
+#    'Artifacts/**/libmobilecoin_stripped.a'
+#    'Artifacts/**/libmobilecoin.a'
+#  ]
+
   s.preserve_paths = [
-    'Artifacts/**/libmobilecoin.a',
-    'Artifacts/**/libmobilecoin_stripped.a'
+    'Artifacts/**/libmobilecoin.a'
   ]
 
   # ――― Dependencies ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
@@ -47,7 +51,6 @@ Pod::Spec.new do |s|
     "ENABLE_BITCODE" => "NO",
     # HACK: this forces the libmobilecoin.a static archive to be included when the
     # linker is linking LibMobileCoin as a shared framework
-    "OTHER_LDFLAGS" => "-u _mc_string_free",
     # Mac Catalyst is not supported since this library includes a vendored binary
     # that only includes support for iOS archictures.
     "SUPPORTS_MACCATALYST" => "NO",
@@ -55,21 +58,19 @@ Pod::Spec.new do |s|
     # for iphonesimulator. This must be manually configured to avoid Xcode's default
     # setting of building 32-bit and Xcode 12's default setting of including the
     # arm64 simulator. Note: 32-bit is officially dropped in iOS 11
-    "VALID_ARCHS[sdk=iphoneos*]" => "arm64",
-    "VALID_ARCHS[sdk=iphonesimulator*]" => "x86_64",
-
 
     "HEADER_SEARCH_PATHS": "$(PODS_TARGET_SRCROOT)/Artifacts/include",
     "SWIFT_INCLUDE_PATHS": "$(HEADER_SEARCH_PATHS)",
 
+    #"LIBMOBILECOIN_LIB_IF_NEEDED": "$(PODS_TARGET_SRCROOT)/Artifacts/$(CARGO_BUILD_TARGET)/libmobilecoin_stripped.a",
     "LIBMOBILECOIN_LIB_IF_NEEDED": "$(PODS_TARGET_SRCROOT)/Artifacts/$(CARGO_BUILD_TARGET)/libmobilecoin.a",
     "OTHER_LDFLAGS": "-u _mc_string_free $(LIBMOBILECOIN_LIB_IF_NEEDED)",
 
-    "CARGO_BUILD_TARGET[sdk=iphonesimulator*][arch=arm64]": "aarch64-apple-ios-sim",
+     # "CARGO_BUILD_TARGET[sdk=iphonesimulator*][arch=arm64]": "aarch64-apple-ios-sim",
     "CARGO_BUILD_TARGET[sdk=iphonesimulator*][arch=*]": "x86_64-apple-ios",
     "CARGO_BUILD_TARGET[sdk=iphoneos*]": "aarch64-apple-ios",
 
-    "ARCHS[sdk=iphonesimulator*]": "x86_64 arm64",
+    "ARCHS[sdk=iphonesimulator*]": "x86_64",
     "ARCHS[sdk=iphoneos*]": "arm64",
 
     "script_phases": [
@@ -86,8 +87,6 @@ Pod::Spec.new do |s|
   s.user_target_xcconfig = {
     "ENABLE_BITCODE" => "NO",
     "SUPPORTS_MACCATALYST" => "NO",
-    "VALID_ARCHS[sdk=iphoneos*]" => "arm64",
-    "VALID_ARCHS[sdk=iphonesimulator*]" => "x86_64 arm64",
   }
 
 end
