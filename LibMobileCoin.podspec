@@ -62,16 +62,20 @@ Pod::Spec.new do |s|
     "HEADER_SEARCH_PATHS": "$(PODS_TARGET_SRCROOT)/Artifacts/include",
     "SWIFT_INCLUDE_PATHS": "$(HEADER_SEARCH_PATHS)",
 
-    #"LIBMOBILECOIN_LIB_IF_NEEDED": "$(PODS_TARGET_SRCROOT)/Artifacts/$(CARGO_BUILD_TARGET)/libmobilecoin_stripped.a",
-    "LIBMOBILECOIN_LIB_IF_NEEDED": "$(PODS_TARGET_SRCROOT)/Artifacts/$(CARGO_BUILD_TARGET)/libmobilecoin.a",
+    "LIBMOBILECOIN_LIB_IF_NEEDED": "$(PODS_TARGET_SRCROOT)/Artifacts/$(CARGO_BUILD_TARGET)/libmobilecoin_stripped.a",
+     #"LIBMOBILECOIN_LIB_IF_NEEDED": "$(PODS_TARGET_SRCROOT)/Artifacts/$(CARGO_BUILD_TARGET)/libmobilecoin.a",
     "OTHER_LDFLAGS": "-u _mc_string_free $(LIBMOBILECOIN_LIB_IF_NEEDED)",
 
      # "CARGO_BUILD_TARGET[sdk=iphonesimulator*][arch=arm64]": "aarch64-apple-ios-sim",
     "CARGO_BUILD_TARGET[sdk=iphonesimulator*][arch=*]": "x86_64-apple-ios",
     "CARGO_BUILD_TARGET[sdk=iphoneos*]": "aarch64-apple-ios",
 
+    "VALID_ARCHS[sdk=iphoneos*]" => "arm64",
+    "VALID_ARCHS[sdk=iphonesimulator*]" => "x86_64",
     "ARCHS[sdk=iphonesimulator*]": "x86_64",
     "ARCHS[sdk=iphoneos*]": "arm64",
+    "EXCLUDED_ARCHS[sdk=iphoneos*]" => "armv7",
+    "EXCLUDED_ARCHS[sdk=iphonesimulator*]" => "i386 arm64",
 
     "script_phases": [
       {
@@ -87,6 +91,10 @@ Pod::Spec.new do |s|
   s.user_target_xcconfig = {
     "ENABLE_BITCODE" => "NO",
     "SUPPORTS_MACCATALYST" => "NO",
+    "EXCLUDED_ARCHS[sdk=iphoneos*]" => "armv7",
+    "EXCLUDED_ARCHS[sdk=iphonesimulator*]" => "i386 arm64",
+    "VALID_ARCHS[sdk=iphoneos*]" => "arm64",
+    "VALID_ARCHS[sdk=iphonesimulator*]" => "x86_64",
   }
 
 end
