@@ -21,7 +21,7 @@ unexport CARGO_TARGET_DIR
 unexport CARGO_PROFILE
 
 .PHONY: build
-build: 
+build:
 	cd "$(LIBMOBILECOIN_LIB_DIR)" && $(MAKE) ios
 	rm -r "$(ARTIFACTS_DIR)" 2>/dev/null || true
 	mkdir -p "$(ARTIFACTS_DIR)"

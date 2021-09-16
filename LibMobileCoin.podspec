@@ -60,7 +60,7 @@ Pod::Spec.new do |s|
     # linker is linking LibMobileCoin as a shared framework
     # Mac Catalyst is not supported since this library includes a vendored binary
     # that only includes support for iOS archictures.
-    "SUPPORTS_MACCATALYST" => "NO",
+    "SUPPORTS_MACCATALYST" => "YES",
     # The vendored binary doesn't include support for 32-bit architectures or arm64
     # for iphonesimulator. This must be manually configured to avoid Xcode's default
     # setting of building 32-bit and Xcode 12's default setting of including the
@@ -89,7 +89,7 @@ Pod::Spec.new do |s|
   # all targets that depend on this library.
   s.user_target_xcconfig = {
     "ENABLE_BITCODE" => "NO",
-    "SUPPORTS_MACCATALYST" => "NO",
+    "SUPPORTS_MACCATALYST" => "YES",
     "EXCLUDED_ARCHS[sdk=iphoneos*]" => "armv7",
     "EXCLUDED_ARCHS[sdk=iphonesimulator*]" => "i386",
     "VALID_ARCHS[sdk=iphoneos*]" => "arm64",
