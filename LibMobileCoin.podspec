@@ -56,9 +56,7 @@ Pod::Spec.new do |s|
     # Rust bitcode is not verified to be compatible with Apple Xcode's LLVM bitcode,
     # so this is disabled to be on the safe side.
     "ENABLE_BITCODE" => "NO",
-    # HACK: this forces the libmobilecoin.a static archive to be included when the
-    # linker is linking LibMobileCoin as a shared framework
-    # Mac Catalyst is not supported since this library includes a vendored binary
+    # Mac Catalyst is not supported since tjis library includes a vendored binary
     # that only includes support for iOS archictures.
     "SUPPORTS_MACCATALYST" => "YES",
     # The vendored binary doesn't include support for 32-bit architectures or arm64
@@ -70,12 +68,18 @@ Pod::Spec.new do |s|
     "SWIFT_INCLUDE_PATHS": "$(HEADER_SEARCH_PATHS)",
 
     "LIBMOBILECOIN_LIB_IF_NEEDED": "$(PODS_TARGET_SRCROOT)/Artifacts/target/$(CARGO_BUILD_TARGET)/release/libmobilecoin_stripped.a",
-     #"LIBMOBILECOIN_LIB_IF_NEEDED": "$(PODS_TARGET_SRCROOT)/Artifacts/target/$(CARGO_BUILD_TARGET)/release/libmobilecoin.a",
     "OTHER_LDFLAGS": "-u _mc_string_free $(LIBMOBILECOIN_LIB_IF_NEEDED)",
 
-     # "CARGO_BUILD_TARGET[sdk=iphonesimulator*][arch=arm64]": "aarch64-apple-ios-sim",
+    "CARGO_BUILD_TARGET[sdk=iphonesimulator*][arch=arm64]": "aarch64-apple-ios-sim",
     "CARGO_BUILD_TARGET[sdk=iphonesimulator*][arch=*]": "x86_64-apple-ios",
     "CARGO_BUILD_TARGET[sdk=iphoneos*]": "aarch64-apple-ios",
+
+    "CARGO_BUILD_TARGET_MAC_CATALYST_ARM_": "aarch64-apple-darwin",
+    "CARGO_BUILD_TARGET_MAC_CATALYST_ARM_YES": "aarch64-apple-ios-macabi",
+    "CARGO_BUILD_TARGET[sdk=macosx*][arch=arm64]": "$(CARGO_BUILD_TARGET_MAC_CATALYST_ARM_$(IS_MACCATALYST))",
+    "CARGO_BUILD_TARGET_MAC_CATALYST_X86_": "x86_64-apple-darwin",
+    "CARGO_BUILD_TARGET_MAC_CATALYST_X86_YES": "x86_64-apple-ios-macabi",
+    "CARGO_BUILD_TARGET[sdk=macosx*][arch=*]": "$(CARGO_BUILD_TARGET_MAC_CATALYST_X86_$(IS_MACCATALYST))",
 
     "VALID_ARCHS[sdk=iphoneos*]" => "arm64",
     "VALID_ARCHS[sdk=iphonesimulator*]" => "x86_64 arm64",
