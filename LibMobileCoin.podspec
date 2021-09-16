@@ -28,7 +28,6 @@ Pod::Spec.new do |s|
 
   s.preserve_paths = [
     'Artifacts/**/libmobilecoin_stripped.a',
-    'Artifacts/**/libmobilecoin.a'
   ]
 
   # ――― Dependencies ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
