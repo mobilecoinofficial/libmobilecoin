@@ -67,11 +67,11 @@ Pod::Spec.new do |s|
     "CARGO_BUILD_TARGET[sdk=iphoneos*]": "aarch64-apple-ios",
 
     "VALID_ARCHS[sdk=iphoneos*]" => "arm64",
-    "VALID_ARCHS[sdk=iphonesimulator*]" => "x86_64",
-    "ARCHS[sdk=iphonesimulator*]": "x86_64",
+    "VALID_ARCHS[sdk=iphonesimulator*]" => "x86_64 arm64",
+    "ARCHS[sdk=iphonesimulator*]": "x86_64 arm64",
     "ARCHS[sdk=iphoneos*]": "arm64",
     "EXCLUDED_ARCHS[sdk=iphoneos*]" => "armv7",
-    "EXCLUDED_ARCHS[sdk=iphonesimulator*]" => "i386 arm64",
+    "EXCLUDED_ARCHS[sdk=iphonesimulator*]" => "i386",
   }
 
   # `user_target_xcconfig` should only be set when the setting needs to propogate to
@@ -80,9 +80,9 @@ Pod::Spec.new do |s|
     "ENABLE_BITCODE" => "NO",
     "SUPPORTS_MACCATALYST" => "NO",
     "EXCLUDED_ARCHS[sdk=iphoneos*]" => "armv7",
-    "EXCLUDED_ARCHS[sdk=iphonesimulator*]" => "i386 arm64",
+    "EXCLUDED_ARCHS[sdk=iphonesimulator*]" => "i386",
     "VALID_ARCHS[sdk=iphoneos*]" => "arm64",
-    "VALID_ARCHS[sdk=iphonesimulator*]" => "x86_64",
+    "VALID_ARCHS[sdk=iphonesimulator*]" => "x86_64 arm64",
   }
 
 end
