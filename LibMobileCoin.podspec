@@ -60,6 +60,8 @@ Pod::Spec.new do |s|
   s.swift_version = "5.2"
 
   s.pod_target_xcconfig = {
+    "GCC_OPTIMIZATION_LEVEL" => "z",
+    "LLVM_LTO" => "YES",
     # Rust bitcode is not verified to be compatible with Apple Xcode's LLVM bitcode,
     # so this is disabled to be on the safe side.
     "ENABLE_BITCODE" => "YES",
@@ -99,6 +101,8 @@ Pod::Spec.new do |s|
   # `user_target_xcconfig` should only be set when the setting needs to propogate to
   # all targets that depend on this library.
   s.user_target_xcconfig = {
+    "GCC_OPTIMIZATION_LEVEL" => "z",
+    "LLVM_LTO" => "YES",
     "ENABLE_BITCODE" => "YES",
     "SUPPORTS_MACCATALYST" => "YES",
     "EXCLUDED_ARCHS[sdk=iphoneos*]" => "armv7",
