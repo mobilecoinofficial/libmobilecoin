@@ -4,7 +4,7 @@ LIBMOBILECOIN_ARTIFACTS_DIR = $(LIBMOBILECOIN_LIB_DIR)/out/ios
 LIBMOBILECOIN_ARTIFACTS_HEADERS = $(LIBMOBILECOIN_LIB_DIR)/out/ios/include
 ARTIFACTS_DIR = Artifacts
 IOS_TARGETS = x86_64-apple-ios aarch64-apple-ios aarch64-apple-ios-sim aarch64-apple-ios-macabi x86_64-apple-ios-macabi
-LIBMOBILECOIN_PROFILE = mobile-release
+LIBMOBILECOIN_PROFILE = mobile-release-bitcode
 
 .PHONY: default
 default: setup build generate
