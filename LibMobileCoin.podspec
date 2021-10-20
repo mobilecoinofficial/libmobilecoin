@@ -62,7 +62,7 @@ Pod::Spec.new do |s|
   s.pod_target_xcconfig = {
     # Rust bitcode is not verified to be compatible with Apple Xcode's LLVM bitcode,
     # so this is disabled to be on the safe side.
-    "ENABLE_BITCODE" => "NO",
+    "ENABLE_BITCODE" => "YES",
     # Mac Catalyst is not supported since tjis library includes a vendored binary
     # that only includes support for iOS archictures.
     "SUPPORTS_MACCATALYST" => "YES",
@@ -99,7 +99,7 @@ Pod::Spec.new do |s|
   # `user_target_xcconfig` should only be set when the setting needs to propogate to
   # all targets that depend on this library.
   s.user_target_xcconfig = {
-    "ENABLE_BITCODE" => "NO",
+    "ENABLE_BITCODE" => "YES",
     "SUPPORTS_MACCATALYST" => "YES",
     "EXCLUDED_ARCHS[sdk=iphoneos*]" => "armv7",
     "EXCLUDED_ARCHS[sdk=iphonesimulator*]" => "i386",
