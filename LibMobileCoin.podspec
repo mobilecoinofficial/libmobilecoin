@@ -60,7 +60,6 @@ Pod::Spec.new do |s|
   s.swift_version = "5.2"
 
   s.pod_target_xcconfig = {
-    "GCC_GENERATE_DEBUGGING_SYMBOLS" => "NO",
     "GCC_OPTIMIZATION_LEVEL" => "z",
     "LLVM_LTO" => "YES",
     # Rust bitcode is not verified to be compatible with Apple Xcode's LLVM bitcode,
