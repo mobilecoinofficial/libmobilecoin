@@ -31,7 +31,7 @@ Pod::Spec.new do |s|
   ]
 
   s.preserve_paths = [
-    'Artifacts/**/libmobilecoin_stripped.a',
+    'Artifacts/**/libmobilecoin.a',
   ]
 
   # ――― Dependencies ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
@@ -47,7 +47,7 @@ Pod::Spec.new do |s|
   s.subspec "TestVectors" do |subspec|
     subspec.source_files = "Sources/TestVector/**/*.swift"
     subspec.preserve_paths = [
-      'Artifacts/**/libmobilecoin_stripped.a',
+      'Artifacts/**/libmobilecoin.a',
     ]
     subspec.resources = [
       "Vendor/mobilecoin/test-vectors/vectors/**/*.*",
@@ -76,7 +76,7 @@ Pod::Spec.new do |s|
     "HEADER_SEARCH_PATHS": "$(PODS_TARGET_SRCROOT)/Artifacts/include",
     "SWIFT_INCLUDE_PATHS": "$(HEADER_SEARCH_PATHS)",
 
-    "LIBMOBILECOIN_LIB_IF_NEEDED": "$(PODS_TARGET_SRCROOT)/Artifacts/target/$(CARGO_BUILD_TARGET)/release/libmobilecoin_stripped.a",
+    "LIBMOBILECOIN_LIB_IF_NEEDED": "$(PODS_TARGET_SRCROOT)/Artifacts/target/$(CARGO_BUILD_TARGET)/release/libmobilecoin.a",
     "OTHER_LDFLAGS": "-u _mc_string_free $(LIBMOBILECOIN_LIB_IF_NEEDED)",
 
     "CARGO_BUILD_TARGET[sdk=iphonesimulator*][arch=arm64]": "aarch64-apple-ios-sim",
