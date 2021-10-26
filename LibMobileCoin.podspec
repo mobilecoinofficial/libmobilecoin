@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.license      = { :type => "GPLv3" }
 
   s.source       = { 
-    :git => "https://github.com/mobilecoinofficial/libmobilecoin-ios-artifacts.git",
+    :git => "https://github.com/the-real-adammork/libmobilecoin-ios-artifacts.git",
     :tag => "v#{s.version}",
     :submodules => true
   }
