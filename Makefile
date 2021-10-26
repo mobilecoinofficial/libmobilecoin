@@ -11,7 +11,7 @@ default: setup build generate
 
 .PHONY: setup
 setup:
-	cd "$(LIBMOBILECOIN_LIB_DIR)" && $(MAKE) setup
+	cd "$(LIBMOBILECOIN_LIB_DIR)"
 	bundle install
 
 # Unexport conditional environment variables so the build is more predictable
