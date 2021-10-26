@@ -12,6 +12,8 @@
 #  define __has_attribute(x) 0
 #endif
 
+// void _mc_string_free() __attribute__((weak_import))
+
 #if __has_attribute(nonnull)
 #  define MC_ATTRIBUTE_NONNULL(...) __attribute__((nonnull(__VA_ARGS__)))
 #else
