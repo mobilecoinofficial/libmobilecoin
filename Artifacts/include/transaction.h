@@ -205,9 +205,10 @@ MC_ATTRIBUTE_NONNULL(1, 3, 6);
 
 /// # Preconditions
 ///
-/// * `transaction_builder` - must not have been previously consumed by a call to `build`.
-/// * `change_destination` - must be a valid `PublicAddress`.
-/// * `out_subaddress_spend_public_key` - length must be >= 32.
+/// * `account_kay` - must be a valid account key, default change address computed from account key
+/// * `transaction_builder` - must not have been previously consumed by a call
+///   to `build`.
+/// * `out_tx_out_confirmation_number` - length must be >= 32.
 ///
 /// # Errors
 ///
@@ -221,7 +222,7 @@ McData* MC_NULLABLE mc_transaction_builder_add_change_output(
   McMutableBuffer* MC_NONNULL out_tx_out_confirmation_number,
   McError* MC_NULLABLE * MC_NULLABLE out_error
 )
-MC_ATTRIBUTE_NONNULL(1, 3, 6);
+MC_ATTRIBUTE_NONNULL(1, 2, 4, 6);
 
 /// # Preconditions
 ///
