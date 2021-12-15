@@ -23,18 +23,6 @@ Pod::Spec.new do |s|
   s.platform     = :ios, "10.0"
 
 
-  # ――― Sources -――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
-
-  s.preserve_paths = [
-    'Artifacts/**/libmobilecoin.a',
-  ]
-
-  # ――― Dependencies ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
-
-  s.dependency "gRPC-Swift"
-  s.dependency "SwiftProtobuf", "~> 1.5"
-
-
   # ――― Subspecs ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   s.default_subspecs = "Core"
@@ -50,6 +38,9 @@ Pod::Spec.new do |s|
   end
 
   s.subspec "Core" do |subspec|
+
+    # ――― Sources -――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
+
     subspec.source_files = [
       "Artifacts/include/*.h",
       "Sources/Generated/Proto/*.{grpc,pb}.swift",
@@ -59,8 +50,14 @@ Pod::Spec.new do |s|
       "Sources/**/*.{h,m,swift}",
     ]
 
-    s.dependency "gRPC-Swift"
-    s.dependency "SwiftProtobuf", "~> 1.5"
+    subspec.preserve_paths = [
+      'Artifacts/**/libmobilecoin.a',
+    ]
+
+    # ――― Dependencies ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
+
+    subspec.dependency "gRPC-Swift"
+    subspec.dependency "SwiftProtobuf", "~> 1.5"
   end
 
 
