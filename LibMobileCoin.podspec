@@ -26,6 +26,22 @@ Pod::Spec.new do |s|
     'Artifacts/**/libmobilecoin.a',
   ]
 
+  # ――― Sources -――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
+
+  s.source_files = [
+    "Artifacts/include/*.h",
+    "Sources/Generated/Proto/*.{grpc,pb}.swift",
+  ]
+
+  s.source_files = [
+    "Sources/**/*.{h,m,swift}",
+  ]
+
+  # ――― Dependencies ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
+
+  s.dependency "gRPC-Swift"
+  s.dependency "SwiftProtobuf", "~> 1.5"
+
 
   # ――― Subspecs ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
@@ -41,24 +57,24 @@ Pod::Spec.new do |s|
     ]
   end
 
-  s.subspec "Core" do |subspec|
-
-    # ――― Sources -――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
-
-    subspec.source_files = [
-      "Artifacts/include/*.h",
-      "Sources/Generated/Proto/*.{grpc,pb}.swift",
-    ]
-
-    subspec.source_files = [
-      "Sources/**/*.{h,m,swift}",
-    ]
-
-    # ――― Dependencies ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
-
-    subspec.dependency "gRPC-Swift"
-    subspec.dependency "SwiftProtobuf", "~> 1.5"
-  end
+#  s.subspec "Core" do |subspec|
+#
+#    # ――― Sources -――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
+#
+#    subspec.source_files = [
+#      "Artifacts/include/*.h",
+#      "Sources/Generated/Proto/*.{grpc,pb}.swift",
+#    ]
+#
+#    subspec.source_files = [
+#      "Sources/**/*.{h,m,swift}",
+#    ]
+#
+#    # ――― Dependencies ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
+#
+#    subspec.dependency "gRPC-Swift"
+#    subspec.dependency "SwiftProtobuf", "~> 1.5"
+#  end
 
 
   # ――― Project Settings ――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
