@@ -55,10 +55,7 @@ Pod::Spec.new do |s|
    end
 
    s.subspec "Core" do |subspec|
- 
-     # ――― Sources -――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
-
-     s.preserve_paths = [
+     subspec.preserve_paths = [
        'Artifacts/**/libmobilecoin.a',
      ]
  
@@ -66,8 +63,6 @@ Pod::Spec.new do |s|
        "Artifacts/include/*.h",
        "Sources/Generated/Proto/*.{grpc,pb}.swift",
      ]
- 
-       ――― Dependencies ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――  
  
      subspec.dependency "gRPC-Swift"
      subspec.dependency "SwiftProtobuf", "~> 1.5"
