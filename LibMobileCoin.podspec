@@ -33,10 +33,6 @@ Pod::Spec.new do |s|
     "Sources/Generated/Proto/*.{grpc,pb}.swift",
   ]
 
-  s.source_files = [
-    "Sources/**/*.{h,m,swift}",
-  ]
-
   # ――― Dependencies ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   s.dependency "gRPC-Swift"
