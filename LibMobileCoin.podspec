@@ -25,11 +25,6 @@ Pod::Spec.new do |s|
 
   # ――― Sources -――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  s.source_files = [
-    "Artifacts/include/*.h",
-    "Sources/Generated/Proto/*.{grpc,pb}.swift",
-  ]
-
   s.preserve_paths = [
     'Artifacts/**/libmobilecoin.a',
   ]
@@ -42,7 +37,7 @@ Pod::Spec.new do |s|
 
   # ――― Subspecs ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  s.default_subspecs = :none
+  s.default_subspecs = "Core"
 
   s.subspec "TestVectors" do |subspec|
     subspec.source_files = "Sources/TestVector/**/*.swift"
@@ -52,6 +47,20 @@ Pod::Spec.new do |s|
     subspec.resources = [
       "Vendor/mobilecoin/test-vectors/vectors/**/*.*",
     ]
+  end
+
+  s.subspec "Core" do |subspec|
+    subspec.source_files = [
+      "Artifacts/include/*.h",
+      "Sources/Generated/Proto/*.{grpc,pb}.swift",
+    ]
+
+    subspec.source_files = [
+      "Sources/**/*.{h,m,swift}",
+    ]
+
+    s.dependency "gRPC-Swift"
+    s.dependency "SwiftProtobuf", "~> 1.5"
   end
 
 
