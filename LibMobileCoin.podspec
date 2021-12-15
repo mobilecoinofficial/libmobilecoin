@@ -22,6 +22,10 @@ Pod::Spec.new do |s|
 
   s.platform     = :ios, "10.0"
 
+  s.preserve_paths = [
+    'Artifacts/**/libmobilecoin.a',
+  ]
+
 
   # ――― Subspecs ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
@@ -48,10 +52,6 @@ Pod::Spec.new do |s|
 
     subspec.source_files = [
       "Sources/**/*.{h,m,swift}",
-    ]
-
-    subspec.preserve_paths = [
-      'Artifacts/**/libmobilecoin.a',
     ]
 
     # ――― Dependencies ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
