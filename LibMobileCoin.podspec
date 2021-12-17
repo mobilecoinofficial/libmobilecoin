@@ -18,31 +18,10 @@ Pod::Spec.new do |s|
   }
 
 
-  # ――― Platform Specifics ――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
-
-  s.platform     = :ios, "10.0"
-
-#  s.preserve_paths = [
-#    'Artifacts/**/libmobilecoin.a',
-#  ]
-#
-#  # ――― Sources -――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
-#
-#  s.source_files = [
-#    "Artifacts/include/*.h",
-#    "Sources/Generated/Proto/*.{grpc,pb}.swift",
-#  ]
-#
-#  # ――― Dependencies ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
-#
-#  s.dependency "gRPC-Swift"
-#  s.dependency "SwiftProtobuf", "~> 1.5"
-
-
   # ――― Subspecs ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-   s.default_subspecs = :none
-# s.default_subspecs = "Core"
+  s.default_subspecs = :none
+  # s.default_subspecs = "Core"
 
    s.subspec "TestVectors" do |subspec|
      subspec.source_files = "Sources/TestVector/**/*.swift"
