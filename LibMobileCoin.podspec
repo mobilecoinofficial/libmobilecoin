@@ -60,20 +60,6 @@ Pod::Spec.new do |s|
      subspec.dependency "SwiftProtobuf", "~> 1.5"
    end
 
-   s.subspec "CoreGRPC" do |subspec|
-     subspec.preserve_paths = [
-       'Artifacts/**/libmobilecoin.a',
-     ]
- 
-     subspec.source_files = [
-       "Artifacts/include/*.h",
-       "Sources/Generated/Proto/*.grpc.swift",
-     ]
- 
-     subspec.dependency "gRPC-Swift"
-     subspec.dependency "SwiftProtobuf", "~> 1.5"
-   end
-
   # ――― Project Settings ――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   s.swift_version = "5.2"
