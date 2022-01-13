@@ -11,6 +11,14 @@ defaults:
     testNetTestAccountMnemonicsCommaSeparated:
 
 commands:
+  init-mobilecoin-submodule:
+    description: Initialize mobilecoin submodule
+    steps:
+      - run:
+          name: Run git submodule update --init
+          working_directory: Vendor/mobilecoin
+          command: git submodule update --init --depth 1 --recursive
+
   print-tool-versions:
     description: Print versions of various tools used
     steps:
@@ -112,6 +120,7 @@ jobs:
       SCAN_OUTPUT_TYPES: junit
     steps:
       - checkout
+      - init-mobilecoin-submodule
       - set-ruby-version
       - install-gems
       - print-tool-versions
@@ -135,6 +144,7 @@ jobs:
       <<: *default-environment
     steps:
       - checkout
+      - init-mobilecoin-submodule
       - set-ruby-version
       - install-gems
       - print-tool-versions
