@@ -73,9 +73,6 @@ commands:
 
   lint-locally-podspec:
     steps:
-      - add_ssh_keys:
-          fingerprints:
-            - "c2:90:32:ec:0e:38:09:a0:b0:d7:20:23:68:bc:8d:6f"
       - run:
           name: Lint podspec locally
           command: make lint-locally
@@ -84,7 +81,7 @@ commands:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - "c2:90:32:ec:0e:38:09:a0:b0:d7:20:23:68:bc:8d:6f"
+            - "6a:f9:48:a4:26:2a:48:dd:57:0b:8b:1d:42:db:ce:cd"
       - run:
           name: Publish Pod to Trunk
           command: make publish
