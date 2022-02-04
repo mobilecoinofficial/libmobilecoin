@@ -194,8 +194,11 @@ public struct ConsensusCommon_LastBlockInfoResponse {
   /// Block index
   public var index: UInt64 = 0
 
-  /// Current minimum fee
-  public var minimumFee: UInt64 = 0
+  /// Current MOB minimum fee (kept for backwards compatibility)
+  public var mobMinimumFee: UInt64 = 0
+
+  /// A map of token id -> minimum fee
+  public var minimumFees: Dictionary<UInt32,UInt64> = [:]
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -294,7 +297,8 @@ extension ConsensusCommon_LastBlockInfoResponse: SwiftProtobuf.Message, SwiftPro
   public static let protoMessageName: String = _protobuf_package + ".LastBlockInfoResponse"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "index"),
-    2: .standard(proto: "minimum_fee"),
+    2: .standard(proto: "mob_minimum_fee"),
+    3: .standard(proto: "minimum_fees"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -304,7 +308,8 @@ extension ConsensusCommon_LastBlockInfoResponse: SwiftProtobuf.Message, SwiftPro
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
       case 1: try { try decoder.decodeSingularUInt64Field(value: &self.index) }()
-      case 2: try { try decoder.decodeSingularUInt64Field(value: &self.minimumFee) }()
+      case 2: try { try decoder.decodeSingularUInt64Field(value: &self.mobMinimumFee) }()
+      case 3: try { try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufUInt32,SwiftProtobuf.ProtobufUInt64>.self, value: &self.minimumFees) }()
       default: break
       }
     }
@@ -314,15 +319,19 @@ extension ConsensusCommon_LastBlockInfoResponse: SwiftProtobuf.Message, SwiftPro
     if self.index != 0 {
       try visitor.visitSingularUInt64Field(value: self.index, fieldNumber: 1)
     }
-    if self.minimumFee != 0 {
-      try visitor.visitSingularUInt64Field(value: self.minimumFee, fieldNumber: 2)
+    if self.mobMinimumFee != 0 {
+      try visitor.visitSingularUInt64Field(value: self.mobMinimumFee, fieldNumber: 2)
+    }
+    if !self.minimumFees.isEmpty {
+      try visitor.visitMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufUInt32,SwiftProtobuf.ProtobufUInt64>.self, value: self.minimumFees, fieldNumber: 3)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   public static func ==(lhs: ConsensusCommon_LastBlockInfoResponse, rhs: ConsensusCommon_LastBlockInfoResponse) -> Bool {
     if lhs.index != rhs.index {return false}
-    if lhs.minimumFee != rhs.minimumFee {return false}
+    if lhs.mobMinimumFee != rhs.mobMinimumFee {return false}
+    if lhs.minimumFees != rhs.minimumFees {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
