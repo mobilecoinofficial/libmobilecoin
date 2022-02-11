@@ -196,6 +196,7 @@ commands:
           key: v0-homebrew-{{ arch }}
       - run:
           name: Update Homebrew
+          working_directory: Vendor/mobilecoin
           command: |
             brew --version
             brew update --preinstall
@@ -205,6 +206,7 @@ commands:
           working_directory: Vendor/mobilecoin
           command: |
             # rm '/usr/local/lib/python3.8/site-packages/six.py'
+            ls
             pwd
             brew bundle --no-upgrade
 
