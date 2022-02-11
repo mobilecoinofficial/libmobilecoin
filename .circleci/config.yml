@@ -332,7 +332,6 @@ commands:
     steps:
       - run:
           name: Run git submodule update --init
-          working_directory: Vendor/mobilecoin
           command: git submodule update --init --depth 1 --recursive
 
   print-tool-versions:
