@@ -205,9 +205,8 @@ commands:
           name: Install Homebrew dependencies
           working_directory: Vendor/mobilecoin
           command: |
+            rm '/usr/local/lib/python3.9/site-packages/six.py' || true
             # rm '/usr/local/lib/python3.8/site-packages/six.py'
-            ls
-            pwd
             brew bundle --no-upgrade
 
   save-homebrew-cache:
