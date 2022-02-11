@@ -514,6 +514,7 @@ jobs:
       CONSENSUS_ENCLAVE_CSS: /Users/distiller/project/sgx/css/src/valid.css
     steps:
       - prepare-for-build: { os: macos }
+      - init-mobilecoin-submodule
       - run:
           working_directory: Vendor/mobilecoin
           name: Cargo build
