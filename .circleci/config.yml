@@ -205,6 +205,7 @@ commands:
           working_directory: Vendor/mobilecoin
           command: |
             # rm '/usr/local/lib/python3.8/site-packages/six.py'
+            pwd
             brew bundle --no-upgrade
 
   save-homebrew-cache:
