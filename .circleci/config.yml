@@ -284,6 +284,7 @@ commands:
     steps:
       - run:
           name: Fetch project Cargo dependencies
+          working_directory: Vendor/mobilecoin
           command: |
             set -x
             time cargo fetch --locked
