@@ -207,6 +207,7 @@ commands:
           command: |
             rm '/usr/local/lib/python3.9/site-packages/six.py' || true
             # rm '/usr/local/lib/python3.8/site-packages/six.py'
+            brew install ninja
             brew bundle --no-upgrade
 
   save-homebrew-cache:
@@ -518,7 +519,7 @@ jobs:
       - prepare-for-build: { os: macos }
       - run:
           working_directory: Vendor/mobilecoin
-          name: Cargo build
+          name: Build libmobilecoin static libraries
           command: |
             cd libmobilecoin
             make 
