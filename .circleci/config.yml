@@ -523,7 +523,14 @@ jobs:
           command: |
             cd libmobilecoin
             make 
+
+          # Add way to save libmobilecoin/rust-bitcode
+          # remove libmobilecoin/rust-bitcode, so check-dirty-git step functions
       # - check-dirty-git // git will be dirty from rust-bitcode submodule
+      # Add code here to run libmobilecoin-ios-artifacts Makefile, which,
+      #    copies artifacts and generates GRPC clients etc..
+      # Also add way to save built artifacts so if nothing changed in the repo, 
+      #    building can re-use the .o files already created from previous build.
       - when:
           condition: { equal: [ << pipeline.git.branch >>, master ] }
           steps: [ save-sccache-cache, save-cargo-cache, save-homebrew-cache ]
