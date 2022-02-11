@@ -298,9 +298,6 @@ commands:
       - when:
           condition: { equal: [ << parameters.os >>, macos ] }
           steps: [ restore-homebrew-cache ]
-      - when:
-          condition: { equal: [ << parameters.os >>, linux ] }
-          steps: [ enable-postgresql ]
       - install-rust
       - restore-cargo-cache
       - env_setup
