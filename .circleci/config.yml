@@ -533,9 +533,12 @@ jobs:
       # Also add way to save built artifacts so if nothing changed in the repo, 
       #    building can re-use the .o files already created from previous build.
       - save-rustup-cache
-      - when:
-          condition: { equal: [ << pipeline.git.branch >>, master ] }
-          steps: [ save-sccache-cache, save-cargo-cache, save-homebrew-cache ]
+      - save-sccache-cache
+      - save-cargo-cache
+      - save-homebrew-cache 
+      #- when:
+          #condition: { equal: [ << pipeline.git.branch >>, master ] }
+          #steps: [ save-sccache-cache, save-cargo-cache, save-homebrew-cache ]
       - post-build
 
 
