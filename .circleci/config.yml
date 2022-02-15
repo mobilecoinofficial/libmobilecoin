@@ -512,6 +512,7 @@ jobs:
       OPENSSL_BIN: /usr/local/opt/openssl/bin/openssl
       SCCACHE_CACHE_SIZE: 450M
       CONSENSUS_ENCLAVE_CSS: /Users/distiller/project/sgx/css/src/valid.css
+      CMAKE_PREFIX_PATH: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib
     steps:
       - checkout
       - init-mobilecoin-submodule
