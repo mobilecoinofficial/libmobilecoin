@@ -511,7 +511,6 @@ jobs:
       <<: *default-build-environment
       OPENSSL_BIN: /usr/local/opt/openssl/bin/openssl
       SCCACHE_CACHE_SIZE: 450M
-      RUSTFLAGS: -D warnings -C target-cpu=penryn
       CONSENSUS_ENCLAVE_CSS: /Users/distiller/project/sgx/css/src/valid.css
     steps:
       - checkout
