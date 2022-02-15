@@ -305,6 +305,7 @@ commands:
           steps: [ restore-homebrew-cache ]
       - install-rust
       - restore-cargo-cache
+      - restore-rustup-cache
       - env_setup
       - install-ci-deps:
           cbindgen: << parameters.cbindgen >>
@@ -531,6 +532,7 @@ jobs:
       #    copies artifacts and generates GRPC clients etc..
       # Also add way to save built artifacts so if nothing changed in the repo, 
       #    building can re-use the .o files already created from previous build.
+      - save-rustup-cache
       - when:
           condition: { equal: [ << pipeline.git.branch >>, master ] }
           steps: [ save-sccache-cache, save-cargo-cache, save-homebrew-cache ]
