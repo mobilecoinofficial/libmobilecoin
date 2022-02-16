@@ -526,7 +526,7 @@ jobs:
           name: Build libmobilecoin static libraries
           command: |
             cd libmobilecoin
-            make bitcode
+            make
 
           # Add way to save libmobilecoin/rust-bitcode
           # remove libmobilecoin/rust-bitcode, so check-dirty-git step functions
