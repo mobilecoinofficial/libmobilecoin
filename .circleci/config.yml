@@ -110,85 +110,6 @@ commands:
           #path: /tmp/sccache.log
           #destination: logs/sccache.log
 
-  restore-cargo-cache:
-    steps:
-      - restore_cache:
-          name: Restore Cargo cache
-          key: v0-cargo-{{ arch }}
-
-  # Saves cargo cache on a per-architecture basis. Adds the git revision as a suffix so that each
-  # saved cache is stored using a unique key.
-  save-cargo-cache:
-    steps:
-      - run:
-          name: Prepare Cargo cache for saving
-          command: |
-            set -x
-
-            command -v cargo-trim >/dev/null \
-              || (cd .. && rustup run --install stable cargo install cargo-trim)
-
-            # Configure cargo-trim with the project's Cargo.lock files
-            mkdir -p ~/.config
-            cargo trim init
-            pushd "consensus/enclave/trusted"
-            cargo trim init
-            popd
-            pushd "fog/ingest/enclave/trusted"
-            cargo trim init
-            popd
-            pushd "fog/ledger/enclave/trusted"
-            cargo trim init
-            popd
-            pushd "fog/view/enclave/trusted"
-            cargo trim init
-            popd
-
-            # Clean dependencies not in the Cargo.lock
-            time cargo trim --orphan
-
-            # Make sure all dependencies are downloaded, since there appears to be
-            # a bug where cargo trim erroneously removes certain git repos.
-            time cargo fetch --locked
-            (cd consensus/enclave/trusted && time cargo fetch --locked)
-            (cd fog/ingest/enclave/trusted && time cargo fetch --locked)
-            (cd fog/ledger/enclave/trusted && time cargo fetch --locked)
-            (cd fog/view/enclave/trusted && time cargo fetch --locked)
-
-            # Remove the registry src dir since it's the largest dir and it's
-            # recreatable from the archives in ~/.cargo/cache
-            time cargo trim --wipe src
-
-            # Run git compress on cached repos
-            time cargo trim --gc all
-
-            # Display Cargo cache stats
-            cargo trim --query
-
-            # Uninstall binary cargo crates that don't need to be cached
-            time cargo uninstall cargo-trim
-      - save_cache:
-          name: Save Cargo cache
-          # See https://discuss.circleci.com/t/add-mechanism-to-update-existing-cache-key/9014/13
-          key: v0-cargo-{{ arch }}-{{ .Revision }}
-          # https://doc.rust-lang.org/cargo/guide/cargo-home.html#caching-the-cargo-home-in-ci
-          paths:
-            - ~/.cargo/.crates.toml
-            - ~/.cargo/bin
-            - ~/.cargo/git/checkout
-            - ~/.cargo/git/db
-            - ~/.cargo/registry/cache
-            - ~/.cargo/registry/index
-
-  print-cargo-cache-stats:
-    steps:
-      - run:
-          name: Print Cargo cache statistics
-          working_directory: Vendor/mobilecoin
-          command: |
-            cargo cache
-            cargo cache local || true
-
   restore-homebrew-cache:
     steps:
       - restore_cache:
@@ -264,7 +185,7 @@ commands:
           command: |
             cd ..
             #command -v sccache >/dev/null || rustup run --install stable cargo install sccache
-            command -v cargo-cache >/dev/null || rustup run --install stable cargo install cargo-cache
+            #command -v cargo-cache >/dev/null || rustup run --install stable cargo install cargo-cache
             #command -v cargo2junit >/dev/null || rustup run --install stable cargo install cargo2junit
             <<# parameters.cbindgen >>
               command -v cbindgen >/dev/null || rustup run --install stable cargo install cbindgen
@@ -305,7 +226,7 @@ commands:
           condition: { equal: [ << parameters.os >>, macos ] }
           steps: [ restore-homebrew-cache ]
       - install-rust
-      - restore-cargo-cache
+      #- restore-cargo-cache
       - restore-rustup-cache
       - env_setup
       - install-ci-deps:
@@ -537,7 +458,7 @@ jobs:
       #    building can re-use the .o files already created from previous build.
       - save-rustup-cache
       #- save-sccache-cache
-      - save-cargo-cache
+      #- save-cargo-cache
       - save-homebrew-cache 
       #- when:
           #condition: { equal: [ << pipeline.git.branch >>, master ] }
