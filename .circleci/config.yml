@@ -19,6 +19,7 @@ defaults:
 
 executors:
   macos:
+    resource_class: large
     parameters:
       xcode-version: { type: string, default: *default-xcode-version }
     macos:
