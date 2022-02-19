@@ -136,6 +136,7 @@ commands:
     steps:
       - run:
           name: Prepare Homebrew cache for saving
+          working_directory: Vendor/mobilecoin
           command: |
             # Make sure latest versions are installed
             time brew bundle
