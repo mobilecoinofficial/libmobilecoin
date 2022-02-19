@@ -429,6 +429,9 @@ jobs:
   build-artifacts:
     parameters:
       xcode-version: { type: string, default: *default-xcode-version }
+      build-target:
+        type: string
+        default: aarch64-apple-ios-sim
     executor:
       name: macos
       xcode-version: << parameters.xcode-version >>
@@ -447,7 +450,7 @@ jobs:
           name: Build libmobilecoin static libraries
           command: |
             cd libmobilecoin
-            make
+            make << parameters.build-target >>
 
           # Add way to save libmobilecoin/rust-bitcode
           # remove libmobilecoin/rust-bitcode, so check-dirty-git step functions
@@ -466,6 +469,9 @@ jobs:
       #- post-build
 
 
+x86_64-apple-darwin
+
+
 
 workflows:
   version: 2
@@ -476,10 +482,41 @@ workflows:
           matrix:
             parameters:
               xcode-version: [*default-xcode-version]
-      - build-artifacts:
+      - build-artifacts-m1-ios-sim:
           name: build-artifacts-xcode-<< matrix.xcode-version >>
           matrix:
             parameters:
+              build-target: 'aarch64-apple-ios-sim' 
+              xcode-version: [*default-xcode-version]
+      - build-artifacts-m1-catalyst:
+          name: build-artifacts-xcode-<< matrix.xcode-version >>
+          matrix:
+            parameters:
+              build-target: 'aarch64-apple-ios-macabi' 
+              xcode-version: [*default-xcode-version]
+      - build-artifacts-ios-device:
+          name: build-artifacts-xcode-<< matrix.xcode-version >>
+          matrix:
+            parameters:
+              build-target: 'aarch64-apple-ios' 
+              xcode-version: [*default-xcode-version]
+      - build-artifacts-intel-catalyst:
+          name: build-artifacts-xcode-<< matrix.xcode-version >>
+          matrix:
+            parameters:
+              build-target: 'x86_64-apple-ios-macabi' 
+              xcode-version: [*default-xcode-version]
+      - build-artifacts-intel-ios-sim:
+          name: build-artifacts-xcode-<< matrix.xcode-version >>
+          matrix:
+            parameters:
+              build-target: 'x86_64-apple-ios'
+              xcode-version: [*default-xcode-version]
+      - build-artifacts-intel-macos:
+          name: build-artifacts-xcode-<< matrix.xcode-version >>
+          matrix:
+            parameters:
+              build-target: 'x86_64-apple-darwin'
               xcode-version: [*default-xcode-version]
       - publish-pod-release:
           filters:
