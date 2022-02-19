@@ -451,6 +451,7 @@ jobs:
           name: Build libmobilecoin static libraries
           command: |
             cd libmobilecoin
+            make require setup
             make << parameters.build-target >>
 
           # Add way to save libmobilecoin/rust-bitcode
