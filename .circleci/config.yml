@@ -524,7 +524,7 @@ workflows:
       # ios-sim
       - build-toolchain:
           name: build-toolchain-m1-ios-sim-xcode-<< matrix.xcode-version >>
-          toolchain-target: "aarch64-apple-ios-sim" 
+          build-target: "aarch64-apple-ios-sim" 
           matrix:
             parameters:
               xcode-version: [*default-xcode-version]
