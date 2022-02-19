@@ -427,6 +427,49 @@ jobs:
             #- "~/.cache/sccache"
 
   # Build using macOS
+  build-toolchain:
+    parameters:
+      xcode-version: { type: string, default: *default-xcode-version }
+      build-target:
+        type: string
+        default: "aarch64-apple-ios-sim"
+    executor:
+      name: macos
+      xcode-version: << parameters.xcode-version >>
+    environment:
+      <<: *default-build-environment
+      OPENSSL_BIN: /usr/local/opt/openssl/bin/openssl
+      #SCCACHE_CACHE_SIZE: 450M
+      CONSENSUS_ENCLAVE_CSS: /Users/distiller/project/sgx/css/src/valid.css
+    steps:
+      - checkout
+      - init-mobilecoin-submodule
+      - prepare-for-build: { os: macos }
+      - run:
+          working_directory: Vendor/mobilecoin
+          name: Build rustup toolchains for a build target
+          command: |
+            cd libmobilecoin
+            make require setup
+            make toolchain_<< parameters.build-target >>
+
+          # Add way to save libmobilecoin/rust-bitcode
+          # remove libmobilecoin/rust-bitcode, so check-dirty-git step functions
+      # - check-dirty-git // git will be dirty from rust-bitcode submodule
+      # Add code here to run libmobilecoin-ios-artifacts Makefile, which,
+      #    copies artifacts and generates GRPC clients etc..
+      # Also add way to save built artifacts so if nothing changed in the repo, 
+      #    building can re-use the .o files already created from previous build.
+      - save-rustup-cache
+      #- save-sccache-cache
+      #- save-cargo-cache
+      - save-homebrew-cache 
+      #- when:
+          #condition: { equal: [ << pipeline.git.branch >>, master ] }
+          #steps: [ save-sccache-cache, save-cargo-cache, save-homebrew-cache ]
+      #- post-build
+      
+  # Build using macOS
   build-artifacts:
     parameters:
       xcode-version: { type: string, default: *default-xcode-version }
@@ -441,7 +484,6 @@ jobs:
       OPENSSL_BIN: /usr/local/opt/openssl/bin/openssl
       #SCCACHE_CACHE_SIZE: 450M
       CONSENSUS_ENCLAVE_CSS: /Users/distiller/project/sgx/css/src/valid.css
-      CMAKE_PREFIX_PATH: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib
     steps:
       - checkout
       - init-mobilecoin-submodule
@@ -461,7 +503,6 @@ jobs:
       #    copies artifacts and generates GRPC clients etc..
       # Also add way to save built artifacts so if nothing changed in the repo, 
       #    building can re-use the .o files already created from previous build.
-      - save-rustup-cache
       #- save-sccache-cache
       #- save-cargo-cache
       - save-homebrew-cache 
@@ -479,12 +520,22 @@ workflows:
           matrix:
             parameters:
               xcode-version: [*default-xcode-version]
-      - build-artifacts:
-          name: build-artifacts-m1-ios-sim-xcode-<< matrix.xcode-version >>
-          build-target: "aarch64-apple-ios-sim" 
+
+      # ios-sim
+      - build-toolchain:
+          name: build-toolchain-m1-ios-sim-xcode-<< matrix.xcode-version >>
+          toolchain-target: "aarch64-apple-ios-sim" 
           matrix:
             parameters:
               xcode-version: [*default-xcode-version]
+      - build-artifacts:
+          name: build-artifacts-m1-ios-sim-xcode-<< matrix.xcode-version >>
+          build-target: "aarch64-apple-ios-sim" 
+          requires: [build-artifacts-m1-ios-sim-xcode-<< matrix.xcode-version >>]
+          matrix:
+            parameters:
+              xcode-version: [*default-xcode-version]
+
       - build-artifacts:
           name: build-artifacts-m1-catalyst-xcode-<< matrix.xcode-version >>
           build-target: "aarch64-apple-ios-macabi" 
