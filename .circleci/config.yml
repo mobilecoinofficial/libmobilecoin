@@ -531,7 +531,7 @@ workflows:
       - build-artifacts:
           name: build-artifacts-m1-ios-sim-xcode-<< matrix.xcode-version >>
           build-target: "aarch64-apple-ios-sim" 
-          requires: [build-artifacts-m1-ios-sim-xcode-<< matrix.xcode-version >>]
+          requires: [build-toolchain-m1-ios-sim-xcode-<< matrix.xcode-version >>]
           matrix:
             parameters:
               xcode-version: [*default-xcode-version]
