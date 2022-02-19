@@ -431,7 +431,7 @@ jobs:
       xcode-version: { type: string, default: *default-xcode-version }
       build-target:
         type: string
-        default: aarch64-apple-ios-sim
+        default: 'aarch64-apple-ios-sim'
     executor:
       name: macos
       xcode-version: << parameters.xcode-version >>
