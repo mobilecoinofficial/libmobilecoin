@@ -477,38 +477,38 @@ workflows:
           matrix:
             parameters:
               xcode-version: [*default-xcode-version]
-      - build-artifacts-m1-ios-sim:
-          name: build-artifacts-xcode-<< matrix.xcode-version >>
+      - build-artifacts:
+          name: build-artifacts-m1-ios-sim-xcode-<< matrix.xcode-version >>
           matrix:
             parameters:
               build-target: 'aarch64-apple-ios-sim' 
               xcode-version: [*default-xcode-version]
-      - build-artifacts-m1-catalyst:
-          name: build-artifacts-xcode-<< matrix.xcode-version >>
+      - build-artifacts:
+          name: build-artifacts-m1-catalyst-xcode-<< matrix.xcode-version >>
           matrix:
             parameters:
               build-target: 'aarch64-apple-ios-macabi' 
               xcode-version: [*default-xcode-version]
-      - build-artifacts-ios-device:
-          name: build-artifacts-xcode-<< matrix.xcode-version >>
+      - build-artifacts:
+          name: build-artifacts-ios-device-xcode-<< matrix.xcode-version >>
           matrix:
             parameters:
               build-target: 'aarch64-apple-ios' 
               xcode-version: [*default-xcode-version]
-      - build-artifacts-intel-catalyst:
-          name: build-artifacts-xcode-<< matrix.xcode-version >>
+      - build-artifacts:
+          name: build-artifacts-intel-catalyst-xcode-<< matrix.xcode-version >>
           matrix:
             parameters:
               build-target: 'x86_64-apple-ios-macabi' 
               xcode-version: [*default-xcode-version]
-      - build-artifacts-intel-ios-sim:
-          name: build-artifacts-xcode-<< matrix.xcode-version >>
+      - build-artifacts:
+          name: build-artifacts-intel-ios-sim-xcode-<< matrix.xcode-version >>
           matrix:
             parameters:
               build-target: 'x86_64-apple-ios'
               xcode-version: [*default-xcode-version]
-      - build-artifacts-intel-macos:
-          name: build-artifacts-xcode-<< matrix.xcode-version >>
+      - build-artifacts:
+          name: build-artifacts-intel-macos-xcode-<< matrix.xcode-version >>
           matrix:
             parameters:
               build-target: 'x86_64-apple-darwin'
