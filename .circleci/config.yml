@@ -152,20 +152,99 @@ commands:
           paths:
             - /usr/local/Cellar
 
-  restore-rustup-cache:
+  restore-rustup-cache-aarch64-apple-ios-sim:
     steps:
       - restore_cache:
-          name: Restore Rustup cache
+          name: Restore Rustup cache for target aarch64-apple-ios-sim
           keys: 
-            - v0-rustup-{{ checksum "Vendor/mobilecoin/libmobilecoin/toolchain-config.env" }}
-            - v0-rustup-
+            - v0-rustup-aarch64-apple-ios-sim-{{ checksum "Vendor/mobilecoin/libmobilecoin/toolchain-config.env" }}
 
-  save-rustup-cache:
+  save-rustup-cache-aarch64-apple-ios-sim:
     steps:
       - save_cache:
-          name: Save Rustup cache
+          name: Save Rustup cache for target aarch64-apple-ios-sim
           # See https://discuss.circleci.com/t/add-mechanism-to-update-existing-cache-key/9014/13
-          key: v0-rustup-{{ checksum "Vendor/mobilecoin/libmobilecoin/toolchain-config.env" }}
+          key: v0-rustup-aarch64-apple-ios-sim-{{ checksum "Vendor/mobilecoin/libmobilecoin/toolchain-config.env" }}
+          paths:
+            - ~/.rustup/toolchains
+
+  restore-rustup-cache-aarch64-apple-ios-macabi:
+    steps:
+      - restore_cache:
+          name: Restore Rustup cache for target aarch64-apple-ios-macabi
+          keys: 
+            - v0-rustup-aarch64-apple-ios-macabi-{{ checksum "Vendor/mobilecoin/libmobilecoin/toolchain-config.env" }}
+
+  save-rustup-cache-aarch64-apple-ios-macabi:
+    steps:
+      - save_cache:
+          name: Save Rustup cache for target aarch64-apple-ios-macabi
+          # See https://discuss.circleci.com/t/add-mechanism-to-update-existing-cache-key/9014/13
+          key: v0-rustup-aarch64-apple-ios-macabi-{{ checksum "Vendor/mobilecoin/libmobilecoin/toolchain-config.env" }}
+          paths:
+            - ~/.rustup/toolchains
+
+  restore-rustup-cache-aarch64-apple-ios:
+    steps:
+      - restore_cache:
+          name: Restore Rustup cache for target aarch64-apple-ios
+          keys: 
+            - v0-rustup-aarch64-apple-ios-{{ checksum "Vendor/mobilecoin/libmobilecoin/toolchain-config.env" }}
+
+  save-rustup-cache-aarch64-apple-ios:
+    steps:
+      - save_cache:
+          name: Save Rustup cache for target aarch64-apple-ios
+          # See https://discuss.circleci.com/t/add-mechanism-to-update-existing-cache-key/9014/13
+          key: v0-rustup-aarch64-apple-ios-{{ checksum "Vendor/mobilecoin/libmobilecoin/toolchain-config.env" }}
+          paths:
+            - ~/.rustup/toolchains
+
+  restore-rustup-cache-x86_64-apple-ios-macabi:
+    steps:
+      - restore_cache:
+          name: Restore Rustup cache for target x86_64-apple-ios-macabi
+          keys: 
+            - v0-rustup-x86_64-apple-ios-macabi-{{ checksum "Vendor/mobilecoin/libmobilecoin/toolchain-config.env" }}
+
+  save-rustup-cache-x86_64-apple-ios-macabi:
+    steps:
+      - save_cache:
+          name: Save Rustup cache for target x86_64-apple-ios-macabi
+          # See https://discuss.circleci.com/t/add-mechanism-to-update-existing-cache-key/9014/13
+          key: v0-rustup-x86_64-apple-ios-macabi-{{ checksum "Vendor/mobilecoin/libmobilecoin/toolchain-config.env" }}
+          paths:
+            - ~/.rustup/toolchains
+
+  restore-rustup-cache-x86_64-apple-ios:
+    steps:
+      - restore_cache:
+          name: Restore Rustup cache for target x86_64-apple-ios
+          keys: 
+            - v0-rustup-x86_64-apple-ios-{{ checksum "Vendor/mobilecoin/libmobilecoin/toolchain-config.env" }}
+
+  save-rustup-cache-x86_64-apple-ios:
+    steps:
+      - save_cache:
+          name: Save Rustup cache for target x86_64-apple-ios
+          # See https://discuss.circleci.com/t/add-mechanism-to-update-existing-cache-key/9014/13
+          key: v0-rustup-x86_64-apple-ios-{{ checksum "Vendor/mobilecoin/libmobilecoin/toolchain-config.env" }}
+          paths:
+            - ~/.rustup/toolchains
+
+  restore-rustup-cache-x86_64-apple-ios-darwin:
+    steps:
+      - restore_cache:
+          name: Restore Rustup cache for target x86_64-apple-ios-darwin
+          keys: 
+            - v0-rustup-x86_64-apple-ios-darwin-{{ checksum "Vendor/mobilecoin/libmobilecoin/toolchain-config.env" }}
+
+  save-rustup-cache-x86_64-apple-ios-darwin:
+    steps:
+      - save_cache:
+          name: Save Rustup cache for target x86_64-apple-ios-darwin
+          # See https://discuss.circleci.com/t/add-mechanism-to-update-existing-cache-key/9014/13
+          key: v0-rustup-x86_64-apple-ios-darwin-{{ checksum "Vendor/mobilecoin/libmobilecoin/toolchain-config.env" }}
           paths:
             - ~/.rustup/toolchains
 
@@ -230,7 +309,24 @@ commands:
           steps: [ restore-homebrew-cache ]
       - install-rust
       #- restore-cargo-cache
-      - restore-rustup-cache
+      #- when:
+          #condition: { equal: [ << parameters.build-target >>, aarch64-apple-ios-sim ] }
+          #steps: [ restore-rustup-cache-aarch64-apple-ios-sim ]
+      #- when:
+          #condition: { equal: [ << parameters.build-target >>, aarch64-apple-ios-macabi ] }
+          #steps: [ restore-rustup-cache-aarch64-apple-ios-macabi ]
+      #- when:
+          #condition: { equal: [ << parameters.build-target >>, aarch64-apple-ios ] }
+          #steps: [ restore-rustup-cache-aarch64-apple-ios ]
+      #- when:
+          #condition: { equal: [ << parameters.build-target >>, x86_64-apple-ios-macabi ] }
+          #steps: [ restore-rustup-cache-x86_64-apple-ios-macabi ]
+      #- when:
+          #condition: { equal: [ << parameters.build-target >>, x86_64-apple-ios ] }
+          #steps: [ restore-rustup-cache-x86_64-apple-ios ]
+      #- when:
+          #condition: { equal: [ << parameters.build-target >>, x86_64-apple-ios-darwin ] }
+          #steps: [ restore-rustup-cache-x86_64-apple-ios-darwin ]
       - env_setup
       - install-ci-deps:
           cbindgen: << parameters.cbindgen >>
@@ -447,6 +543,24 @@ jobs:
       - checkout
       - init-mobilecoin-submodule
       - prepare-for-build: { os: macos }
+      - when:
+          condition: { equal: [ << parameters.build-target >>, aarch64-apple-ios-sim ] }
+          steps: [ restore-rustup-cache-aarch64-apple-ios-sim ]
+      - when:
+          condition: { equal: [ << parameters.build-target >>, aarch64-apple-ios-macabi ] }
+          steps: [ restore-rustup-cache-aarch64-apple-ios-macabi ]
+      - when:
+          condition: { equal: [ << parameters.build-target >>, aarch64-apple-ios ] }
+          steps: [ restore-rustup-cache-aarch64-apple-ios ]
+      - when:
+          condition: { equal: [ << parameters.build-target >>, x86_64-apple-ios-macabi ] }
+          steps: [ restore-rustup-cache-x86_64-apple-ios-macabi ]
+      - when:
+          condition: { equal: [ << parameters.build-target >>, x86_64-apple-ios ] }
+          steps: [ restore-rustup-cache-x86_64-apple-ios ]
+      - when:
+          condition: { equal: [ << parameters.build-target >>, x86_64-apple-ios-darwin ] }
+          steps: [ restore-rustup-cache-x86_64-apple-ios-darwin ]
       - run:
           working_directory: Vendor/mobilecoin
           name: Build rustup toolchains for a build target
@@ -462,7 +576,24 @@ jobs:
       #    copies artifacts and generates GRPC clients etc..
       # Also add way to save built artifacts so if nothing changed in the repo, 
       #    building can re-use the .o files already created from previous build.
-      - save-rustup-cache
+      - when:
+          condition: { equal: [ << parameters.build-target >>, aarch64-apple-ios-sim ] }
+          steps: [ save-rustup-cache-aarch64-apple-ios-sim ]
+      - when:
+          condition: { equal: [ << parameters.build-target >>, aarch64-apple-ios-macabi ] }
+          steps: [ save-rustup-cache-aarch64-apple-ios-macabi ]
+      - when:
+          condition: { equal: [ << parameters.build-target >>, aarch64-apple-ios ] }
+          steps: [ save-rustup-cache-aarch64-apple-ios ]
+      - when:
+          condition: { equal: [ << parameters.build-target >>, x86_64-apple-ios-macabi ] }
+          steps: [ save-rustup-cache-x86_64-apple-ios-macabi ]
+      - when:
+          condition: { equal: [ << parameters.build-target >>, x86_64-apple-ios ] }
+          steps: [ save-rustup-cache-x86_64-apple-ios ]
+      - when:
+          condition: { equal: [ << parameters.build-target >>, x86_64-apple-ios-darwin ] }
+          steps: [ save-rustup-cache-x86_64-apple-ios-darwin ]
       #- save-sccache-cache
       #- save-cargo-cache
       - save-homebrew-cache 
