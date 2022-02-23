@@ -621,6 +621,24 @@ jobs:
       - checkout
       - init-mobilecoin-submodule
       - prepare-for-build: { os: macos }
+      - when:
+          condition: { equal: [ << parameters.build-target >>, aarch64-apple-ios-sim ] }
+          steps: [ restore-rustup-cache-aarch64-apple-ios-sim ]
+      - when:
+          condition: { equal: [ << parameters.build-target >>, aarch64-apple-ios-macabi ] }
+          steps: [ restore-rustup-cache-aarch64-apple-ios-macabi ]
+      - when:
+          condition: { equal: [ << parameters.build-target >>, aarch64-apple-ios ] }
+          steps: [ restore-rustup-cache-aarch64-apple-ios ]
+      - when:
+          condition: { equal: [ << parameters.build-target >>, x86_64-apple-ios-macabi ] }
+          steps: [ restore-rustup-cache-x86_64-apple-ios-macabi ]
+      - when:
+          condition: { equal: [ << parameters.build-target >>, x86_64-apple-ios ] }
+          steps: [ restore-rustup-cache-x86_64-apple-ios ]
+      - when:
+          condition: { equal: [ << parameters.build-target >>, x86_64-apple-ios-darwin ] }
+          steps: [ restore-rustup-cache-x86_64-apple-ios-darwin ]
       - run:
           working_directory: Vendor/mobilecoin
           name: Build libmobilecoin static libraries
