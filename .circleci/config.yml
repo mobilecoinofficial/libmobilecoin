@@ -157,7 +157,7 @@ commands:
       - restore_cache:
           name: Restore Rustup cache
           keys: 
-            - v0-rustup-{{ checksum Vendor/mobilecoin/libmobilecoin/toolchain-config.env }}
+            - v0-rustup-{{ checksum "Vendor/mobilecoin/libmobilecoin/toolchain-config.env" }}
             - v0-rustup-
 
   save-rustup-cache:
@@ -165,7 +165,7 @@ commands:
       - save_cache:
           name: Save Rustup cache
           # See https://discuss.circleci.com/t/add-mechanism-to-update-existing-cache-key/9014/13
-          key: v0-rustup-{{ checksum Vendor/mobilecoin/libmobilecoin/toolchain-config.env }}
+          key: v0-rustup-{{ checksum "Vendor/mobilecoin/libmobilecoin/toolchain-config.env" }}
           paths:
             - ~/.rustup/toolchains
 
