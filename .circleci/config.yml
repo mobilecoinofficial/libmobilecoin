@@ -834,12 +834,12 @@ jobs:
       - checkout
       - init-mobilecoin-submodule
       - prepare-for-build: { os: macos }
-      - restore-build-artifacts-cache-aarch64-apple-ios-sim 
-      - restore-build-artifacts-cache-aarch64-apple-ios-macabi 
-      - restore-build-artifacts-cache-aarch64-apple-ios 
-      - restore-build-artifacts-cache-x86_64-apple-ios-macabi 
-      - restore-build-artifacts-cache-x86_64-apple-ios 
-      - restore-build-artifacts-cache-x86_64-apple-ios-darwin 
+      - restore-build-artifact-cache-aarch64-apple-ios-sim 
+      - restore-build-artifact-cache-aarch64-apple-ios-macabi 
+      - restore-build-artifact-cache-aarch64-apple-ios 
+      - restore-build-artifact-cache-x86_64-apple-ios-macabi 
+      - restore-build-artifact-cache-x86_64-apple-ios 
+      - restore-build-artifact-cache-x86_64-apple-ios-darwin 
       - restore-build-artifact-headers-cache
       - run:
           name: Make libmobilecoin 
