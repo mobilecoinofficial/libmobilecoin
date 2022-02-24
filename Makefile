@@ -7,7 +7,7 @@ IOS_TARGETS = x86_64-apple-ios aarch64-apple-ios aarch64-apple-ios-sim aarch64-a
 LIBMOBILECOIN_PROFILE = mobile-release
 
 .PHONY: default
-default: setup build generate
+default: setup build copy generate
 
 .PHONY: setup
 setup:
@@ -24,6 +24,9 @@ unexport CARGO_PROFILE
 .PHONY: build
 build:
 	cd "$(LIBMOBILECOIN_LIB_DIR)" && $(MAKE)
+
+.PHONY: copy
+copy:
 	rm -r "$(ARTIFACTS_DIR)" 2>/dev/null || true
 	mkdir -p "$(ARTIFACTS_DIR)"
 

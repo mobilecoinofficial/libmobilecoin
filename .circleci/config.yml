@@ -152,6 +152,142 @@ commands:
           paths:
             - /usr/local/Cellar
 
+
+  restore-build-artifact-cache-aarch64-apple-ios-sim:
+    steps:
+      - restore_cache:
+          name: Restore build artifact libmobilecoin.a cache for target aarch64-apple-ios-sim
+          keys: 
+            - v0-build-artifact-aarch64-apple-ios-sim-{{ .Revision }}
+
+  save-build-artifact-cache-aarch64-apple-ios-sim:
+    steps:
+      - save_cache:
+          name: Save build artifact libmobilecoin.a cache for target aarch64-apple-ios-sim
+          # See https://discuss.circleci.com/t/add-mechanism-to-update-existing-cache-key/9014/13
+          key: v0-build-artifact-aarch64-apple-ios-sim-{{ .Revision }}
+          paths:
+            - ~/project/Vendor/mobilecoin/libmobilecoin/out/ios/target/aarch64-apple-ios-sim/mobile-release
+
+  restore-build-artifact-cache-aarch64-apple-ios-macabi:
+    steps:
+      - restore_cache:
+          name: Restore build artifact libmobilecoin.a cache for target aarch64-apple-ios-macabi
+          keys: 
+            - v0-build-artifact-aarch64-apple-ios-macabi-{{ .Revision }}
+
+  save-build-artifact-cache-aarch64-apple-ios-macabi:
+    steps:
+      - save_cache:
+          name: Save build artifact libmobilecoin.a cache for target aarch64-apple-ios-macabi
+          # See https://discuss.circleci.com/t/add-mechanism-to-update-existing-cache-key/9014/13
+          key: v0-build-artifact-aarch64-apple-ios-macabi-{{ .Revision }}
+          paths:
+            - ~/project/Vendor/mobilecoin/libmobilecoin/out/ios/target/aarch64-apple-ios-macabi/mobile-release
+
+  restore-build-artifact-cache-aarch64-apple-ios:
+    steps:
+      - restore_cache:
+          name: Restore build artifact libmobilecoin.a cache for target aarch64-apple-ios
+          keys: 
+            - v0-build-artifact-aarch64-apple-ios-{{ .Revision }}
+
+  save-build-artifact-cache-aarch64-apple-ios:
+    steps:
+      - save_cache:
+          name: Save build artifact libmobilecoin.a cache for target aarch64-apple-ios
+          # See https://discuss.circleci.com/t/add-mechanism-to-update-existing-cache-key/9014/13
+          key: v0-build-artifact-aarch64-apple-ios-{{ .Revision }}
+          paths:
+            - ~/project/Vendor/mobilecoin/libmobilecoin/out/ios/target/aarch64-apple-ios/mobile-release
+
+  restore-build-artifact-cache-x86_64-apple-ios-macabi:
+    steps:
+      - restore_cache:
+          name: Restore build artifact libmobilecoin.a cache for target x86_64-apple-ios-macabi
+          keys: 
+            - v0-build-artifact-x86_64-apple-ios-macabi-{{ .Revision }}
+
+  save-build-artifact-cache-x86_64-apple-ios-macabi:
+    steps:
+      - save_cache:
+          name: Save build artifact libmobilecoin.a cache for target x86_64-apple-ios-macabi
+          # See https://discuss.circleci.com/t/add-mechanism-to-update-existing-cache-key/9014/13
+          key: v0-build-artifact-x86_64-apple-ios-macabi-{{ .Revision }}
+          paths:
+            - ~/project/Vendor/mobilecoin/libmobilecoin/out/ios/target/x86_64-apple-ios-macabi/mobile-release
+
+  restore-build-artifact-cache-x86_64-apple-ios:
+    steps:
+      - restore_cache:
+          name: Restore build artifact libmobilecoin.a cache for target x86_64-apple-ios
+          keys: 
+            - v0-build-artifact-x86_64-apple-ios-{{ .Revision }}
+
+  save-build-artifact-cache-x86_64-apple-ios:
+    steps:
+      - save_cache:
+          name: Save build artifact libmobilecoin.a cache for target x86_64-apple-ios
+          # See https://discuss.circleci.com/t/add-mechanism-to-update-existing-cache-key/9014/13
+          key: v0-build-artifact-x86_64-apple-ios-{{ .Revision }}
+          paths:
+            - ~/project/Vendor/mobilecoin/libmobilecoin/out/ios/target/x86_64-apple-ios/mobile-release
+
+  restore-build-artifact-cache-x86_64-apple-ios-darwin:
+    steps:
+      - restore_cache:
+          name: Restore build artifact libmobilecoin.a cache for target x86_64-apple-ios-darwin
+          keys: 
+            - v0-build-artifact-x86_64-apple-ios-darwin-{{ .Revision }}
+
+  save-build-artifact-cache-x86_64-apple-ios-darwin:
+    steps:
+      - save_cache:
+          name: Save build artifact libmobilecoin.a cache for target x86_64-apple-ios-darwin
+          # See https://discuss.circleci.com/t/add-mechanism-to-update-existing-cache-key/9014/13
+          key: v0-build-artifact-x86_64-apple-ios-darwin-{{ .Revision }}
+          paths:
+            - ~/project/Vendor/mobilecoin/libmobilecoin/out/ios/target/x86_64-apple-ios-darwin/mobile-release
+
+  #
+  # Artifacts
+  # 
+  restore-libmobilecoin-artifacts:
+    steps:
+      - restore_cache:
+          name: Restore libmobilecoin artifacts
+          key: v0-libmobilecoin-artifacts-{{ .Revision }}
+
+  save-libmobilecoin-artifacts:
+    steps:
+      - save_cache:
+          name: Save libmobilecoin artifacts
+          key: v0-libmobilecoin-artifacts-{{ .Revision }}
+          paths:
+            - ~/project/Artifacts
+
+  #
+  # Headers
+  # 
+  restore-build-artifact-headers-cache:
+    steps:
+      - restore_cache:
+          name: Restore build artifact headers cache
+          # See https://discuss.circleci.com/t/add-mechanism-to-update-existing-cache-key/9014/13
+          key: v0-build-artifact-headers-{{ .Revision }}
+
+  save-build-artifact-headers-cache:
+    steps:
+      - save_cache:
+          name: Save build artifact headers cache
+          # See https://discuss.circleci.com/t/add-mechanism-to-update-existing-cache-key/9014/13
+          key: v0-build-artifact-headers-{{ .Revision }}
+          paths:
+            - ~/project/Vendor/mobilecoin/libmobilecoin/out/ios/include
+
+  #
+  # Rustup Cache's
+  #
   restore-rustup-cache-aarch64-apple-ios-sim:
     steps:
       - restore_cache:
@@ -616,7 +752,7 @@ jobs:
       <<: *default-build-environment
       OPENSSL_BIN: /usr/local/opt/openssl/bin/openssl
       #SCCACHE_CACHE_SIZE: 450M
-      CONSENSUS_ENCLAVE_CSS: /Users/distiller/project/sgx/css/src/valid.css
+      #CONSENSUS_ENCLAVE_CSS: /Users/distiller/project/sgx/css/src/valid.css
     steps:
       - checkout
       - init-mobilecoin-submodule
@@ -647,6 +783,26 @@ jobs:
             make setup
             make << parameters.build-target >>
 
+      - save-build-artifact-headers-cache
+      - when:
+          condition: { equal: [ << parameters.build-target >>, aarch64-apple-ios-sim ] }
+          steps: [ save-build-artifacts-cache-aarch64-apple-ios-sim ]
+      - when:
+          condition: { equal: [ << parameters.build-target >>, aarch64-apple-ios-macabi ] }
+          steps: [ save-build-artifacts-cache-aarch64-apple-ios-macabi ]
+      - when:
+          condition: { equal: [ << parameters.build-target >>, aarch64-apple-ios ] }
+          steps: [ save-build-artifacts-cache-aarch64-apple-ios ]
+      - when:
+          condition: { equal: [ << parameters.build-target >>, x86_64-apple-ios-macabi ] }
+          steps: [ save-build-artifacts-cache-x86_64-apple-ios-macabi ]
+      - when:
+          condition: { equal: [ << parameters.build-target >>, x86_64-apple-ios ] }
+          steps: [ save-build-artifacts-cache-x86_64-apple-ios ]
+      - when:
+          condition: { equal: [ << parameters.build-target >>, x86_64-apple-darwin ] }
+          steps: [ save-build-artifacts-cache-x86_64-apple-ios-darwin ]
+
           # Add way to save libmobilecoin/rust-bitcode
           # remove libmobilecoin/rust-bitcode, so check-dirty-git step functions
       # - check-dirty-git // git will be dirty from rust-bitcode submodule
@@ -656,7 +812,69 @@ jobs:
       #    building can re-use the .o files already created from previous build.
       #- save-sccache-cache
       #- save-cargo-cache
-      - save-homebrew-cache 
+      #- save-homebrew-cache 
+      #- when:
+          #condition: { equal: [ << pipeline.git.branch >>, master ] }
+          #steps: [ save-sccache-cache, save-cargo-cache, save-homebrew-cache ]
+      #- post-build
+      #
+  # Build using macOS
+  make-libmobilecoin:
+    parameters:
+      xcode-version: { type: string, default: *default-xcode-version }
+    executor:
+      name: macos
+      xcode-version: << parameters.xcode-version >>
+    environment:
+      <<: *default-build-environment
+      #OPENSSL_BIN: /usr/local/opt/openssl/bin/openssl
+      #SCCACHE_CACHE_SIZE: 450M
+      #CONSENSUS_ENCLAVE_CSS: /Users/distiller/project/sgx/css/src/valid.css
+    steps:
+      - checkout
+      - init-mobilecoin-submodule
+      - prepare-for-build: { os: macos }
+      - restore-build-artifacts-cache-aarch64-apple-ios-sim 
+      - restore-build-artifacts-cache-aarch64-apple-ios-macabi 
+      - restore-build-artifacts-cache-aarch64-apple-ios 
+      - restore-build-artifacts-cache-x86_64-apple-ios-macabi 
+      - restore-build-artifacts-cache-x86_64-apple-ios 
+      - restore-build-artifacts-cache-x86_64-apple-ios-darwin 
+      - restore-build-artifact-headers-cache
+      - run:
+          name: Make libmobilecoin 
+          command: |
+            make setup copy generate
+
+      - when:
+          condition: { equal: [ << parameters.build-target >>, aarch64-apple-ios-sim ] }
+          steps: [ save-build-artifacts-cache-aarch64-apple-ios-sim ]
+      - when:
+          condition: { equal: [ << parameters.build-target >>, aarch64-apple-ios-macabi ] }
+          steps: [ save-build-artifacts-cache-aarch64-apple-ios-macabi ]
+      - when:
+          condition: { equal: [ << parameters.build-target >>, aarch64-apple-ios ] }
+          steps: [ save-build-artifacts-cache-aarch64-apple-ios ]
+      - when:
+          condition: { equal: [ << parameters.build-target >>, x86_64-apple-ios-macabi ] }
+          steps: [ save-build-artifacts-cache-x86_64-apple-ios-macabi ]
+      - when:
+          condition: { equal: [ << parameters.build-target >>, x86_64-apple-ios ] }
+          steps: [ save-build-artifacts-cache-x86_64-apple-ios ]
+      - when:
+          condition: { equal: [ << parameters.build-target >>, x86_64-apple-darwin ] }
+          steps: [ save-build-artifacts-cache-x86_64-apple-ios-darwin ]
+
+          # Add way to save libmobilecoin/rust-bitcode
+          # remove libmobilecoin/rust-bitcode, so check-dirty-git step functions
+      # - check-dirty-git // git will be dirty from rust-bitcode submodule
+      # Add code here to run libmobilecoin-ios-artifacts Makefile, which,
+      #    copies artifacts and generates GRPC clients etc..
+      # Also add way to save built artifacts so if nothing changed in the repo, 
+      #    building can re-use the .o files already created from previous build.
+      #- save-sccache-cache
+      #- save-cargo-cache
+      #- save-homebrew-cache 
       #- when:
           #condition: { equal: [ << pipeline.git.branch >>, master ] }
           #steps: [ save-sccache-cache, save-cargo-cache, save-homebrew-cache ]
@@ -761,6 +979,16 @@ workflows:
           matrix:
             parameters:
               xcode-version: [*default-xcode-version]
+
+      - make-libmobilecoin:
+          name: make-libmobilecoin-<< matrix.xcode-version >>
+          requires:
+            - build-artifacts-m1-ios-sim-xcode-<< matrix.xcode-version >>
+            - build-artifacts-m1-catalyst-xcode-<< matrix.xcode-version >>
+            - build-artifacts-ios-device-xcode-<< matrix.xcode-version >>
+            - build-artifacts-intel-catalyst-xcode-<< matrix.xcode-version >>
+            - build-artifacts-intel-ios-sim-xcode-<< matrix.xcode-version >>
+            - build-artifacts-intel-macos-xcode-<< matrix.xcode-version >>
 
       - publish-pod-release:
           filters:
