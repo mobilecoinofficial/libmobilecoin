@@ -566,7 +566,7 @@ jobs:
           name: Build rustup toolchains for a build target
           command: |
             cd libmobilecoin
-            make require setup
+            make setup
             make toolchain_<< parameters.build-target >>
 
           # Add way to save libmobilecoin/rust-bitcode
@@ -644,7 +644,7 @@ jobs:
           name: Build libmobilecoin static libraries
           command: |
             cd libmobilecoin
-            make require setup
+            make setup
             make << parameters.build-target >>
 
           # Add way to save libmobilecoin/rust-bitcode
