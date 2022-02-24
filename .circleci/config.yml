@@ -786,22 +786,22 @@ jobs:
       - save-build-artifact-headers-cache
       - when:
           condition: { equal: [ << parameters.build-target >>, aarch64-apple-ios-sim ] }
-          steps: [ save-build-artifacts-cache-aarch64-apple-ios-sim ]
+          steps: [ save-build-artifact-cache-aarch64-apple-ios-sim ]
       - when:
           condition: { equal: [ << parameters.build-target >>, aarch64-apple-ios-macabi ] }
-          steps: [ save-build-artifacts-cache-aarch64-apple-ios-macabi ]
+          steps: [ save-build-artifact-cache-aarch64-apple-ios-macabi ]
       - when:
           condition: { equal: [ << parameters.build-target >>, aarch64-apple-ios ] }
-          steps: [ save-build-artifacts-cache-aarch64-apple-ios ]
+          steps: [ save-build-artifact-cache-aarch64-apple-ios ]
       - when:
           condition: { equal: [ << parameters.build-target >>, x86_64-apple-ios-macabi ] }
-          steps: [ save-build-artifacts-cache-x86_64-apple-ios-macabi ]
+          steps: [ save-build-artifact-cache-x86_64-apple-ios-macabi ]
       - when:
           condition: { equal: [ << parameters.build-target >>, x86_64-apple-ios ] }
-          steps: [ save-build-artifacts-cache-x86_64-apple-ios ]
+          steps: [ save-build-artifact-cache-x86_64-apple-ios ]
       - when:
           condition: { equal: [ << parameters.build-target >>, x86_64-apple-darwin ] }
-          steps: [ save-build-artifacts-cache-x86_64-apple-ios-darwin ]
+          steps: [ save-build-artifact-cache-x86_64-apple-ios-darwin ]
 
           # Add way to save libmobilecoin/rust-bitcode
           # remove libmobilecoin/rust-bitcode, so check-dirty-git step functions
