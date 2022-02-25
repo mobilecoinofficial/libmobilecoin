@@ -820,11 +820,9 @@ jobs:
       #
   # Build using macOS
   make-libmobilecoin:
+    machine: true # executor type
     parameters:
       xcode-version: { type: string, default: *default-xcode-version }
-    executor:
-      name: macos
-      xcode-version: << parameters.xcode-version >>
     environment:
       <<: *default-build-environment
       #OPENSSL_BIN: /usr/local/opt/openssl/bin/openssl
@@ -833,7 +831,12 @@ jobs:
     steps:
       - checkout
       - init-mobilecoin-submodule
-      - prepare-for-build: { os: macos }
+      #- run:
+          #name: Make output directories
+          #working_directory: Vendor/mobilecoin/libmobilecoin
+          #command: |
+            #mkdir -p out/ios/target
+
       - restore-build-artifact-cache-aarch64-apple-ios-sim 
       - restore-build-artifact-cache-aarch64-apple-ios-macabi 
       - restore-build-artifact-cache-aarch64-apple-ios 
@@ -844,7 +847,7 @@ jobs:
       - run:
           name: Make libmobilecoin 
           command: |
-            make setup copy generate
+            make copy generate
 
       - save-libmobilecoin-artifacts
 
