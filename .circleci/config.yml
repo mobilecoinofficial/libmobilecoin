@@ -161,7 +161,7 @@ commands:
         type: string
     steps:
       - run: 
-          name: if cache exists exit
+          name: If cache exists exit ...
           command: |
             DIR=<<parameters.directory>>
             if test -d "$DIR"; then
@@ -179,7 +179,7 @@ commands:
         type: string
     steps:
       - run: 
-          name: if cache exists exit
+          name: If cache exists exit ...
           command: |
             FILE=<<parameters.file>>
             if test -f "$FILE"; then
@@ -195,10 +195,11 @@ commands:
         description: Build target triplet
         type: string
     steps:
+      - print-mobilecoin-submodule-hash:
       - restore_cache:
           name: Restore build artifact libmobilecoin.a cache for target <<parameters.build-target>>
           keys: 
-            - v0-build-artifact-<<parameters.build-target>>-{{ .Revision }}
+            - v0-build-artifact-<<parameters.build-target>>-{{ checksum "vendor_mobilecoin.hash" }}
 
   save-build-artifact-cache:
     parameters:
@@ -206,9 +207,10 @@ commands:
         description: Build target triplet
         type: string
     steps:
+      - print-mobilecoin-submodule-hash:
       - save_cache:
           name: Save build artifact libmobilecoin.a cache for target <<parameters.build-target>>
-          key: v0-build-artifact-<<parameters.build-target>>-{{ .Revision }}
+          key: v0-build-artifact-<<parameters.build-target>>-{{ checksum "vendor_mobilecoin.hash" }}
           paths:
             - ~/project/Vendor/mobilecoin/libmobilecoin/out/ios/target/<<parameters.build-target>>/mobile-release
 
@@ -355,6 +357,14 @@ commands:
           name: Run git submodule update --init
           working_directory: Vendor/mobilecoin
           command: git submodule update --init --depth 1 --recursive
+
+  print-mobilecoin-submodule-hash:
+    description: Save mobilecoin submodule hash to file
+    steps:
+      - run:
+          name: Save submodule hash to file for checksumming
+          command: |
+            git submodule status > vendor_mobilecoin.hash
 
   print-tool-versions:
     description: Print versions of various tools used
