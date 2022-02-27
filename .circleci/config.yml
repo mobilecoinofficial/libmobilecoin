@@ -219,15 +219,17 @@ commands:
   # 
   restore-libmobilecoin-artifacts:
     steps:
+      - print-mobilecoin-submodule-hash
       - restore_cache:
           name: Restore libmobilecoin artifacts
-          key: v0-libmobilecoin-artifacts-{{ .Revision }}
+          key: v0-libmobilecoin-artifacts-{{ checksum "vendor_mobilecoin.hash" }}
 
   save-libmobilecoin-artifacts:
     steps:
+      - print-mobilecoin-submodule-hash
       - save_cache:
           name: Save libmobilecoin artifacts
-          key: v0-libmobilecoin-artifacts-{{ .Revision }}
+          key: v0-libmobilecoin-artifacts-{{ checksum "vendor_mobilecoin.hash" }}
           paths:
             - ~/project/Artifacts
 
@@ -679,6 +681,7 @@ jobs:
       <<: *default-build-environment
     steps:
       - checkout
+      - restore-libmobilecoin-artifacts
       - run:
           name: Make libmobilecoin 
           command: |
