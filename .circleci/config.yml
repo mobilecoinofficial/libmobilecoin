@@ -792,7 +792,7 @@ workflows:
               xcode-version: [*default-xcode-version]
 
       - copy-artifacts:
-          name: copy-artifacats-<< matrix.xcode-version >>
+          name: copy-artifacats
           requires:
             - build-artifacts-m1-ios-sim-xcode-<< matrix.xcode-version >>
             - build-artifacts-m1-catalyst-xcode-<< matrix.xcode-version >>
@@ -807,10 +807,7 @@ workflows:
       - make-libmobilecoin:
           name: make-libmobilecoin
           requires:
-            - copy-artifacts-<< matrix.xcode-version >>
-          matrix:
-            parameters:
-              xcode-version: [*default-xcode-version]
+            - copy-artifacts
 
       - publish-pod-release:
           filters:
