@@ -195,7 +195,7 @@ commands:
         description: Build target triplet
         type: string
     steps:
-      - print-mobilecoin-submodule-hash:
+      - print-mobilecoin-submodule-hash
       - restore_cache:
           name: Restore build artifact libmobilecoin.a cache for target <<parameters.build-target>>
           keys: 
@@ -207,7 +207,7 @@ commands:
         description: Build target triplet
         type: string
     steps:
-      - print-mobilecoin-submodule-hash:
+      - print-mobilecoin-submodule-hash
       - save_cache:
           name: Save build artifact libmobilecoin.a cache for target <<parameters.build-target>>
           key: v0-build-artifact-<<parameters.build-target>>-{{ checksum "vendor_mobilecoin.hash" }}
