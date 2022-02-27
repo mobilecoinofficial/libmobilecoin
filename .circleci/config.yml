@@ -154,8 +154,7 @@ commands:
 
 
   skip-if-cache-directory-exists:
-      description: |
-        a command to exit the job if directory exists
+    description: a command to exit the job if directory exists
     parameters:
       directory:
         description: path to directory cache
@@ -173,8 +172,7 @@ commands:
             fi
 
   skip-if-cache-file-exists:
-      description: |
-        a command to exit the job if file exists
+    description: a command to exit the job if file exists
     parameters:
       file:
         description: path to file cache
@@ -543,7 +541,7 @@ jobs:
             mkdir -p ~/.rustup/toolchains
       - restore-rustup-cache:
           build-target: <<parameters.build-target>>
-      - skip-if-cache-directory-exists
+      - skip-if-cache-directory-exists:
           directory: ~/.rustup/toolchains/ios-<<parameters.build-target>>-nightly-2021-08-01-swift-5-3-2
       - prepare-for-build: { os: macos }
       - run:
@@ -591,7 +589,7 @@ jobs:
       - init-mobilecoin-submodule
       - restore-build-artifact-cache:
           build-target: <<parameters.build-target>>
-      - skip-if-cache-file-exists
+      - skip-if-cache-file-exists:
           file: ~/project/Vendor/mobilecoin/libmobilecoin/out/ios/target/<<parameters.build-target>>/mobile-release
       - prepare-for-build: { os: macos }
       - restore-rustup-cache:
@@ -626,6 +624,11 @@ jobs:
   copy-artifacts:
     parameters:
       xcode-version: { type: string, default: *default-xcode-version }
+    executor:
+      name: macos
+      xcode-version: << parameters.xcode-version >>
+    environment:
+      <<: *default-build-environment
     steps:
       - checkout
       - init-mobilecoin-submodule
