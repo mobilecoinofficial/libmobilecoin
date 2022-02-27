@@ -263,6 +263,10 @@ commands:
             - v0-rustup-<<parameters.build-target>>-{{ checksum "Vendor/mobilecoin/libmobilecoin/toolchain-config.env" }}
 
   save-rustup-cache:
+    parameters:
+      build-target:
+        description: Build target triplet
+        type: string
     steps:
       - save_cache:
           name: Save Rustup cache for target aarch64-apple-ios-sim
