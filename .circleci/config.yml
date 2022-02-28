@@ -536,6 +536,9 @@ jobs:
     environment:
       <<: *default-build-environment
     steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "16:4d:90:f0:c4:2b:2e:ac:96:7b:6b:8b:e0:ce:72:28"
       - checkout
       - init-mobilecoin-submodule
       - attach_workspace:
@@ -556,7 +559,7 @@ jobs:
             git add Artifacts/*
             git add Sources/Generated/Proto/*
             git commit -m '[skip ci] commit build Artifacts and generated protos from build machine'
-            # git push origin HEAD 
+            git push origin HEAD 
             
 workflows:
   version: 2
