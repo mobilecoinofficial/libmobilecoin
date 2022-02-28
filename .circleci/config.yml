@@ -676,7 +676,8 @@ jobs:
 
 
   make-libmobilecoin:
-    machine: true # executor type
+    machine: 
+      image: ubuntu-2004:202111-02
     environment:
       <<: *default-build-environment
     steps:
