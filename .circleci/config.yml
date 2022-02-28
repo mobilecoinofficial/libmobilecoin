@@ -549,7 +549,7 @@ jobs:
             rm -rf Artifacts
             cp -R /tmp/workspace/Artifacts ./
       - run:
-          name: Make libmobilecoin 
+          name: make generate (proto -> grpc swift) 
           command: |
             make generate
       - set-git-credentials
