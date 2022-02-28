@@ -39,7 +39,7 @@ copy:
 .PHONY: generate
 generate:
 	rm -r Sources/Generated/Proto 2>/dev/null || true
-	docker build . \
+	DOCKER_BUILDKIT=1 docker build . \
 		--build-arg grpc_swift_version=1.0.0 \
 		--output .
 
