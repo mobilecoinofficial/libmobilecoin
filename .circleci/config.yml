@@ -406,10 +406,11 @@ jobs:
     steps:
       - checkout
       - init-mobilecoin-submodule
+      - set-git-credentials
+      - publish-to-trunk
       - set-ruby-version
       - install-gems
       - print-tool-versions
-      - set-git-credentials
       - lint-locally-podspec
       - check-dirty-git
 
