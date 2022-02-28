@@ -52,6 +52,13 @@ lint-locally: lint-locally-podspec
 .PHONY: publish
 publish: tag-release publish-podspec
 
+.PHONY: push-generated
+push-generated:
+	git add Artifacts/*
+	git add Sources/Generated/Proto/*
+	git commit -m '[skip ci] commit build Artifacts and generated protos from build machine'
+	git push origin HEAD 
+
 # Release
 
 .PHONY: tag-release
