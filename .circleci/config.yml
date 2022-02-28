@@ -241,7 +241,9 @@ commands:
       - print-mobilecoin-submodule-hash
       - restore_cache:
           name: Restore build artifact headers cache
-          key: v0-build-artifact-headers-{{ checksum "vendor_mobilecoin.hash" }}
+          keys: 
+            - v0-build-artifact-headers-{{ checksum "vendor_mobilecoin.hash" }}
+            - v0-build-artifact-headers-
 
   save-build-artifact-headers-cache:
     steps:
