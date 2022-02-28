@@ -399,11 +399,6 @@ jobs:
       - print-tool-versions
       - set-git-credentials
       - lint-locally-podspec
-      #- run: make build # TODO
-      #- run: make test # TODO
-      - store_artifacts: { path: output }
-      - store_test_results: { path: output/scan }
-      - store_artifacts: { path: ~/Library/Logs/DiagnosticReports }
       - check-dirty-git
 
   publish-pod-release:
