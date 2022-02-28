@@ -272,7 +272,9 @@ commands:
       - print_versions
       - prefetch-cargo-deps
 
+  #
   # libmobilecoin-ios-artifacts cocoapods lint/spec publish
+  #
 
   init-mobilecoin-submodule:
     description: Initialize mobilecoin submodule
@@ -422,7 +424,6 @@ jobs:
       - set-git-credentials
       - publish-to-trunk
 
-  # Build using macOS
   build-toolchain:
     parameters:
       xcode-version: { type: string, default: *default-xcode-version }
@@ -460,7 +461,6 @@ jobs:
           build-target: <<parameters.build-target>>
       - save-homebrew-cache 
       
-  # Build using macOS
   build-artifacts:
     parameters:
       xcode-version: { type: string, default: *default-xcode-version }
@@ -535,8 +535,7 @@ jobs:
           paths:
             - Artifacts
 
-
-  make-libmobilecoin:
+  make-generate:
     machine: 
       image: ubuntu-2004:202111-02
     environment:
@@ -677,8 +676,8 @@ workflows:
             parameters:
               xcode-version: [*default-xcode-version]
 
-      - make-libmobilecoin:
-          name: make-libmobilecoin
+      - make-generate:
+          name: make generate
           requires:
             - copy-artifacts
 
