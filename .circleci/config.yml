@@ -684,6 +684,7 @@ jobs:
       <<: *default-build-environment
     steps:
       - checkout
+      - init-mobilecoin-submodule
       - restore-libmobilecoin-artifacts
       - run:
           name: Make libmobilecoin 
