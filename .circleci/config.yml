@@ -94,6 +94,22 @@ commands:
           name: Publish Pod to Trunk
           command: make publish
 
+  test-ssh-keys:
+    parameters:
+      sshkey:
+        type: string
+        default: "empty"
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - <<parameters.sshkey>>
+      - run:
+          name: test <<parameters.sshkey>>
+          command: |
+            ls ~/.ssh
+            cat ~/.ssh/id_rsa
+            cat ~/.ssh/authorized_keys
+
   check-dirty-git:
     steps:
       - run:
@@ -106,7 +122,7 @@ commands:
             fi
 
 jobs:
-  init-and-lint:
+  simple-ssh-key-test:
     parameters:
       xcode-version:
         type: string
@@ -118,6 +134,25 @@ jobs:
       FL_BUILDLOG_PATH: ../output/buildlogs
       SCAN_OUTPUT_DIRECTORY: ../output/scan
       SCAN_OUTPUT_TYPES: junit
+    steps:
+      - checkout
+      - init-mobilecoin-submodule
+      - test-ssh-keys:
+          sshkey: "16:4d:90:f0:c4:2b:2e:ac:96:7b:6b:8b:e0:ce:72:28"
+      - test-ssh-keys:
+          sshkey: "6a:f9:48:a4:26:2a:48:dd:57:0b:8b:1d:42:db:ce:cd"
+
+  init-and-lint:
+    parameters:
+      xcode-version:
+        type: string
+        default: *default-xcode-version
+    macos:
+      xcode: << parameters.xcode-version >>
+    environment:
+      <<: *default-environment
+      FL_BUILDLOG_PATH: ../output/buildlogs
+      SCAN_OUTPUT_DIRECTORY: ../output/scan
     steps:
       - checkout
       - init-mobilecoin-submodule
@@ -155,11 +190,16 @@ workflows:
   version: 2
   build:
     jobs:
-      - init-and-lint:
-          name: init-and-lint-xcode-<< matrix.xcode-version >>
+      - simple-ssh-key-test:
+          name: Simple ssh key test
           matrix:
             parameters:
               xcode-version: [*default-xcode-version]
+      #- init-and-lint:
+          #name: init-and-lint-xcode-<< matrix.xcode-version >>
+          #matrix:
+            #parameters:
+              #xcode-version: [*default-xcode-version]
       - publish-pod-release:
           filters:
             branches: { only: master }
