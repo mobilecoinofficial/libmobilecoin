@@ -238,17 +238,17 @@ commands:
   # 
   restore-build-artifact-headers-cache:
     steps:
+      - print-mobilecoin-submodule-hash
       - restore_cache:
           name: Restore build artifact headers cache
-          # See https://discuss.circleci.com/t/add-mechanism-to-update-existing-cache-key/9014/13
-          key: v0-build-artifact-headers-{{ .Revision }}
+          key: v0-build-artifact-headers-{{ checksum "vendor_mobilecoin.hash" }}
 
   save-build-artifact-headers-cache:
     steps:
+      - print-mobilecoin-submodule-hash
       - save_cache:
           name: Save build artifact headers cache
-          # See https://discuss.circleci.com/t/add-mechanism-to-update-existing-cache-key/9014/13
-          key: v0-build-artifact-headers-{{ .Revision }}
+          key: v0-build-artifact-headers-{{ checksum "vendor_mobilecoin.hash" }}
           paths:
             - ~/project/Vendor/mobilecoin/libmobilecoin/out/ios/include
 
