@@ -556,6 +556,7 @@ jobs:
           command: |
             make generate
 
+      - add_ssh_keys
       - set-git-credentials
       - make-generate-and-push
             
