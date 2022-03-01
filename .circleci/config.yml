@@ -367,7 +367,7 @@ commands:
           name: Publish Pod to Trunk
           command: make publish
 
-  make-generate-and-push:
+  make-push-generated:
     steps:
       - add_ssh_keys:
           fingerprints:
