@@ -560,7 +560,7 @@ jobs:
             make generate
 
       - set-git-credentials
-      - make-generate-and-push
+      - make-push-generated
             
 workflows:
   version: 2
