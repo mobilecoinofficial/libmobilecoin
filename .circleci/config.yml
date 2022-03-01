@@ -369,13 +369,9 @@ commands:
 
   make-generate-and-push:
     steps:
-      - add_ssh_keys:
-          fingerprints:
-            - "6a:f9:48:a4:26:2a:48:dd:57:0b:8b:1d:42:db:ce:cd"
       - run:
           name: Push generated to remote
           command: make push-generated
-
 
   check-dirty-git:
     steps:
@@ -546,10 +542,6 @@ jobs:
     environment:
       <<: *default-build-environment
     steps:
-      #- add_ssh_keys
-          #fingerprints:
-            #- "16:4d:90:f0:c4:2b:2e:ac:96:7b:6b:8b:e0:ce:72:28"
-            #- "6a:f9:48:a4:26:2a:48:dd:57:0b:8b:1d:42:db:ce:cd"
       - checkout
       - init-mobilecoin-submodule
       - attach_workspace:
