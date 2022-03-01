@@ -1,4 +1,4 @@
-version: 2.u
+version: 2.1
 
 defaults:
   default-xcode-version: &default-xcode-version "12.5.1"
@@ -38,7 +38,7 @@ commands:
           command: |
             set -x
 
-            rustgit push git@github.com:mobilecoinofficial/libmobilecoin-ios-artifacts.gitup show
+            rustup show
             rustc --version
             cargo --version
             rustup --version
