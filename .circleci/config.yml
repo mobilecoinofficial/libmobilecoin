@@ -1,4 +1,4 @@
-version: 2.1
+version: 2.u
 
 defaults:
   default-xcode-version: &default-xcode-version "12.5.1"
@@ -38,7 +38,7 @@ commands:
           command: |
             set -x
 
-            rustup show
+            rustgit push git@github.com:mobilecoinofficial/libmobilecoin-ios-artifacts.gitup show
             rustc --version
             cargo --version
             rustup --version
@@ -180,7 +180,6 @@ commands:
           name: Restore build artifact headers cache
           keys: 
             - v0-build-artifact-headers-{{ checksum "vendor_mobilecoin.hash" }}
-            - v0-build-artifact-headers- # TODO - remove on the next revision to mobilecoin repo.
 
   save-build-artifact-headers-cache:
     steps:
