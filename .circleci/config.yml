@@ -369,6 +369,9 @@ commands:
 
   make-generate-and-push:
     steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "0b:63:05:5c:f9:37:25:a8:85:7a:8e:2c:8d:96:1a:39"
       - run:
           name: Push generated to remote
           command: make push-generated
@@ -556,7 +559,6 @@ jobs:
           command: |
             make generate
 
-      - add_ssh_keys
       - set-git-credentials
       - make-generate-and-push
             
