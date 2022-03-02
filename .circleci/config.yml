@@ -9,8 +9,8 @@ defaults:
 
   default-artifact-build-environment: &default-build-environment
     <<: *default-environment
-    IAS_MODE: DEV
-    SGX_MODE: SW
+    IAS_MODE: PROD
+    SGX_MODE: HW
     RUST_BACKTRACE: "1"
     SKIP_SLOW_TESTS: "1"
 
@@ -43,6 +43,11 @@ commands:
             cargo --version
             rustup --version
             command -v jq >/dev/null && jq --version || true
+            xcodebuild -version
+            xcode-select -p
+            clang -v
+            llvm-gcc -v
+            make -v
 
   env_setup:
     description: Environment Setup
@@ -155,7 +160,7 @@ commands:
       - restore_cache:
           name: Restore build artifact libmobilecoin.a cache for target <<parameters.build-target>>
           keys: 
-            - v0-build-artifact-<<parameters.build-target>>-{{ checksum "vendor_mobilecoin.hash" }}
+            - v1-build-artifact-<<parameters.build-target>>-{{ checksum "vendor_mobilecoin.hash" }}
 
   save-build-artifact-cache:
     parameters:
@@ -166,7 +171,7 @@ commands:
       - print-mobilecoin-submodule-hash
       - save_cache:
           name: Save build artifact libmobilecoin.a cache for target <<parameters.build-target>>
-          key: v0-build-artifact-<<parameters.build-target>>-{{ checksum "vendor_mobilecoin.hash" }}
+          key: v1-build-artifact-<<parameters.build-target>>-{{ checksum "vendor_mobilecoin.hash" }}
           paths:
             - ~/project/Vendor/mobilecoin/libmobilecoin/out/ios/target/<<parameters.build-target>>/mobile-release
 
@@ -179,14 +184,14 @@ commands:
       - restore_cache:
           name: Restore build artifact headers cache
           keys: 
-            - v0-build-artifact-headers-{{ checksum "vendor_mobilecoin.hash" }}
+            - v1-build-artifact-headers-{{ checksum "vendor_mobilecoin.hash" }}
 
   save-build-artifact-headers-cache:
     steps:
       - print-mobilecoin-submodule-hash
       - save_cache:
           name: Save build artifact headers cache
-          key: v0-build-artifact-headers-{{ checksum "vendor_mobilecoin.hash" }}
+          key: v1-build-artifact-headers-{{ checksum "vendor_mobilecoin.hash" }}
           paths:
             - ~/project/Vendor/mobilecoin/libmobilecoin/out/ios/include
 
@@ -229,18 +234,6 @@ commands:
             # Installs the toolchain specified in `rust-toolchain`
             "$HOME/.cargo/bin/rustup" show active-toolchain
 
-  update-ci-deps:
-    steps:
-      - run:
-          name: Update CI dependencies
-          working_directory: Vendor/mobilecoin
-          command: |
-            cd ..
-            rustup default stable
-            command -v cargo-install-update >/dev/null || cargo install cargo-update
-            cargo install-update --all
-            time cargo uninstall cargo-update
-
   prefetch-cargo-deps:
     steps:
       - run:
@@ -265,9 +258,6 @@ commands:
           steps: [ restore-homebrew-cache ]
       - install-rust
       - env_setup
-      - when:
-          condition: { equal: [ << pipeline.git.branch >>, master ] }
-          steps: [ update-ci-deps ]
       - print_versions
       - prefetch-cargo-deps
 
