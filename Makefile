@@ -56,9 +56,9 @@ publish: tag-release publish-podspec
 push-generated:
 	git add Artifacts/*
 	git add Sources/Generated/Proto/*
-	if ! git diff-index --quiet HEAD; then
-		git commit -m '[skip ci] commit build Artifacts and generated protos from build machine'
-		git push origin HEAD 
+	if ! git diff-index --quiet HEAD; then \
+		git commit -m '[skip ci] commit build Artifacts and generated protos from build machine'; \
+		git push origin HEAD; \
 	fi
 
 # Release
