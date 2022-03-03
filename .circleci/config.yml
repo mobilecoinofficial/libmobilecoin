@@ -380,10 +380,10 @@ commands:
         default: *default-ruby-version
     steps:
       - restore_cache:
-          name: Restore Ruby gem cache
+          name: Restore Ruby gem cache swift sdk
           keys:
-            - v0-ruby-<< parameters.ruby-version >>-gems-{{ checksum "Gemfile.lock" }}
-            - v0-ruby-<< parameters.ruby-version >>-gems-
+            - v1-ruby-<< parameters.ruby-version >>-gems-{{ checksum "~/MobileCoin-Swift/Gemfile.lock" }}
+            - v1-ruby-<< parameters.ruby-version >>-gems-
       - run:
           name: Install root bundler dependencies
           working_directory: ~/MobileCoin-Swift
@@ -393,8 +393,8 @@ commands:
             bundle config set --local clean 'true'
             bundle check || bundle install
       - save_cache:
-          name: Save Ruby gem cache
-          key: v0-ruby-<< parameters.ruby-version >>-gems-{{ checksum "Gemfile.lock" }}
+          name: Save Ruby gem cache swift sdk
+          key: v1-ruby-<< parameters.ruby-version >>-gems-{{ checksum "~/MobileCoin-Swift/Gemfile.lock" }}
           paths:
             - ~/MobileCoin-Swift/.vendor/bundle
 
@@ -408,7 +408,7 @@ commands:
       - restore_cache:
           name: Restore Ruby gem cache for Example project
           keys:
-            - v0-example-ruby-<< parameters.ruby-version >>-gems-{{ checksum "Example/Gemfile.lock" }}
+            - v0-example-ruby-<< parameters.ruby-version >>-gems-{{ checksum "~/MobileCoin-Swift/Example/Gemfile.lock" }}
             - v0-example-ruby-<< parameters.ruby-version >>-gems-
       - run:
           name: Install Example project bundler dependencies
@@ -420,7 +420,7 @@ commands:
             bundle check || bundle install
       - save_cache:
           name: Save Ruby gem cache for Example project
-          key: v0-example-ruby-<< parameters.ruby-version >>-gems-{{ checksum "Example/Gemfile.lock" }}
+          key: v0-example-ruby-<< parameters.ruby-version >>-gems-{{ checksum "~/MobileCoin-Swift/Example/Gemfile.lock" }}
           paths:
             - ~/MobileCoin-Swift/Example/.vendor/bundle
 
@@ -434,7 +434,7 @@ commands:
       - restore_cache:
           name: Restore Ruby gem cache for ExampleHTTP project
           keys:
-            - v0-example-http-ruby-<< parameters.ruby-version >>-gems-{{ checksum "ExampleHTTP/Gemfile.lock" }}
+            - v0-example-http-ruby-<< parameters.ruby-version >>-gems-{{ checksum "~/MobileCoin-Swift/ExampleHTTP/Gemfile.lock" }}
             - v0-example-http-ruby-<< parameters.ruby-version >>-gems-
       - run:
           name: Install ExampleHTTP project bundler dependencies
@@ -446,7 +446,7 @@ commands:
             bundle check || bundle install
       - save_cache:
           name: Save Ruby gem cache for ExampleHTTP project
-          key: v0-example-http-ruby-<< parameters.ruby-version >>-gems-{{ checksum "ExampleHTTP/Gemfile.lock" }}
+          key: v0-example-http-ruby-<< parameters.ruby-version >>-gems-{{ checksum "~/MobileCoin-Swift/ExampleHTTP/Gemfile.lock" }}
           paths:
             - ~/MobileCoin-Swift/ExampleHTTP/.vendor/bundle
 
@@ -459,12 +459,12 @@ commands:
       - restore_cache:
           name: Restore CocoaPods cache
           keys:
-            - v0-xcode-<< parameters.xcode-version >>-example-pods-{{ checksum "Example/Podfile.lock" }}
+            - v0-xcode-<< parameters.xcode-version >>-example-pods-{{ checksum "~/MobileCoin-Swift/Example/Podfile.lock" }}
             - v0-xcode-<< parameters.xcode-version >>-example-pods-
       - run: cd ~/MobileCoin-Swift/Example && bundle exec pod install --deployment
       - save_cache:
           name: Save CocoaPods cache
-          key: v0-xcode-<< parameters.xcode-version >>-example-pods-{{ checksum "Example/Podfile.lock" }}
+          key: v0-xcode-<< parameters.xcode-version >>-example-pods-{{ checksum "~/MobileCoin-Swift/Example/Podfile.lock" }}
           paths:
             - ~/MobileCoin-Swift/Example/Pods
 
@@ -477,14 +477,14 @@ commands:
       - restore_cache:
           name: Restore CocoaPods cache
           keys:
-            - v0-xcode-<< parameters.xcode-version >>-example-http-pods-{{ checksum "ExampleHTTP/Podfile.lock" }}
+            - v0-xcode-<< parameters.xcode-version >>-example-http-pods-{{ checksum "~/MobileCoin-Swift/ExampleHTTP/Podfile.lock" }}
             - v0-xcode-<< parameters.xcode-version >>-example-http-pods-
       - run: cd ~/MobileCoin-Swift/ExampleHTTP && bundle exec pod install --deployment
       - save_cache:
           name: Save CocoaPods cache
-          key: v0-xcode-<< parameters.xcode-version >>-example-http-pods-{{ checksum "ExampleHTTP/Podfile.lock" }}
+          key: v0-xcode-<< parameters.xcode-version >>-example-http-pods-{{ checksum "~/MobileCoin-Swift/ExampleHTTP/Podfile.lock" }}
           paths:
-            - ~/MobileCoin-Swift/Example/Pods
+            - ~/MobileCoin-Swift/ExampleHTTP/Pods
 
   init-swift-sdk-submodules:
     description: Initialize swift-sdk submodules
