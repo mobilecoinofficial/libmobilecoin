@@ -913,7 +913,7 @@ workflows:
               xcode-version: [*default-xcode-version]
 
       - test-example-with-swift-sdk:
-          name: test-example-http-with-swift-sdk-<< matrix.xcode-version >>
+          name: test-example-with-swift-sdk-<< matrix.xcode-version >>
           requires: 
             - make-generate
           matrix:
