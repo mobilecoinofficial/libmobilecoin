@@ -13,6 +13,9 @@ defaults:
     SGX_MODE: HW
     RUST_BACKTRACE: "1"
     SKIP_SLOW_TESTS: "1"
+    DEV_NETWORK_AUTH_USERNAME:
+    DEV_NETWORK_AUTH_PASSWORD:
+    TEST_NET_TEST_ACCOUNT_MNEMONICS_COMMA_SEPARATED:
 
 executors:
   macos:
@@ -362,13 +365,13 @@ commands:
           working_directory: ~/MobileCoin-Swift
           command: |
             cd Example
-            bundle exec pod keys set devNetworkAuthUsername "$DEV_NETWORK_AUTH_USERNAME"
-            bundle exec pod keys set devNetworkAuthPassword "$DEV_NETWORK_AUTH_PASSWORD"
-            bundle exec pod keys set testNetTestAccountMnemonicsCommaSeparated "$TEST_NET_TEST_ACCOUNT_MNEMONICS_COMMA_SEPARATED"
+            bundle exec pod keys set devNetworkAuthUsername "${DEV_NETWORK_AUTH_USERNAME}"
+            bundle exec pod keys set devNetworkAuthPassword "${DEV_NETWORK_AUTH_PASSWORD}"
+            bundle exec pod keys set testNetTestAccountMnemonicsCommaSeparated "${TEST_NET_TEST_ACCOUNT_MNEMONICS_COMMA_SEPARATED}"
             cd ../ExampeHTTP
-            bundle exec pod keys set devNetworkAuthUsername "$DEV_NETWORK_AUTH_USERNAME"
-            bundle exec pod keys set devNetworkAuthPassword "$DEV_NETWORK_AUTH_PASSWORD"
-            bundle exec pod keys set testNetTestAccountMnemonicsCommaSeparated "$TEST_NET_TEST_ACCOUNT_MNEMONICS_COMMA_SEPARATED"
+            bundle exec pod keys set devNetworkAuthUsername "${DEV_NETWORK_AUTH_USERNAME}"
+            bundle exec pod keys set devNetworkAuthPassword "${DEV_NETWORK_AUTH_PASSWORD}"
+            bundle exec pod keys set testNetTestAccountMnemonicsCommaSeparated "${TEST_NET_TEST_ACCOUNT_MNEMONICS_COMMA_SEPARATED}"
             cd ..
             make lock
 
