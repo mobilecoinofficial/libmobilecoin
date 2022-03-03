@@ -340,8 +340,9 @@ commands:
     steps:
       - run:
           name: Run git clone git@github.com:mobilecoinofficial/MobileCoin-Swift.git
-          working_directory: ~
-          command: git clone git@github.com:mobilecoinofficial/MobileCoin-Swift.git
+          command: |
+            cd ~
+            git clone git@github.com:mobilecoinofficial/MobileCoin-Swift.git
 
   apply-podfile-cherry-pick:
     description: Cherry-Pick change to use ../../project for libmobilecoin-ios-artifacts
