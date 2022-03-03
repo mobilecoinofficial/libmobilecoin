@@ -733,7 +733,6 @@ jobs:
       - checkout
       - init-mobilecoin-submodule
       - set-ruby-version
-      - print-tool-versions
       - set-git-credentials
       - init-mobilecoin-swift
       - init-swift-sdk-submodules
@@ -744,6 +743,7 @@ jobs:
           swift-project: << parameters.swift-project >>
       - install-example-http-pods:
           xcode-version: << parameters.xcode-version >>
+      - print-tool-versions
       - run:
           name: make test
           working_directory: ~/MobileCoin-Swift/<<parameters.swift-project>>
@@ -769,7 +769,6 @@ jobs:
       - checkout
       - init-mobilecoin-submodule
       - set-ruby-version
-      - print-tool-versions
       - set-git-credentials
       - init-mobilecoin-swift
       - init-swift-sdk-submodules
@@ -780,6 +779,7 @@ jobs:
           swift-project: << parameters.swift-project >>
       - install-example-pods:
           xcode-version: << parameters.xcode-version >>
+      - print-tool-versions
       - run:
           name: make test
           working_directory: ~/MobileCoin-Swift/<<parameters.swift-project>>
