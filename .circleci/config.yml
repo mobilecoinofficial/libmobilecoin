@@ -350,7 +350,7 @@ commands:
           name: 
           working_directory: ~/MobileCoin-Swift
           command: |
-            git fetch origin
+            git fetch origin cicd/change-path-to-cicd-local-libmobilecoin
             git cherry-pick 17c2f570e920467be680c7d0559a3f95d245e8dc
 
   configure-cocoapod-keys:
