@@ -348,10 +348,10 @@ commands:
             git clone git@github.com:mobilecoinofficial/MobileCoin-Swift.git
 
   apply-cherry-pick:
-    description: Cherry-Pick change to apply new version syntax for libmobilecoin-ios-artifacts
+    description: Cherry-Pick changes to make swift repo compatible
     steps:
       - run:
-          name: 
+          name: Cherry-Pick changes to make swift repo compatible
           working_directory: ~/MobileCoin-Swift
           command: |
             git fetch origin cicd/temporary-version-syntax-change
@@ -365,7 +365,7 @@ commands:
         default: "Example"
     steps:
       - run:
-          name: 
+          name: Configure cocoapod-keys secrets
           working_directory: ~/MobileCoin-Swift/<<parameters.swift-project>>
           command: |
             bundle exec pod keys set devNetworkAuthUsername "${DEV_NETWORK_AUTH_USERNAME}"
@@ -461,7 +461,9 @@ commands:
           keys:
             - v0-xcode-<< parameters.xcode-version >>-example-pods-{{ checksum "~/MobileCoin-Swift/Example/Podfile.lock" }}
             - v0-xcode-<< parameters.xcode-version >>-example-pods-
-      - run: cd ~/MobileCoin-Swift/Example && bundle exec pod install
+      - run: 
+          name: Install pods for Example project
+          command: cd ~/MobileCoin-Swift/Example && bundle exec pod install
       - save_cache:
           name: Save CocoaPods cache
           key: v0-xcode-<< parameters.xcode-version >>-example-pods-{{ checksum "~/MobileCoin-Swift/Example/Podfile.lock" }}
@@ -479,7 +481,9 @@ commands:
           keys:
             - v0-xcode-<< parameters.xcode-version >>-example-http-pods-{{ checksum "~/MobileCoin-Swift/ExampleHTTP/Podfile.lock" }}
             - v0-xcode-<< parameters.xcode-version >>-example-http-pods-
-      - run: cd ~/MobileCoin-Swift/ExampleHTTP && bundle exec pod install
+      - run: 
+          name: Install pods for ExampleHTTP project
+          command: cd ~/MobileCoin-Swift/ExampleHTTP && bundle exec pod install
       - save_cache:
           name: Save CocoaPods cache
           key: v0-xcode-<< parameters.xcode-version >>-example-http-pods-{{ checksum "~/MobileCoin-Swift/ExampleHTTP/Podfile.lock" }}
