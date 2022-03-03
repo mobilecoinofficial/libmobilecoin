@@ -486,13 +486,17 @@ commands:
           paths:
             - ~/MobileCoin-Swift/ExampleHTTP/Pods
 
-  init-swift-sdk-submodules:
-    description: Initialize swift-sdk submodules
+  init-mobilecoin-swift-submodules:
+    description: Initialize MobileCoin-Swift submodules
     steps:
       - run:
-          name: Run git submodule update --init
+          name: Clone current branch of LibMobileCoin and its submodules
           working_directory: ~/MobileCoin-Swift
-          command: git submodule update --init --depth 1 --recursive
+          command: |
+            mkdir -p Vendor/libmobilecoin-ios-artifacts
+            git clone --branch ${CIRCLE_BRANCH} ${CIRCLE_REPOSITORY_URL} Vendor/libmobilecoin-ios-artifacts
+            cd Vendor/libmobilecoin-ios-artifacts
+            git submodule update --init --recursive --depth 1
 
 
   set-git-credentials:
@@ -714,7 +718,7 @@ jobs:
       - set-git-credentials
       - make-push-generated
 
-  test-example-http-with-swift-sdk:
+  test-example-http-with-mobilecoin-swift:
     parameters:
       xcode-version:
         type: string
@@ -735,7 +739,7 @@ jobs:
       - set-ruby-version
       - set-git-credentials
       - init-mobilecoin-swift
-      - init-swift-sdk-submodules
+      - init-mobilecoin-swift-submodules
       - apply-podfile-cherry-pick
       - install-swift-gems
       - install-example-http-gems
@@ -749,7 +753,7 @@ jobs:
           command: |
             make test
             
-  test-example-with-swift-sdk:
+  test-example-with-mobilecoin-swift:
     parameters:
       xcode-version:
         type: string
@@ -770,7 +774,7 @@ jobs:
       - set-ruby-version
       - set-git-credentials
       - init-mobilecoin-swift
-      - init-swift-sdk-submodules
+      - init-mobilecoin-swift-submodules
       - apply-podfile-cherry-pick
       - install-swift-gems
       - install-example-gems
@@ -902,16 +906,16 @@ workflows:
           requires:
             - copy-artifacts
 
-      - test-example-http-with-swift-sdk:
-          name: test-example-http-with-swift-sdk-<< matrix.xcode-version >>
+      - test-example-http-with-mobilecoin-swift:
+          name: test-example-http-with-mobilecoin-swift-<< matrix.xcode-version >>
           requires: 
             - make-generate
           matrix:
             parameters:
               xcode-version: [*default-xcode-version]
 
-      - test-example-with-swift-sdk:
-          name: test-example-with-swift-sdk-<< matrix.xcode-version >>
+      - test-example-with-mobilecoin-swift:
+          name: test-example-with-mobilecoin-swift-<< matrix.xcode-version >>
           requires: 
             - make-generate
           matrix:
