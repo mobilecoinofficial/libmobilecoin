@@ -347,15 +347,15 @@ commands:
             cd ~
             git clone git@github.com:mobilecoinofficial/MobileCoin-Swift.git
 
-  apply-podfile-cherry-pick:
-    description: Cherry-Pick change to use ../../project for libmobilecoin-ios-artifacts
+  apply-cherry-pick:
+    description: Cherry-Pick change to apply new version syntax for libmobilecoin-ios-artifacts
     steps:
       - run:
           name: 
           working_directory: ~/MobileCoin-Swift
           command: |
-            git fetch origin cicd/change-path-to-cicd-local-libmobilecoin
-            git cherry-pick 17c2f570e920467be680c7d0559a3f95d245e8dc
+            git fetch origin cicd/temporary-version-syntax-change
+            git cherry-pick 1a34956a8910b1b6f866b0ac0c52d286691e6dec
 
   configure-cocoapod-keys:
     description: Configure cocoapod-keys secrets
@@ -740,7 +740,7 @@ jobs:
       - set-git-credentials
       - init-mobilecoin-swift
       - init-mobilecoin-swift-submodules
-      - apply-podfile-cherry-pick
+      - apply-cherry-pick
       - install-swift-gems
       - install-example-http-gems
       - configure-cocoapod-keys:
@@ -775,7 +775,7 @@ jobs:
       - set-git-credentials
       - init-mobilecoin-swift
       - init-mobilecoin-swift-submodules
-      - apply-podfile-cherry-pick
+      - apply-cherry-pick
       - install-swift-gems
       - install-example-gems
       - configure-cocoapod-keys:
