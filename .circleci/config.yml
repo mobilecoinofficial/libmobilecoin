@@ -615,11 +615,14 @@ jobs:
       - run:
           name: make setup
           command: |
+            cd ~/MobileCoin-Swift
             make setup
       - configure-cocoapod-keys
       - run:
           name: make test
           command: |
+            cd ~/MobileCoin-Swift
+            make bootstrap
             make test
             
 workflows:
