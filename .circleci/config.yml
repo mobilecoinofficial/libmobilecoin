@@ -743,7 +743,6 @@ jobs:
           swift-project: << parameters.swift-project >>
       - install-example-http-pods:
           xcode-version: << parameters.xcode-version >>
-      - print-tool-versions
       - run:
           name: make test
           working_directory: ~/MobileCoin-Swift/<<parameters.swift-project>>
@@ -779,7 +778,6 @@ jobs:
           swift-project: << parameters.swift-project >>
       - install-example-pods:
           xcode-version: << parameters.xcode-version >>
-      - print-tool-versions
       - run:
           name: make test
           working_directory: ~/MobileCoin-Swift/<<parameters.swift-project>>
