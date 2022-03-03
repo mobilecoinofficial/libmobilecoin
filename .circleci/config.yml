@@ -461,7 +461,7 @@ commands:
           keys:
             - v0-xcode-<< parameters.xcode-version >>-example-pods-{{ checksum "~/MobileCoin-Swift/Example/Podfile.lock" }}
             - v0-xcode-<< parameters.xcode-version >>-example-pods-
-      - run: cd ~/MobileCoin-Swift/Example && bundle exec pod install --deployment
+      - run: cd ~/MobileCoin-Swift/Example && bundle exec pod install
       - save_cache:
           name: Save CocoaPods cache
           key: v0-xcode-<< parameters.xcode-version >>-example-pods-{{ checksum "~/MobileCoin-Swift/Example/Podfile.lock" }}
@@ -479,7 +479,7 @@ commands:
           keys:
             - v0-xcode-<< parameters.xcode-version >>-example-http-pods-{{ checksum "~/MobileCoin-Swift/ExampleHTTP/Podfile.lock" }}
             - v0-xcode-<< parameters.xcode-version >>-example-http-pods-
-      - run: cd ~/MobileCoin-Swift/ExampleHTTP && bundle exec pod install --deployment
+      - run: cd ~/MobileCoin-Swift/ExampleHTTP && bundle exec pod install
       - save_cache:
           name: Save CocoaPods cache
           key: v0-xcode-<< parameters.xcode-version >>-example-http-pods-{{ checksum "~/MobileCoin-Swift/ExampleHTTP/Podfile.lock" }}
