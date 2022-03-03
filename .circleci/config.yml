@@ -6,6 +6,9 @@ defaults:
 
   default-environment: &default-environment
     FASTLANE_SKIP_UPDATE_CHECK: "1"
+    DEV_NETWORK_AUTH_USERNAME:
+    DEV_NETWORK_AUTH_PASSWORD:
+    TEST_NET_TEST_ACCOUNT_MNEMONICS_COMMA_SEPARATED:
 
   default-artifact-build-environment: &default-build-environment
     <<: *default-environment
@@ -13,9 +16,6 @@ defaults:
     SGX_MODE: HW
     RUST_BACKTRACE: "1"
     SKIP_SLOW_TESTS: "1"
-    DEV_NETWORK_AUTH_USERNAME:
-    DEV_NETWORK_AUTH_PASSWORD:
-    TEST_NET_TEST_ACCOUNT_MNEMONICS_COMMA_SEPARATED:
 
 executors:
   macos:
