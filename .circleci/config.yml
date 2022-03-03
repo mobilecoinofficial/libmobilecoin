@@ -368,7 +368,7 @@ commands:
             bundle exec pod keys set devNetworkAuthUsername "${DEV_NETWORK_AUTH_USERNAME}"
             bundle exec pod keys set devNetworkAuthPassword "${DEV_NETWORK_AUTH_PASSWORD}"
             bundle exec pod keys set testNetTestAccountMnemonicsCommaSeparated "${TEST_NET_TEST_ACCOUNT_MNEMONICS_COMMA_SEPARATED}"
-            cd ../ExampeHTTP
+            cd ../ExampleHTTP
             bundle exec pod keys set devNetworkAuthUsername "${DEV_NETWORK_AUTH_USERNAME}"
             bundle exec pod keys set devNetworkAuthPassword "${DEV_NETWORK_AUTH_PASSWORD}"
             bundle exec pod keys set testNetTestAccountMnemonicsCommaSeparated "${TEST_NET_TEST_ACCOUNT_MNEMONICS_COMMA_SEPARATED}"
