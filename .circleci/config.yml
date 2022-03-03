@@ -340,7 +340,7 @@ commands:
     steps:
       - run:
           name: Run git clone git@github.com:mobilecoinofficial/MobileCoin-Swift.git
-          working_directory: Vendor/mobilecoin
+          working_directory: ~
           command: git clone git@github.com:mobilecoinofficial/MobileCoin-Swift.git
 
   apply-podfile-cherry-pick:
@@ -348,9 +348,9 @@ commands:
     steps:
       - run:
           name: 
-          working_directory: MobileCoin-Swift
+          working_directory: ~/MobileCoin-Swift
           command: |
-            git fetch origin cicd/change-path-to-cicd-local-libmobilecoin
+            git fetch origin
             git cherry-pick 17c2f570e920467be680c7d0559a3f95d245e8dc
 
   configure-cocoapod-keys:
@@ -358,7 +358,7 @@ commands:
     steps:
       - run:
           name: 
-          working_directory: MobileCoin-Swift
+          working_directory: ~/MobileCoin-Swift
           command: |
             cd Example
             bundle exec pod keys set devNetworkAuthUsername "$DEV_NETWORK_AUTH_USERNAME"
