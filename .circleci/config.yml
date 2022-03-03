@@ -612,6 +612,10 @@ jobs:
       - set-git-credentials
       - init-mobilecoin-swift
       - apply-podfile-cherry-pick
+      - run:
+          name: make setup
+          command: |
+            make setup
       - configure-cocoapod-keys
       - run:
           name: make test
