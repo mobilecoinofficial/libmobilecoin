@@ -740,7 +740,7 @@ jobs:
       - apply-podfile-cherry-pick
       - install-swift-gems
       - install-example-http-gems
-      - configure-cocoapod-keys
+      - configure-cocoapod-keys:
           swift-project: << parameters.swift-project >>
       - install-example-http-pods:
           xcode-version: << parameters.xcode-version >>
@@ -776,7 +776,7 @@ jobs:
       - apply-podfile-cherry-pick
       - install-swift-gems
       - install-example-gems
-      - configure-cocoapod-keys
+      - configure-cocoapod-keys:
           swift-project: << parameters.swift-project >>
       - install-example-pods:
           xcode-version: << parameters.xcode-version >>
