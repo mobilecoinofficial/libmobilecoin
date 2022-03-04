@@ -546,22 +546,6 @@ commands:
             fi
 
 jobs:
-  legacy-test-job:
-    parameters:
-      xcode-version:
-        type: string
-        default: *default-xcode-version
-    macos:
-      xcode: << parameters.xcode-version >>
-    environment:
-      <<: *default-environment
-      FL_BUILDLOG_PATH: ../output/buildlogs
-      SCAN_OUTPUT_DIRECTORY: ../output/scan
-      SCAN_OUTPUT_TYPES: junit
-    steps:
-      - checkout
-      - set-git-credentials
-
   init-and-lint:
     parameters:
       xcode-version:
@@ -758,7 +742,7 @@ jobs:
       - set-git-credentials
       - init-mobilecoin-swift
       - init-mobilecoin-swift-submodules
-      - apply-cherry-pick
+      #- apply-cherry-pick
       - install-swift-gems
       - install-example-http-gems
       - configure-cocoapod-keys:
@@ -793,7 +777,7 @@ jobs:
       - set-git-credentials
       - init-mobilecoin-swift
       - init-mobilecoin-swift-submodules
-      - apply-cherry-pick
+      #- apply-cherry-pick
       - install-swift-gems
       - install-example-gems
       - configure-cocoapod-keys:
@@ -810,12 +794,6 @@ workflows:
   version: 2
   build:
     jobs:
-      - legacy-test-job:
-          name: init-and-lint-xcode-<< matrix.xcode-version >>
-          matrix:
-            parameters:
-              xcode-version: [*default-xcode-version]
-
       - init-and-lint:
           name: init-and-lint-xcode-<< matrix.xcode-version >>
           matrix:
