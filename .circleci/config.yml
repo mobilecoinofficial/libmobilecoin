@@ -12,8 +12,6 @@ defaults:
 
   default-artifact-build-environment: &default-build-environment
     <<: *default-environment
-    IAS_MODE: DEV
-    SGX_MODE: HW
     RUST_BACKTRACE: "1"
     SKIP_SLOW_TESTS: "1"
 
@@ -548,6 +546,22 @@ commands:
             fi
 
 jobs:
+  legacy-test-job:
+    parameters:
+      xcode-version:
+        type: string
+        default: *default-xcode-version
+    macos:
+      xcode: << parameters.xcode-version >>
+    environment:
+      <<: *default-environment
+      FL_BUILDLOG_PATH: ../output/buildlogs
+      SCAN_OUTPUT_DIRECTORY: ../output/scan
+      SCAN_OUTPUT_TYPES: junit
+    steps:
+      - checkout
+      - set-git-credentials
+
   init-and-lint:
     parameters:
       xcode-version:
@@ -796,6 +810,12 @@ workflows:
   version: 2
   build:
     jobs:
+      - legacy-test-job:
+          name: legacy-test-job-<< matrix.xcode-version >>
+          matrix:
+            parameters:
+              xcode-version: [*default-xcode-version]
+
       - init-and-lint:
           name: init-and-lint-xcode-<< matrix.xcode-version >>
           matrix:
