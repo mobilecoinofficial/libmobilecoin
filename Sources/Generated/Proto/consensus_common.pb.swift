@@ -60,6 +60,10 @@ public enum ConsensusCommon_ProposeTxResult: SwiftProtobuf.Enum {
   case unsortedInputs // = 39
   case missingMemo // = 40
   case memosNotAllowed // = 41
+  case tokenNotYetConfigured // = 42
+  case missingMaskedTokenID // = 43
+  case maskedTokenIDNotAllowed // = 44
+  case unsortedOutputs // = 45
   case UNRECOGNIZED(Int)
 
   public init() {
@@ -101,6 +105,10 @@ public enum ConsensusCommon_ProposeTxResult: SwiftProtobuf.Enum {
     case 39: self = .unsortedInputs
     case 40: self = .missingMemo
     case 41: self = .memosNotAllowed
+    case 42: self = .tokenNotYetConfigured
+    case 43: self = .missingMaskedTokenID
+    case 44: self = .maskedTokenIDNotAllowed
+    case 45: self = .unsortedOutputs
     default: self = .UNRECOGNIZED(rawValue)
     }
   }
@@ -140,6 +148,10 @@ public enum ConsensusCommon_ProposeTxResult: SwiftProtobuf.Enum {
     case .unsortedInputs: return 39
     case .missingMemo: return 40
     case .memosNotAllowed: return 41
+    case .tokenNotYetConfigured: return 42
+    case .missingMaskedTokenID: return 43
+    case .maskedTokenIDNotAllowed: return 44
+    case .unsortedOutputs: return 45
     case .UNRECOGNIZED(let i): return i
     }
   }
@@ -184,6 +196,10 @@ extension ConsensusCommon_ProposeTxResult: CaseIterable {
     .unsortedInputs,
     .missingMemo,
     .memosNotAllowed,
+    .tokenNotYetConfigured,
+    .missingMaskedTokenID,
+    .maskedTokenIDNotAllowed,
+    .unsortedOutputs,
   ]
 }
 
@@ -295,6 +311,10 @@ extension ConsensusCommon_ProposeTxResult: SwiftProtobuf._ProtoNameProviding {
     39: .same(proto: "UnsortedInputs"),
     40: .same(proto: "MissingMemo"),
     41: .same(proto: "MemosNotAllowed"),
+    42: .same(proto: "TokenNotYetConfigured"),
+    43: .same(proto: "MissingMaskedTokenId"),
+    44: .same(proto: "MaskedTokenIdNotAllowed"),
+    45: .same(proto: "UnsortedOutputs"),
   ]
 }
 

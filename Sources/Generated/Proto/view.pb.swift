@@ -394,6 +394,9 @@ public struct FogView_TxOutRecord {
   //// This is omitted for TxOut's from before the upgrade that introduced memos.
   public var txOutEMemoData: Data = Data()
 
+  //// The masked token id associated to the amount field in the TxOut that was recovered
+  public var txOutAmountMaskedTokenID: Data = Data()
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -706,6 +709,7 @@ extension FogView_TxOutRecord: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
     7: .same(proto: "timestamp"),
     8: .standard(proto: "tx_out_amount_commitment_data_crc32"),
     9: .standard(proto: "tx_out_e_memo_data"),
+    10: .standard(proto: "tx_out_amount_masked_token_id"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -723,6 +727,7 @@ extension FogView_TxOutRecord: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
       case 7: try { try decoder.decodeSingularFixed64Field(value: &self.timestamp) }()
       case 8: try { try decoder.decodeSingularFixed32Field(value: &self.txOutAmountCommitmentDataCrc32) }()
       case 9: try { try decoder.decodeSingularBytesField(value: &self.txOutEMemoData) }()
+      case 10: try { try decoder.decodeSingularBytesField(value: &self.txOutAmountMaskedTokenID) }()
       default: break
       }
     }
@@ -756,6 +761,9 @@ extension FogView_TxOutRecord: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
     if !self.txOutEMemoData.isEmpty {
       try visitor.visitSingularBytesField(value: self.txOutEMemoData, fieldNumber: 9)
     }
+    if !self.txOutAmountMaskedTokenID.isEmpty {
+      try visitor.visitSingularBytesField(value: self.txOutAmountMaskedTokenID, fieldNumber: 10)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -769,6 +777,7 @@ extension FogView_TxOutRecord: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
     if lhs.timestamp != rhs.timestamp {return false}
     if lhs.txOutAmountCommitmentDataCrc32 != rhs.txOutAmountCommitmentDataCrc32 {return false}
     if lhs.txOutEMemoData != rhs.txOutEMemoData {return false}
+    if lhs.txOutAmountMaskedTokenID != rhs.txOutAmountMaskedTokenID {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
