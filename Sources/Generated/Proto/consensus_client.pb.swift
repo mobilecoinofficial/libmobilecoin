@@ -149,6 +149,9 @@ public struct ConsensusClient_ProposeMintConfigTxResponse {
   //// The number of blocks in the ledger at the time the request was received.
   public var blockCount: UInt64 = 0
 
+  //// The block version which is in effect right now
+  public var blockVersion: UInt32 = 0
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -174,6 +177,9 @@ public struct ConsensusClient_ProposeMintTxResponse {
 
   //// The number of blocks in the ledger at the time the request was received.
   public var blockCount: UInt64 = 0
+
+  //// The block version which is in effect right now
+  public var blockVersion: UInt32 = 0
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -259,6 +265,7 @@ extension ConsensusClient_ProposeMintConfigTxResponse: SwiftProtobuf.Message, Sw
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "result"),
     2: .standard(proto: "block_count"),
+    3: .standard(proto: "block_version"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -269,6 +276,7 @@ extension ConsensusClient_ProposeMintConfigTxResponse: SwiftProtobuf.Message, Sw
       switch fieldNumber {
       case 1: try { try decoder.decodeSingularMessageField(value: &self._result) }()
       case 2: try { try decoder.decodeSingularUInt64Field(value: &self.blockCount) }()
+      case 3: try { try decoder.decodeSingularUInt32Field(value: &self.blockVersion) }()
       default: break
       }
     }
@@ -285,12 +293,16 @@ extension ConsensusClient_ProposeMintConfigTxResponse: SwiftProtobuf.Message, Sw
     if self.blockCount != 0 {
       try visitor.visitSingularUInt64Field(value: self.blockCount, fieldNumber: 2)
     }
+    if self.blockVersion != 0 {
+      try visitor.visitSingularUInt32Field(value: self.blockVersion, fieldNumber: 3)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   public static func ==(lhs: ConsensusClient_ProposeMintConfigTxResponse, rhs: ConsensusClient_ProposeMintConfigTxResponse) -> Bool {
     if lhs._result != rhs._result {return false}
     if lhs.blockCount != rhs.blockCount {return false}
+    if lhs.blockVersion != rhs.blockVersion {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -301,6 +313,7 @@ extension ConsensusClient_ProposeMintTxResponse: SwiftProtobuf.Message, SwiftPro
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "result"),
     2: .standard(proto: "block_count"),
+    3: .standard(proto: "block_version"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -311,6 +324,7 @@ extension ConsensusClient_ProposeMintTxResponse: SwiftProtobuf.Message, SwiftPro
       switch fieldNumber {
       case 1: try { try decoder.decodeSingularMessageField(value: &self._result) }()
       case 2: try { try decoder.decodeSingularUInt64Field(value: &self.blockCount) }()
+      case 3: try { try decoder.decodeSingularUInt32Field(value: &self.blockVersion) }()
       default: break
       }
     }
@@ -327,12 +341,16 @@ extension ConsensusClient_ProposeMintTxResponse: SwiftProtobuf.Message, SwiftPro
     if self.blockCount != 0 {
       try visitor.visitSingularUInt64Field(value: self.blockCount, fieldNumber: 2)
     }
+    if self.blockVersion != 0 {
+      try visitor.visitSingularUInt32Field(value: self.blockVersion, fieldNumber: 3)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   public static func ==(lhs: ConsensusClient_ProposeMintTxResponse, rhs: ConsensusClient_ProposeMintTxResponse) -> Bool {
     if lhs._result != rhs._result {return false}
     if lhs.blockCount != rhs.blockCount {return false}
+    if lhs.blockVersion != rhs.blockVersion {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

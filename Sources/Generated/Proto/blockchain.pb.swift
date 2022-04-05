@@ -127,8 +127,8 @@ public struct Blockchain_BlockContents {
   /// Outputs created in this block.
   public var outputs: [External_TxOut] = []
 
-  //// mint-config transactions in this block.
-  public var mintConfigTxs: [External_MintConfigTx] = []
+  //// mint-config transactions in this block coupled with data used to validate them.
+  public var validatedMintConfigTxs: [External_ValidatedMintConfigTx] = []
 
   //// Mint transactions in this block.
   public var mintTxs: [External_MintTx] = []
@@ -418,7 +418,7 @@ extension Blockchain_BlockContents: SwiftProtobuf.Message, SwiftProtobuf._Messag
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "key_images"),
     2: .same(proto: "outputs"),
-    3: .standard(proto: "mint_config_txs"),
+    3: .standard(proto: "validated_mint_config_txs"),
     4: .standard(proto: "mint_txs"),
   ]
 
@@ -430,7 +430,7 @@ extension Blockchain_BlockContents: SwiftProtobuf.Message, SwiftProtobuf._Messag
       switch fieldNumber {
       case 1: try { try decoder.decodeRepeatedMessageField(value: &self.keyImages) }()
       case 2: try { try decoder.decodeRepeatedMessageField(value: &self.outputs) }()
-      case 3: try { try decoder.decodeRepeatedMessageField(value: &self.mintConfigTxs) }()
+      case 3: try { try decoder.decodeRepeatedMessageField(value: &self.validatedMintConfigTxs) }()
       case 4: try { try decoder.decodeRepeatedMessageField(value: &self.mintTxs) }()
       default: break
       }
@@ -444,8 +444,8 @@ extension Blockchain_BlockContents: SwiftProtobuf.Message, SwiftProtobuf._Messag
     if !self.outputs.isEmpty {
       try visitor.visitRepeatedMessageField(value: self.outputs, fieldNumber: 2)
     }
-    if !self.mintConfigTxs.isEmpty {
-      try visitor.visitRepeatedMessageField(value: self.mintConfigTxs, fieldNumber: 3)
+    if !self.validatedMintConfigTxs.isEmpty {
+      try visitor.visitRepeatedMessageField(value: self.validatedMintConfigTxs, fieldNumber: 3)
     }
     if !self.mintTxs.isEmpty {
       try visitor.visitRepeatedMessageField(value: self.mintTxs, fieldNumber: 4)
@@ -456,7 +456,7 @@ extension Blockchain_BlockContents: SwiftProtobuf.Message, SwiftProtobuf._Messag
   public static func ==(lhs: Blockchain_BlockContents, rhs: Blockchain_BlockContents) -> Bool {
     if lhs.keyImages != rhs.keyImages {return false}
     if lhs.outputs != rhs.outputs {return false}
-    if lhs.mintConfigTxs != rhs.mintConfigTxs {return false}
+    if lhs.validatedMintConfigTxs != rhs.validatedMintConfigTxs {return false}
     if lhs.mintTxs != rhs.mintTxs {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true

@@ -939,6 +939,38 @@ public struct External_MintConfigTx {
   fileprivate var _signature: External_Ed25519MultiSig? = nil
 }
 
+//// A mint-config transaction coupled with the data used to validate it.
+public struct External_ValidatedMintConfigTx {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  public var mintConfigTx: External_MintConfigTx {
+    get {return _mintConfigTx ?? External_MintConfigTx()}
+    set {_mintConfigTx = newValue}
+  }
+  /// Returns true if `mintConfigTx` has been explicitly set.
+  public var hasMintConfigTx: Bool {return self._mintConfigTx != nil}
+  /// Clears the value of `mintConfigTx`. Subsequent reads from it will return its default value.
+  public mutating func clearMintConfigTx() {self._mintConfigTx = nil}
+
+  public var signerSet: External_Ed25519SignerSet {
+    get {return _signerSet ?? External_Ed25519SignerSet()}
+    set {_signerSet = newValue}
+  }
+  /// Returns true if `signerSet` has been explicitly set.
+  public var hasSignerSet: Bool {return self._signerSet != nil}
+  /// Clears the value of `signerSet`. Subsequent reads from it will return its default value.
+  public mutating func clearSignerSet() {self._signerSet = nil}
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _mintConfigTx: External_MintConfigTx? = nil
+  fileprivate var _signerSet: External_Ed25519SignerSet? = nil
+}
+
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
 fileprivate let _protobuf_package = "external"
@@ -2414,6 +2446,48 @@ extension External_MintConfigTx: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
   public static func ==(lhs: External_MintConfigTx, rhs: External_MintConfigTx) -> Bool {
     if lhs._prefix != rhs._prefix {return false}
     if lhs._signature != rhs._signature {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension External_ValidatedMintConfigTx: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".ValidatedMintConfigTx"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "mint_config_tx"),
+    2: .standard(proto: "signer_set"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularMessageField(value: &self._mintConfigTx) }()
+      case 2: try { try decoder.decodeSingularMessageField(value: &self._signerSet) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._mintConfigTx {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+    } }()
+    try { if let v = self._signerSet {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: External_ValidatedMintConfigTx, rhs: External_ValidatedMintConfigTx) -> Bool {
+    if lhs._mintConfigTx != rhs._mintConfigTx {return false}
+    if lhs._signerSet != rhs._signerSet {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
