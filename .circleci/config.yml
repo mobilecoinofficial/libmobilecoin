@@ -367,6 +367,26 @@ commands:
             git checkout ${CIRCLE_BRANCH} || true
 
 
+  checkout-matching-sdk-branch:
+    description: Checkout matching SDK branch for testing
+    steps:
+      - run:
+          name: Clone MobileCoin-Swift, checkout matching branch for tests. Precedence given to exact match, then the release branch then master.
+          command: |
+            cd ~/project
+            LMC_CUR_BRANCH=$(echo \
+              "release-$(bundle exec pod ipc spec LibMobileCoin.podspec \
+               | jq -r '.version' | sed 's/-.*//g')")
+            cd ~
+            cd MobileCoin-Swift
+            MC_CUR_BRANCH=$(echo \
+              "release-$(bundle exec pod ipc spec MobileCoin.podspec \
+               | jq -r '.version' | sed 's/-.*//g')")
+            git fetch 
+            [ "$LMC_CUR_BRANCH" != "$MC_CUR_BRANCH" ] && git checkout "$LMC_CUR_BRANCH" || true
+            git checkout ${CIRCLE_BRANCH} || true
+
+
   apply-cherry-pick:
     description: Cherry-Pick changes to make swift repo compatible
     steps:
@@ -763,9 +783,9 @@ jobs:
       - set-ruby-version
       - set-git-credentials
       - init-mobilecoin-swift
-      - init-mobilecoin-swift-submodules
-      #- apply-cherry-pick
       - install-swift-gems
+      - checkout-matching-sdk-branch
+      - init-mobilecoin-swift-submodules
       - install-example-http-gems
       - configure-cocoapod-keys:
           swift-project: << parameters.swift-project >>
@@ -798,9 +818,9 @@ jobs:
       - set-ruby-version
       - set-git-credentials
       - init-mobilecoin-swift
-      - init-mobilecoin-swift-submodules
-      #- apply-cherry-pick
       - install-swift-gems
+      - checkout-matching-sdk-branch
+      - init-mobilecoin-swift-submodules
       - install-example-gems
       - configure-cocoapod-keys:
           swift-project: << parameters.swift-project >>
