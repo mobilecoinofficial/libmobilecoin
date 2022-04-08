@@ -971,46 +971,6 @@ public struct External_ValidatedMintConfigTx {
   fileprivate var _signerSet: External_Ed25519SignerSet? = nil
 }
 
-#if swift(>=5.5) && canImport(_Concurrency)
-extension External_KnownTokenId: @unchecked Sendable {}
-extension External_RistrettoPrivate: @unchecked Sendable {}
-extension External_CompressedRistretto: @unchecked Sendable {}
-extension External_Ed25519Public: @unchecked Sendable {}
-extension External_Ed25519Signature: @unchecked Sendable {}
-extension External_Ed25519MultiSig: @unchecked Sendable {}
-extension External_Ed25519SignerSet: @unchecked Sendable {}
-extension External_AccountKey: @unchecked Sendable {}
-extension External_PublicAddress: @unchecked Sendable {}
-extension External_RootIdentity: @unchecked Sendable {}
-extension External_RootEntropy: @unchecked Sendable {}
-extension External_CurveScalar: @unchecked Sendable {}
-extension External_KeyImage: @unchecked Sendable {}
-extension External_Range: @unchecked Sendable {}
-extension External_TxOutMembershipHash: @unchecked Sendable {}
-extension External_TxOutMembershipElement: @unchecked Sendable {}
-extension External_TxOutMembershipProof: @unchecked Sendable {}
-extension External_TxOutConfirmationNumber: @unchecked Sendable {}
-extension External_MaskedAmount: @unchecked Sendable {}
-extension External_EncryptedFogHint: @unchecked Sendable {}
-extension External_EncryptedMemo: @unchecked Sendable {}
-extension External_TxOut: @unchecked Sendable {}
-extension External_TxIn: @unchecked Sendable {}
-extension External_TxPrefix: @unchecked Sendable {}
-extension External_RingMLSAG: @unchecked Sendable {}
-extension External_SignatureRctBulletproofs: @unchecked Sendable {}
-extension External_Tx: @unchecked Sendable {}
-extension External_TxHash: @unchecked Sendable {}
-extension External_Receipt: @unchecked Sendable {}
-extension External_VerificationSignature: @unchecked Sendable {}
-extension External_VerificationReport: @unchecked Sendable {}
-extension External_MintTxPrefix: @unchecked Sendable {}
-extension External_MintTx: @unchecked Sendable {}
-extension External_MintConfig: @unchecked Sendable {}
-extension External_MintConfigTxPrefix: @unchecked Sendable {}
-extension External_MintConfigTx: @unchecked Sendable {}
-extension External_ValidatedMintConfigTx: @unchecked Sendable {}
-#endif  // swift(>=5.5) && canImport(_Concurrency)
-
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
 fileprivate let _protobuf_package = "external"
