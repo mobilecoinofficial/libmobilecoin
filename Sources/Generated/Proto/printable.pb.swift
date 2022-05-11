@@ -7,7 +7,7 @@
 // For information on using the generated types, please see the documentation:
 //   https://github.com/apple/swift-protobuf/
 
-// Copyright (c) 2018-2021 The MobileCoin Foundation
+// Copyright (c) 2018-2022 The MobileCoin Foundation
 
 /// Protos to be used for displaying encoded strings to users
 
@@ -46,6 +46,9 @@ public struct Printable_PaymentRequest {
 
   //// Any additional text explaining the request
   public var memo: String = String()
+
+  //// Token id to transact in.
+  public var tokenID: UInt64 = 0
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -159,13 +162,6 @@ public struct Printable_PrintableWrapper {
   public init() {}
 }
 
-#if swift(>=5.5) && canImport(_Concurrency)
-extension Printable_PaymentRequest: @unchecked Sendable {}
-extension Printable_TransferPayload: @unchecked Sendable {}
-extension Printable_PrintableWrapper: @unchecked Sendable {}
-extension Printable_PrintableWrapper.OneOf_Wrapper: @unchecked Sendable {}
-#endif  // swift(>=5.5) && canImport(_Concurrency)
-
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
 fileprivate let _protobuf_package = "printable"
@@ -176,6 +172,7 @@ extension Printable_PaymentRequest: SwiftProtobuf.Message, SwiftProtobuf._Messag
     1: .standard(proto: "public_address"),
     2: .same(proto: "value"),
     3: .same(proto: "memo"),
+    4: .standard(proto: "token_id"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -187,6 +184,7 @@ extension Printable_PaymentRequest: SwiftProtobuf.Message, SwiftProtobuf._Messag
       case 1: try { try decoder.decodeSingularMessageField(value: &self._publicAddress) }()
       case 2: try { try decoder.decodeSingularUInt64Field(value: &self.value) }()
       case 3: try { try decoder.decodeSingularStringField(value: &self.memo) }()
+      case 4: try { try decoder.decodeSingularUInt64Field(value: &self.tokenID) }()
       default: break
       }
     }
@@ -206,6 +204,9 @@ extension Printable_PaymentRequest: SwiftProtobuf.Message, SwiftProtobuf._Messag
     if !self.memo.isEmpty {
       try visitor.visitSingularStringField(value: self.memo, fieldNumber: 3)
     }
+    if self.tokenID != 0 {
+      try visitor.visitSingularUInt64Field(value: self.tokenID, fieldNumber: 4)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -213,6 +214,7 @@ extension Printable_PaymentRequest: SwiftProtobuf.Message, SwiftProtobuf._Messag
     if lhs._publicAddress != rhs._publicAddress {return false}
     if lhs.value != rhs.value {return false}
     if lhs.memo != rhs.memo {return false}
+    if lhs.tokenID != rhs.tokenID {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

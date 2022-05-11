@@ -7,7 +7,7 @@
 // For information on using the generated types, please see the documentation:
 //   https://github.com/apple/swift-protobuf/
 
-// Copyright (c) 2018-2021 The MobileCoin Foundation
+// Copyright (c) 2018-2022 The MobileCoin Foundation
 
 import Foundation
 import SwiftProtobuf
@@ -38,10 +38,6 @@ public struct FogCommon_BlockRange {
 
   public init() {}
 }
-
-#if swift(>=5.5) && canImport(_Concurrency)
-extension FogCommon_BlockRange: @unchecked Sendable {}
-#endif  // swift(>=5.5) && canImport(_Concurrency)
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 

@@ -38,6 +38,7 @@ COPY Vendor/mobilecoin/attest/api/proto/attest.proto \
     Vendor/mobilecoin/attest/api/proto/
 COPY Vendor/mobilecoin/consensus/api/proto/consensus_client.proto \
     Vendor/mobilecoin/consensus/api/proto/consensus_common.proto \
+    Vendor/mobilecoin/consensus/api/proto/consensus_config.proto \
     Vendor/mobilecoin/consensus/api/proto/
 COPY Vendor/mobilecoin/fog/report/api/proto/report.proto \
     Vendor/mobilecoin/fog/report/api/proto/
