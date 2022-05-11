@@ -66,6 +66,7 @@ RUN protoc \
     attest.proto \
     consensus_client.proto \
     consensus_common.proto \
+    consensus_config.proto \
     report.proto \
     fog_common.proto \
     kex_rng.proto \
