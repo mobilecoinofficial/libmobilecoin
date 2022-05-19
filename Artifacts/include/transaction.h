@@ -166,11 +166,13 @@ MC_ATTRIBUTE_NONNULL(1, 2, 3);
 
 McTransactionBuilder* MC_NULLABLE mc_transaction_builder_create(
   uint64_t fee,
+  uint64_t token_id,
   uint64_t tombstone_block,
   const McFogResolver* MC_NULLABLE fog_resolver,
   McTxOutMemoBuilder* MC_NONNULL memo_builder,
   uint32_t block_version
 );
+MC_ATTRIBUTE_NONNULL(5);
 
 void mc_transaction_builder_free(
   McTransactionBuilder* MC_NULLABLE transaction_builder
@@ -216,7 +218,7 @@ McData* MC_NULLABLE mc_transaction_builder_add_output(
   McMutableBuffer* MC_NONNULL out_tx_out_shared_secret,
   McError* MC_NULLABLE * MC_NULLABLE out_error
 )
-MC_ATTRIBUTE_NONNULL(1, 3, 7);
+MC_ATTRIBUTE_NONNULL(1, 3, 5, 6);
 
 /// # Preconditions
 ///
@@ -238,7 +240,7 @@ McData* MC_NULLABLE mc_transaction_builder_add_change_output(
   McMutableBuffer* MC_NONNULL out_tx_out_shared_secret,
   McError* MC_NULLABLE * MC_NULLABLE out_error
 )
-MC_ATTRIBUTE_NONNULL(1, 2, 4, 7);
+MC_ATTRIBUTE_NONNULL(1, 2, 4, 6);
 
 /// # Preconditions
 ///
