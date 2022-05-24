@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
   # ―――  Spec Metadata  ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   s.name         = "LibMobileCoin"
-  s.version      = "1.2.0-pre13"
+  s.version      = "1.2.0-pre14"
   s.summary      = "A library for communicating with MobileCoin network"
 
   s.author       = "MobileCoin"
@@ -69,7 +69,7 @@ Pod::Spec.new do |s|
 
   s.pod_target_xcconfig = {
     "GCC_OPTIMIZATION_LEVEL" => "z",
-    "LLVM_LTO" => "YES",
+    # "LLVM_LTO" => "YES",
     # Rust bitcode is not verified to be compatible with Apple Xcode's LLVM bitcode,
     # so this is disabled to be on the safe side.
     "ENABLE_BITCODE" => "YES",
