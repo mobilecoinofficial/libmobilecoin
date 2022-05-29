@@ -71,7 +71,7 @@ lint-locally: lint-locally-podspec
 publish: tag-release publish-podspec
 
 .PHONY: publish-hotfix
-publish: tag-hotfix publish-podspec
+publish-hotfix: tag-hotfix publish-podspec
 
 .PHONY: push-generated
 push-generated:
