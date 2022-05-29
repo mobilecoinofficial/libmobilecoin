@@ -70,6 +70,9 @@ lint-locally: lint-locally-podspec
 .PHONY: publish
 publish: tag-release publish-podspec
 
+.PHONY: publish-hotfix
+publish: tag-hotfix publish-podspec
+
 .PHONY: push-generated
 push-generated:
 	git add Artifacts/*
