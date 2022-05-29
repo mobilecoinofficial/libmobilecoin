@@ -89,6 +89,12 @@ tag-release:
 		git tag "v$$VERSION" && \
 		git push git@github.com:mobilecoinofficial/libmobilecoin-ios-artifacts.git "refs/tags/v$$VERSION"
 
+.PHONY: tag-hotfix
+tag-release:
+	VERSION="$$(bundle exec pod ipc spec LibMobileCoin.podspec | jq -r '.version')" && \
+		git tag "v$$VERSION" && \
+		git push git@github.com:mobilecoinofficial/libmobilecoin-ios-artifacts.git "refs/tags/v$$VERSION"
+
 # LibMobileCoin pod
 
 .PHONY: lint-locally-podspec
