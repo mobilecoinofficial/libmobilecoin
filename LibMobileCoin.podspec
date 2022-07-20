@@ -8,6 +8,7 @@ Pod::Spec.new do |s|
 
   s.author       = "MobileCoin"
   s.homepage     = "https://www.mobilecoin.com/"
+
   s.license      = { :type => "GPLv3" }
 
   s.source       = { 
