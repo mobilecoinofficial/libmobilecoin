@@ -47,7 +47,6 @@ Pod::Spec.new do |s|
  
      subspec.dependency "gRPC-Swift"
      subspec.dependency "SwiftProtobuf", "~> 1.5"
-     subspec.libraries = 'z'
    end
 
    s.subspec "CoreHTTP" do |subspec|
