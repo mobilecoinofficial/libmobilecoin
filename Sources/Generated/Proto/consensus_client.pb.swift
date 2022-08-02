@@ -188,13 +188,6 @@ public struct ConsensusClient_ProposeMintTxResponse {
   fileprivate var _result: ConsensusClient_MintValidationResult? = nil
 }
 
-#if swift(>=5.5) && canImport(_Concurrency)
-extension ConsensusClient_MintValidationResultCode: @unchecked Sendable {}
-extension ConsensusClient_MintValidationResult: @unchecked Sendable {}
-extension ConsensusClient_ProposeMintConfigTxResponse: @unchecked Sendable {}
-extension ConsensusClient_ProposeMintTxResponse: @unchecked Sendable {}
-#endif  // swift(>=5.5) && canImport(_Concurrency)
-
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
 fileprivate let _protobuf_package = "consensus_client"
