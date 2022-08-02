@@ -184,6 +184,13 @@ public struct ConsensusConfig_ConsensusNodeConfig {
   fileprivate var _scpMessageSigningKey: External_Ed25519Public? = nil
 }
 
+#if swift(>=5.5) && canImport(_Concurrency)
+extension ConsensusConfig_ActiveMintConfig: @unchecked Sendable {}
+extension ConsensusConfig_ActiveMintConfigs: @unchecked Sendable {}
+extension ConsensusConfig_TokenConfig: @unchecked Sendable {}
+extension ConsensusConfig_ConsensusNodeConfig: @unchecked Sendable {}
+#endif  // swift(>=5.5) && canImport(_Concurrency)
+
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
 fileprivate let _protobuf_package = "consensus_config"
