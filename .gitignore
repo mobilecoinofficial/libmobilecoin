@@ -75,3 +75,5 @@ iOSInjectionProject/
 # Bundler
 .bundle/
 .vendor/
+.DS_Store
+/libmobilecoin/target
