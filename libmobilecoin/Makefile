@@ -36,7 +36,7 @@ ARCHS_IOS = aarch64-apple-ios-sim aarch64-apple-ios-macabi aarch64-apple-ios x86
 TARGET_TOOLCHAINS = toolchain_aarch64-apple-ios-sim toolchain_aarch64-apple-ios-macabi toolchain_aarch64-apple-ios toolchain_x86_64-apple-ios-macabi toolchain_x86_64-apple-ios toolchain_x86_64-apple-darwin
 
 # add l_ prefix to build-targets that use the legacy build-process
-ALL_LEGACY_ARCHS_IOS = l_aarch64-apple-ios-sim l_aarch64-apple-ios-macabi l_aarch64-apple-ios
+ALL_LEGACY_ARCHS_IOS = l_aarch64-apple-ios-sim l_aarch64-apple-ios-macabi l_aarch64-apple-ios l_x86_64-apple-ios-macabi l_x86_64-apple-ios l_x86_64-apple-darwin
 
 IOS_LIB = libmobilecoin.a
 IOS_LIB_STRIPPED = libmobilecoin_stripped.a
