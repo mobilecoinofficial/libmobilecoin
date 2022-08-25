@@ -928,4 +928,8 @@ workflows:
 
       - publish-pod-release:
           filters:
-            branches: { only: master }
+            branches:
+              only:
+                 - master
+                 - release/*
+            
