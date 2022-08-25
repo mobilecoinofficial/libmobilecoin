@@ -10,6 +10,8 @@
 
 #define LIB_MC_ERROR_CODE_PANIC -2
 
+#define LIB_MC_ERROR_CODE_POISON -3
+
 #define LIB_MC_ERROR_CODE_INVALID_INPUT 100
 
 #define LIB_MC_ERROR_CODE_INVALID_OUTPUT 101
@@ -97,6 +99,8 @@ typedef struct McRngCallback {
   FfiCallbackRng rng;
   FfiOptMutPtr<void> context;
 } McRngCallback;
+
+typedef ChaCha20Rng McChaCha20Rng;
 
 typedef FullyValidatedFogPubkey McFullyValidatedFogPubkey;
 
@@ -391,6 +395,99 @@ ssize_t mc_bip39_entropy_from_mnemonic(FfiStr mnemonic,
  * * `prefix` - must be a nul-terminated C string containing valid UTF-8.
  */
 FfiOptOwnedStr mc_bip39_words_by_prefix(FfiStr prefix);
+
+/**
+ * Returns a new ChaCha20Rng instance initialized with the
+ * seed value provided by the u64 long_val parameter
+ *
+ * # Arguments
+ *
+ * * `long_val` - an unsigned 64 bit value to use as the rng seed
+ *
+ * # Errors
+ *
+ * * `LibMcError::Poison`
+ */
+FfiOptOwnedPtr<Mutex<McChaCha20Rng>> mc_chacha20_rng_create_with_long(uint64_t long_val,
+                                                                      FfiOptMutPtr<FfiOptOwnedPtr<McError>> out_error);
+
+/**
+ * Returns a new ChaCha20Rng instance initialized with the
+ * seed value provided by the bytes data, which must be at
+ * least 32 bytes (only the first 32 bytes will be used)
+ *
+ * # Arguments
+ *
+ * * `bytes` - 32 bytes of data to use as the rng seed
+ *
+ * # Errors
+ *
+ * * `LibMcError::InvalidInput`
+ * * `LibMcError::Poison`
+ */
+FfiOptOwnedPtr<Mutex<McChaCha20Rng>> mc_chacha20_rng_create_with_bytes(FfiRefPtr<McBuffer> bytes,
+                                                                       FfiOptMutPtr<FfiOptOwnedPtr<McError>> out_error);
+
+/**
+ * Returns the current word_pos of the ChaCha20Rng instance
+ *
+ * # Arguments
+ *
+ * * `chacha20_rng` - must be a valid ChaCha20Rng
+ * * `out_word_pos` - pointer to buffer of 16 bytes where the current
+ *   chacha20_rng wordpos will be returned
+ *
+ * # Errors
+ *
+ * * `LibMcError::Poison`
+ */
+bool mc_chacha20_rng_get_word_pos(FfiMutPtr<Mutex<McChaCha20Rng>> chacha20_rng,
+                                  FfiMutPtr<McMutableBuffer> out_word_pos,
+                                  FfiOptMutPtr<FfiOptOwnedPtr<McError>> out_error);
+
+/**
+ * Sets the current word_pos of the ChaCha20Rng instance
+ *
+ * /// # Arguments
+ *
+ * * `chacha20_rng` - must be a valid ChaCha20Rng
+ * * `out_word_pos` - pointer to buffer of 128 bytes where the current
+ *   chacha20_rng wordpos will be returned
+ *
+ * # Errors
+ *
+ * * `LibMcError::Poison`
+ */
+bool mc_chacha20_rng_set_word_pos(FfiMutPtr<Mutex<McChaCha20Rng>> chacha20_rng,
+                                  FfiRefPtr<McBuffer> bytes,
+                                  FfiOptMutPtr<FfiOptOwnedPtr<McError>> out_error);
+
+/**
+ * Returns the next random u64 value from the ChaCha20Rng
+ *
+ * /// # Arguments
+ *
+ * * `chacha20_rng` - must be a valid ChaCha20Rng
+ *
+ * # Errors
+ *
+ * * `LibMcError::Poison`
+ */
+uint64_t mc_chacha20_rng_next_long(FfiMutPtr<Mutex<McChaCha20Rng>> chacha20_rng,
+                                   FfiOptMutPtr<FfiOptOwnedPtr<McError>> out_error);
+
+/**
+ * frees the ChaCha20Rng
+ *
+ * # Preconditions
+ *
+ * * The ChaCha20Rng is no longer in use
+ *
+ * # Arguments
+ *
+ * * `chacha20_rng` - must be a valid ChaCha20Rng
+ */
+void mc_chacha20_rng_free(FfiOptOwnedPtr<Mutex<McChaCha20Rng>> chacha20_rng);
 
 bool mc_ristretto_private_validate(FfiRefPtr<McBuffer> ristretto_private,
                                    FfiMutPtr<bool> out_valid);
@@ -760,12 +857,19 @@ bool mc_transaction_builder_ring_add_element(FfiMutPtr<McTransactionBuilderRing>
                                              FfiRefPtr<McBuffer> tx_out_proto_bytes,
                                              FfiRefPtr<McBuffer> membership_proof_proto_bytes);
 
+/**
+ *
+ * # Errors
+ *
+ * * `LibMcError::InvalidInput`
+ */
 FfiOptOwnedPtr<McTransactionBuilder> mc_transaction_builder_create(uint64_t fee,
                                                                    uint64_t token_id,
                                                                    uint64_t tombstone_block,
                                                                    FfiOptRefPtr<McFogResolver> fog_resolver,
                                                                    FfiMutPtr<McTxOutMemoBuilder> memo_builder,
-                                                                   uint32_t block_version);
+                                                                   uint32_t block_version,
+                                                                   FfiOptMutPtr<FfiOptOwnedPtr<McError>> out_error);
 
 void mc_transaction_builder_free(FfiOptOwnedPtr<McTransactionBuilder> transaction_builder);
 
@@ -833,27 +937,6 @@ FfiOptOwnedPtr<McData> mc_transaction_builder_add_change_output(FfiRefPtr<McAcco
                                                                 FfiMutPtr<McMutableBuffer> out_tx_out_confirmation_number,
                                                                 FfiMutPtr<McMutableBuffer> out_tx_out_shared_secret,
                                                                 FfiOptMutPtr<FfiOptOwnedPtr<McError>> out_error);
-
-/**
- * # Preconditions
- *
- * * `account_key` - must be a valid account key as the gift code subaddress is
- *   computed from the account key
- * * `transaction_builder` - must not have been previously consumed by a call
- *   to `build`.
- * * `out_tx_out_confirmation_number` - length must be >= 32.
- *
- * # Errors
- *
- * * `LibMcError::AttestationVerification`
- * * `LibMcError::InvalidInput`
- */
-FfiOptOwnedPtr<McData> mc_transaction_builder_fund_gift_code_output(FfiRefPtr<McAccountKey> account_key,
-                                                                    FfiMutPtr<McTransactionBuilder> transaction_builder,
-                                                                    uint64_t amount,
-                                                                    FfiOptMutPtr<McRngCallback> rng_callback,
-                                                                    FfiMutPtr<McMutableBuffer> out_tx_out_confirmation_number,
-                                                                    FfiOptMutPtr<FfiOptOwnedPtr<McError>> out_error);
 
 /**
  * # Preconditions
@@ -1079,180 +1162,6 @@ bool mc_memo_sender_with_payment_request_memo_get_address_hash(FfiRefPtr<McBuffe
 bool mc_memo_sender_with_payment_request_memo_get_payment_request_id(FfiRefPtr<McBuffer> sender_with_payment_request_memo_data,
                                                                      FfiMutPtr<uint64_t> out_payment_request_id,
                                                                      FfiOptMutPtr<FfiOptOwnedPtr<McError>> out_error);
-
-/**
- * # Preconditions
- *
- * * `gift_code_funding_note` - must be a null-terminated C string containing
- * up to 54 valid UTF-8 bytes. The actual note stored on chain is up to 53 null
- * terminated UTF-8 bytes unless the note is exactly 53 utf-8 bytes long,
- * in which case, no null bytes are stored. If the C string passed here is
- * exactly 54 bytes, the last byte MUST be null and that byte will be
- * removed prior to storage on chain.
- */
-FfiOptOwnedPtr<McTxOutMemoBuilder> mc_memo_builder_gift_code_funding_create(FfiStr gift_code_funding_note);
-
-/**
- * # Preconditions
- *
- * * `gift_code_sender_note` - must be a null-terminated C string containing up
- * to 58 valid UTF-8 bytes. The actual note stored on chain is up to 57 null
- * terminated UTF-8 bytes unless the note is exactly 57 utf-8 bytes long,
- * in which case, no null bytes are stored. If the C string passed here is
- * exactly 58 bytes, the last byte MUST be null and that byte will be
- * removed prior to storage on chain.
- */
-FfiOptOwnedPtr<McTxOutMemoBuilder> mc_memo_builder_gift_code_sender_create(FfiStr gift_code_sender_note);
-
-/**
- * # Preconditions
- *
- * * `global_index` - must be the global TxOut index of the originally funded
- *   gift code TxOut
- */
-FfiOptOwnedPtr<McTxOutMemoBuilder> mc_memo_builder_gift_code_cancellation_create(uint64_t global_index);
-
-/**
- * # Preconditions
- *
- * * `tx_out_public_key` - must be a valid 32-byte Ristretto-format scalar.
- * * `fee` - must be an integer less than or equal to 2^56
- * * `gift_code_funding_note` - must be a null-terminated C string containing
- * up to 54 valid UTF-8 bytes. The actual note stored on chain is up to 53 null
- * terminated UTF-8 bytes unless the note is exactly 53 utf-8 bytes long,
- * in which case, no null bytes are stored. If the C string passed here is
- * exactly 54 bytes, the last byte MUST be null and that byte will be
- * removed prior to storage on chain.
- * * `out_memo_data` - length must be >= 64.
- *
- * # Errors
- *
- * * `LibMcError::InvalidInput`
- */
-bool mc_memo_gift_code_funding_memo_create(FfiRefPtr<McBuffer> tx_out_public_key,
-                                           uint64_t fee,
-                                           FfiStr gift_code_funding_note,
-                                           FfiMutPtr<McMutableBuffer> out_memo_data,
-                                           FfiOptMutPtr<FfiOptOwnedPtr<McError>> out_error);
-
-/**
- * # Preconditions
- *
- * * `gift_code_funding_memo_data` - must be 64 bytes
- * * `tx_out_public_key` - must be a valid 32-byte Ristretto-format scalar.
- *
- * # Errors
- *
- * * `LibMcError::InvalidInput`
- */
-bool mc_memo_gift_code_funding_memo_validate_tx_out(FfiRefPtr<McBuffer> gift_code_funding_memo_data,
-                                                    FfiRefPtr<McBuffer> tx_out_public_key,
-                                                    FfiMutPtr<bool> out_valid,
-                                                    FfiOptMutPtr<FfiOptOwnedPtr<McError>> out_error);
-
-/**
- * # Preconditions
- *
- * * `gift_code_funding_memo_data` - must be 64 bytes
- */
-FfiOptOwnedStr mc_memo_gift_code_funding_memo_get_note(FfiRefPtr<McBuffer> gift_code_funding_memo_data);
-
-/**
- * # Preconditions
- *
- * * `gift_code_funding_memo_data` - must be 64 bytes
- *
- * # Errors
- *
- * * `LibMcError::InvalidInput`
- */
-bool mc_memo_gift_code_funding_memo_get_fee(FfiRefPtr<McBuffer> gift_code_funding_memo_data,
-                                            FfiMutPtr<uint64_t> out_fee,
-                                            FfiOptMutPtr<FfiOptOwnedPtr<McError>> out_error);
-
-/**
- * # Preconditions
- *
- * * `fee` - must be an integer less than or equal to 2^56
- * * `gift_code_sender_note` - must be a null-terminated C string containing up
- * to 58 valid UTF-8 bytes. The actual note stored on chain is up to 57 null
- * terminated UTF-8 bytes unless the note is exactly 57 utf-8 bytes long,
- * in which case, no null bytes are stored. If the C string passed here is
- * exactly 58 bytes, the last byte MUST be null and that byte will be
- * removed prior to storage on chain.
- * * `out_memo_data` - length must be >= 64.
- *
- * # Errors
- *
- * * `LibMcError::InvalidInput`
- */
-bool mc_memo_gift_code_sender_memo_create(uint64_t fee,
-                                          FfiStr gift_code_sender_note,
-                                          FfiMutPtr<McMutableBuffer> out_memo_data,
-                                          FfiOptMutPtr<FfiOptOwnedPtr<McError>> out_error);
-
-/**
- * # Preconditions
- *
- * * `gift_code_sender_memo_data` - must be 64 bytes
- */
-FfiOptOwnedStr mc_memo_gift_code_sender_memo_get_note(FfiRefPtr<McBuffer> gift_code_sender_memo_data);
-
-/**
- * # Preconditions
- *
- * * `gift_code_sender_memo_data` - must be 64 bytes
- *
- * # Errors
- *
- * * `LibMcError::InvalidInput`
- */
-bool mc_memo_gift_code_sender_memo_get_fee(FfiRefPtr<McBuffer> gift_code_sender_memo_data,
-                                           FfiMutPtr<uint64_t> out_fee,
-                                           FfiOptMutPtr<FfiOptOwnedPtr<McError>> out_error);
-
-/**
- * # Preconditions
- *
- * * `fee` - must be an integer less than or equal to 2^56
- * * `global_index` - must be the global TxOut index of the originally funded
- *   gift code TxOut
- * * `out_memo_data` - length must be >= 64.
- *
- * # Errors
- *
- * * `LibMcError::InvalidInput`
- */
-bool mc_memo_gift_code_cancellation_memo_create(uint64_t fee,
-                                                uint64_t global_index,
-                                                FfiMutPtr<McMutableBuffer> out_memo_data,
-                                                FfiOptMutPtr<FfiOptOwnedPtr<McError>> out_error);
-
-/**
- * # Preconditions
- *
- * * `gift_code_cancellation_memo_data` - must be 64 bytes
- *
- * # Errors
- *
- * * `LibMcError::InvalidInput`
- */
-bool mc_memo_gift_code_cancellation_memo_get_gift_code_tx_out_index(FfiRefPtr<McBuffer> gift_code_cancellation_memo_data,
-                                                                    FfiMutPtr<uint64_t> out_index,
-                                                                    FfiOptMutPtr<FfiOptOwnedPtr<McError>> out_error);
-
-/**
- * # Preconditions
- *
- * * `gift_code_cancellation_memo_data` - must be 64 bytes
- *
- * # Errors
- *
- * * `LibMcError::InvalidInput`
- */
-bool mc_memo_gift_code_cancellation_memo_get_fee(FfiRefPtr<McBuffer> gift_code_cancellation_memo_data,
-                                                 FfiMutPtr<uint64_t> out_fee,
-                                                 FfiOptMutPtr<FfiOptOwnedPtr<McError>> out_error);
 
 /**
  * # Preconditions
