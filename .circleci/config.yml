@@ -616,10 +616,9 @@ jobs:
           directory: ~/.rustup/toolchains/ios-<<parameters.build-target>>-nightly-2021-08-01-swift-5-3-2
       - prepare-for-build: { os: macos }
       - run:
-          working_directory: Vendor/mobilecoin
+          working_directory: libmobilecoin
           name: Build rustup toolchains for a build target
           command: |
-            cd libmobilecoin
             make setup
             make toolchain_<< parameters.build-target >>
 
