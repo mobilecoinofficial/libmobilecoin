@@ -931,5 +931,5 @@ workflows:
             branches:
               only:
                  - master
-                 - release/*
+                 - /release\/.*/
             
