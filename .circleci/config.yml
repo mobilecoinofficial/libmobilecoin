@@ -649,10 +649,9 @@ jobs:
       - restore-rustup-cache:
           build-target: <<parameters.build-target>>
       - run:
-          working_directory: Vendor/mobilecoin
+          working_directory: libmobilecoin
           name: Build libmobilecoin static libraries
           command: |
-            cd libmobilecoin
             make setup
             make << parameters.build-target >>
 
