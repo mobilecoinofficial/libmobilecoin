@@ -62,7 +62,6 @@ RUN protoc \
     external.proto \
     blockchain.proto \
     printable.proto \
-	quorum_set.proto \
     watcher.proto \
     attest.proto \
     consensus_client.proto \
