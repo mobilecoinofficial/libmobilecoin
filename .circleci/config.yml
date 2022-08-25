@@ -895,7 +895,7 @@ workflows:
               xcode-version: [*default-xcode-version]
 
       - copy-artifacts:
-          name: copy-artifacats
+          name: copy-artifacts
           requires:
             - build-artifacts-m1-ios-sim-xcode-<< matrix.xcode-version >>
             - build-artifacts-m1-catalyst-xcode-<< matrix.xcode-version >>
