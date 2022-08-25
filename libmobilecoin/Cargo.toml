@@ -1,8 +1,8 @@
 [package]
 name = "libmobilecoin"
-version = "1.3.0-pre0"
+version = "2.0.0"
 authors = ["MobileCoin"]
-edition = "2021"
+edition = "2018"
 
 [lib]
 name = "mobilecoin"
@@ -25,10 +25,12 @@ displaydoc = "0.2"
 generic-array = { version = "0.14", features = ["serde", "more_lengths"] }
 libc = "0.2"
 protobuf = "2.27.1"
+rand = { version = "0.8", default-features = false }
+rand_chacha = { version = "0.3.1" }
 rand_core = { version = "0.6", features = ["std"] }
 sha2 = { version = "0.10", default-features = false }
 slip10_ed25519 = "0.1.3"
-tiny-bip39 = "1.0"
+tiny-bip39 = "0.8"
 zeroize = "1.5"
 
 # Lock a specific cmake version that plays nicely with iOS. Note that 0.1.45 does not actually do that,
@@ -49,7 +51,6 @@ mc-crypto-box = { path = "../Vendor/mobilecoin/crypto/box" }
 mc-crypto-keys = { path = "../Vendor/mobilecoin/crypto/keys" }
 mc-crypto-noise = { path = "../Vendor/mobilecoin/crypto/noise" }
 mc-crypto-rand = { path = "../Vendor/mobilecoin/crypto/rand", features = ["std"] }
-mc-crypto-ring-signature-signer = { path = "../Vendor/mobilecoin/crypto/ring-signature/signer", default-features = false }
 mc-crypto-sig = { path = "../Vendor/mobilecoin/crypto/sig" }
 mc-fog-kex-rng = { path = "../Vendor/mobilecoin/fog/kex_rng" }
 mc-fog-report-validation = { path = "../Vendor/mobilecoin/fog/report/validation" }
@@ -90,6 +91,3 @@ serde_cbor = { git = "https://github.com/mobilecoinofficial/cbor", rev = "4c886a
 
 # Fix issues with recent nightlies, bump curve25519-dalek version
 x25519-dalek = { git = "https://github.com/mobilecoinfoundation/x25519-dalek.git", rev = "c1966b8743d320cd07a54191475e5c0f94b2ea30" }
-
-# Override diesel dependency with our fork, to statically link SQLite.
-diesel = { git = "https://github.com/mobilecoinofficial/diesel", rev = "026f6379715d27c8be48396e5ca9059f4a263198" }
