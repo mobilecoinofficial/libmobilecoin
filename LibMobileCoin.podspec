@@ -106,7 +106,7 @@ Pod::Spec.new do |s|
   }
 
   # `user_target_xcconfig` should only be set when the setting needs to propogate to
-  # all targets that depend on this library.
+  # all targets that depend on this library. 
   s.user_target_xcconfig = {
     "SUPPORTS_MACCATALYST" => "YES",
     "EXCLUDED_ARCHS[sdk=iphoneos*]" => "armv7",
