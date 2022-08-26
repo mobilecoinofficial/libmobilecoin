@@ -47,7 +47,6 @@ Pod::Spec.new do |s|
  
      subspec.dependency "gRPC-Swift"
      subspec.dependency "SwiftProtobuf", "~> 1.5"
-     subspec.libraries = 'z'
    end
 
    s.subspec "CoreHTTP" do |subspec|
@@ -61,7 +60,6 @@ Pod::Spec.new do |s|
      ]
  
      subspec.dependency "SwiftProtobuf", "~> 1.5"
-     subspec.libraries = 'z'
    end
 
   # ――― Project Settings ――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
@@ -86,7 +84,7 @@ Pod::Spec.new do |s|
     "SWIFT_INCLUDE_PATHS": "$(HEADER_SEARCH_PATHS)",
 
     "LIBMOBILECOIN_LIB_IF_NEEDED": "$(PODS_TARGET_SRCROOT)/Artifacts/target/$(CARGO_BUILD_TARGET)/release/libmobilecoin.a",
-    "OTHER_LDFLAGS": "-u _mc_string_free $(LIBMOBILECOIN_LIB_IF_NEEDED)",
+    "OTHER_LDFLAGS": "-lz -u _mc_string_free $(LIBMOBILECOIN_LIB_IF_NEEDED)",
 
     "CARGO_BUILD_TARGET[sdk=iphonesimulator*][arch=arm64]": "aarch64-apple-ios-sim",
     "CARGO_BUILD_TARGET[sdk=iphonesimulator*][arch=*]": "x86_64-apple-ios",
