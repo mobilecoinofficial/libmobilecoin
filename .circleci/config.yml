@@ -607,8 +607,8 @@ jobs:
       - init-mobilecoin-submodule
       - restore-build-artifact-cache:
           build-target: <<parameters.build-target>>
-      - skip-if-cache-file-exists:
-          file: ~/project/libmobilecoin/out/ios/target/<<parameters.build-target>>/mobile-release/libmobilecoin.a
+      # - skip-if-cache-file-exists:
+      #     file: ~/project/libmobilecoin/out/ios/target/<<parameters.build-target>>/mobile-release/libmobilecoin.a
       - prepare-for-build: { os: macos }
       - restore-rustup-cache:
           build-target: <<parameters.build-target>>
