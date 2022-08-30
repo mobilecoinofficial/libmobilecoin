@@ -76,11 +76,6 @@ setup:
 .PHONY: ios
 ios: out/ios/target
 
-
-.PHONY: x86_64-apple-darwin
-x86_64-apple-darwin: out/ios/target/x86_64-apple-darwin
-
-
 .PHONY: $(ALL_ARCHS_IOS)
 x86_64-apple-ios aarch64-apple-ios: CARGO_ENV_FLAGS += CFLAGS="-DPB_NO_PACKED_STRUCTS=1"
 x86_64-apple-ios aarch64-apple-ios: CARGO_ENV_FLAGS += CXXFLAGS="-DPB_NO_PACKED_STRUCTS=1"
