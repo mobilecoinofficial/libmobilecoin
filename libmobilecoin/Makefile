@@ -110,6 +110,12 @@ $(ALL_ARCHS_IOS):
 			-o $(IOS_LIB_STRIPPED) \
 			extracted/*.o
 
+	mkdir -p out/ios/target
+	$(call BINARY_copy,$@,target)
+
+	mkdir -p out/ios/include
+	cp $(IOS_C_HEADERS) out/ios/include
+
 
 .PHONY: out/ios/target
 out/ios/target: $(ALL_ARCHS_IOS)
