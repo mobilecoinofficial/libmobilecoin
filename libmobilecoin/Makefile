@@ -13,7 +13,7 @@ export IAS_MODE ?= DEV
 
 CARGO_PROFILE ?= mobile-release
 CARGO_BUILD_FLAGS ?=
-CARGO_TARGET_DIR ?= ./out/ios/target
+CARGO_TARGET_DIR ?= ./target
 
 $(info profile: $(CARGO_PROFILE))
 
