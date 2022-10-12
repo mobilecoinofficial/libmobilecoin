@@ -13,6 +13,12 @@
 extern "C" {
 #endif
 
+/* ==== Types ==== */
+
+typedef struct _McSignedContingentInputBuilder McSignedContingentInputBuilder;
+typedef struct _McTxOutMemoBuilder McTxOutMemoBuilder;
+typedef struct _McTransactionBuilderRing McTransactionBuilderRing;
+
 /* ==== McSignedContingentInputBuilder ==== */
 
 /// # Preconditions

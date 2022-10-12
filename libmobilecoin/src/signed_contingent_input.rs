@@ -187,7 +187,7 @@ pub extern "C" fn mc_signed_contingent_input_builder_add_required_output(
 /// * `LibMcError::AttestationVerification`
 /// * `LibMcError::InvalidInput`
 #[no_mangle]
-pub extern "C" fn mc_transaction_builder_add_required_change_output(
+pub extern "C" fn mc_signed_contingent_input_builder_add_required_change_output(
     account_key: FfiRefPtr<McAccountKey>,
     signed_contingent_input_builder: FfiMutPtr<McSignedContingentInputBuilder>,
     amount: u64,
