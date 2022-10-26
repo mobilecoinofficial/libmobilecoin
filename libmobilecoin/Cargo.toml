@@ -52,7 +52,10 @@ mc-crypto-keys = { path = "../Vendor/mobilecoin/crypto/keys" }
 mc-crypto-noise = { path = "../Vendor/mobilecoin/crypto/noise" }
 mc-crypto-rand = { path = "../Vendor/mobilecoin/crypto/rand", features = ["std"] }
 mc-crypto-sig = { path = "../Vendor/mobilecoin/crypto/sig" }
+mc-fog-ingest-report = { path = "../Vendor/mobilecoin/fog/ingest/report" }
 mc-fog-kex-rng = { path = "../Vendor/mobilecoin/fog/kex_rng" }
+mc-fog-report-resolver = { path = "../Vendor/mobilecoin/fog/report/resolver" }
+mc-fog-report-types = { path = "../Vendor/mobilecoin/fog/report/types" }
 mc-fog-report-validation = { path = "../Vendor/mobilecoin/fog/report/validation" }
 mc-transaction-core = { path = "../Vendor/mobilecoin/transaction/core" }
 mc-transaction-std = { path = "../Vendor/mobilecoin/transaction/std" }
