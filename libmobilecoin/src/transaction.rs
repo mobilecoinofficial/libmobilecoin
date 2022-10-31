@@ -20,6 +20,7 @@ use mc_transaction_core::{
     ring_signature::KeyImage,
     tx::{TxOut, TxOutConfirmationNumber, TxOutMembershipProof},
     Amount, BlockVersion, CompressedCommitment, EncryptedMemo, MaskedAmount, TokenId,
+    SignedContingentInput, SignedContingentInputError,
 };
 use mc_transaction_std::{
     AuthenticatedSenderMemo, AuthenticatedSenderWithPaymentRequestIdMemo, DestinationMemo,
@@ -28,7 +29,6 @@ use mc_transaction_std::{
     MemoBuilder, MemoPayload, RTHMemoBuilder, ReservedSubaddresses, SenderMemoCredential,
     TransactionBuilder,
 };
-
 use mc_util_ffi::*;
 
 /* ==== TxOut ==== */
@@ -487,6 +487,38 @@ pub extern "C" fn mc_transaction_builder_add_input(
         )
         .map_err(|err| LibMcError::InvalidInput(format!("{:?}", err)))?;
         transaction_builder.add_input(input_credential);
+
+        Ok(())
+    })
+}
+
+/// # Preconditions
+///
+/// * `transaction_builder` - must not have been previously consumed by a call
+///   to `build`.
+/// * `view_private_key` - must be a valid 32-byte Ristretto-format scalar.
+/// * `subaddress_spend_private_key` - must be a valid 32-byte Ristretto-format
+///   scalar.
+/// * `real_index` - must be within bounds of `ring`.
+/// * `ring` - `TxOut` at `real_index` must be owned by account keys.
+///
+/// # Errors
+///
+/// * `LibMcError::InvalidInput`
+#[no_mangle]
+pub extern "C" fn mc_transaction_builder_add_presigned_input(
+    transaction_builder: FfiMutPtr<McTransactionBuilder>,
+    presigned_input_proto_bytes: FfiRefPtr<McBuffer>,
+    out_error: FfiOptMutPtr<FfiOptOwnedPtr<McError>>,
+) -> bool {
+    ffi_boundary_with_error(out_error, || {
+        let sci: SignedContingentInput = mc_util_serial::decode(presigned_input_proto_bytes.as_slice())
+            .expect("presigned_input_proto_bytes could not be converted to SignedContingentInput");
+        let transaction_builder = transaction_builder
+            .into_mut()
+            .as_mut()
+            .expect("McTransactionBuilder instance has already been used to build a Tx");
+        transaction_builder.add_presigned_input(sci);
 
         Ok(())
     })
