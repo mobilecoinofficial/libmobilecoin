@@ -243,12 +243,12 @@ pub extern "C" fn mc_signed_contingent_input_builder_build(
         let signed_contingent_input_builder = signed_contingent_input_builder
             .into_mut()
             .take()
-            .expect("McTransactionBuilder instance has already been used to build a Tx");
+            .expect("SignedContingentInputBuilder instance has already been used to build an SCI");
         let mut rng = SdkRng::from_ffi(rng_callback);
 
-        let tx = signed_contingent_input_builder
+        let sci = signed_contingent_input_builder
             .build(&NoKeysRingSigner {}, &mut rng)
             .map_err(|err| LibMcError::InvalidInput(format!("{:?}", err)))?;
-        Ok(mc_util_serial::encode(&tx))
+        Ok(mc_util_serial::encode(&sci))
     })
 }
