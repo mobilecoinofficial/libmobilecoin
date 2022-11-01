@@ -222,6 +222,22 @@ MC_ATTRIBUTE_NONNULL(1, 2, 3, 5);
 /// # Preconditions
 ///
 /// * `transaction_builder` - must not have been previously consumed by a call to `build`.
+/// * `presigned_input_proto_bytes` - serialized proto bytes for a Signed Contingent Input
+/// * `ring` - `TxOut` at `real_index` must be owned by account keys.
+///
+/// # Errors
+///
+/// * `LibMcError::InvalidInput`
+bool mc_transaction_builder_add_presigned_input(
+  McTransactionBuilder* MC_NONNULL transaction_builder,
+  const McBuffer* MC_NONNULL presigned_input_proto_bytes,
+  McError* MC_NULLABLE * MC_NULLABLE out_error
+)
+MC_ATTRIBUTE_NONNULL(1, 2);
+
+/// # Preconditions
+///
+/// * `transaction_builder` - must not have been previously consumed by a call to `build`.
 /// * `recipient_address` - must be a valid `PublicAddress`.
 /// * `out_subaddress_spend_public_key` - length must be >= 32.
 ///
