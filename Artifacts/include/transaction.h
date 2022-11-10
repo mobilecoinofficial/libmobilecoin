@@ -248,13 +248,14 @@ MC_ATTRIBUTE_NONNULL(1, 2);
 McData* MC_NULLABLE mc_transaction_builder_add_output(
   McTransactionBuilder* MC_NONNULL transaction_builder,
   uint64_t amount,
+  uint64_t token_id,
   const McPublicAddress* MC_NONNULL recipient_address,
   McRngCallback* MC_NULLABLE rng_callback,
   McMutableBuffer* MC_NONNULL out_tx_out_confirmation_number,
   McMutableBuffer* MC_NONNULL out_tx_out_shared_secret,
   McError* MC_NULLABLE * MC_NULLABLE out_error
 )
-MC_ATTRIBUTE_NONNULL(1, 3, 5, 6);
+MC_ATTRIBUTE_NONNULL(1, 4, 6, 7);
 
 /// # Preconditions
 ///
@@ -271,12 +272,13 @@ McData* MC_NULLABLE mc_transaction_builder_add_change_output(
   const McAccountKey* MC_NONNULL account_key,
   McTransactionBuilder* MC_NONNULL transaction_builder,
   uint64_t amount,
+  uint64_t token_id,
   McRngCallback* MC_NULLABLE rng_callback,
   McMutableBuffer* MC_NONNULL out_tx_out_confirmation_number,
   McMutableBuffer* MC_NONNULL out_tx_out_shared_secret,
   McError* MC_NULLABLE * MC_NULLABLE out_error
 )
-MC_ATTRIBUTE_NONNULL(1, 2, 4, 6);
+MC_ATTRIBUTE_NONNULL(1, 2, 6, 7);
 
 /// # Preconditions
 ///
@@ -294,11 +296,12 @@ McData* MC_NULLABLE mc_transaction_builder_fund_gift_code_output(
         const McAccountKey* MC_NONNULL account_key,
         McTransactionBuilder* MC_NONNULL transaction_builder,
         uint64_t amount,
+        uint64_t token_id,
         McRngCallback* MC_NULLABLE rng_callback,
         McMutableBuffer* MC_NONNULL out_tx_out_confirmation_number,
         McError* MC_NULLABLE * MC_NULLABLE out_error
 )
-MC_ATTRIBUTE_NONNULL(1, 2, 5);
+MC_ATTRIBUTE_NONNULL(1, 2, 6);
 
 /// # Preconditions
 ///
