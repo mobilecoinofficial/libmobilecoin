@@ -32,11 +32,11 @@ DOT:= .
 DASH:= -
 
 CARGO_PACKAGE = libmobilecoin
-ARCHS_IOS = aarch64-apple-ios-sim aarch64-apple-ios-macabi aarch64-apple-ios x86_64-apple-ios-macabi x86_64-apple-ios x86_64-apple-darwin
-TARGET_TOOLCHAINS = toolchain_aarch64-apple-ios-sim toolchain_aarch64-apple-ios-macabi toolchain_aarch64-apple-ios toolchain_x86_64-apple-ios-macabi toolchain_x86_64-apple-ios toolchain_x86_64-apple-darwin
+ARCHS_IOS = aarch64-apple-ios-sim aarch64-apple-ios x86_64-apple-ios x86_64-apple-darwin
+TARGET_TOOLCHAINS = toolchain_aarch64-apple-ios-sim toolchain_aarch64-apple-ios toolchain_x86_64-apple-ios toolchain_x86_64-apple-darwin
 
 # add l_ prefix to build-targets that use the legacy build-process
-ALL_LEGACY_ARCHS_IOS = l_aarch64-apple-ios-sim l_aarch64-apple-ios-macabi l_aarch64-apple-ios l_x86_64-apple-ios-macabi l_x86_64-apple-ios l_x86_64-apple-darwin
+ALL_LEGACY_ARCHS_IOS = l_aarch64-apple-ios-sim l_aarch64-apple-ios l_x86_64-apple-ios l_x86_64-apple-darwin
 
 IOS_LIB = libmobilecoin.a
 IOS_LIB_STRIPPED = libmobilecoin_stripped.a
@@ -163,9 +163,9 @@ legacy_x86_64-apple-darwin: out/ios/legacy/x86_64-apple-darwin
 .PHONY: $(ALL_LEGACY_ARCHS_IOS)
 l_x86_64-apple-ios l_aarch64-apple-ios: CARGO_ENV_FLAGS += CFLAGS="-DPB_NO_PACKED_STRUCTS=1"
 l_x86_64-apple-ios l_aarch64-apple-ios: CARGO_ENV_FLAGS += CXXFLAGS="-DPB_NO_PACKED_STRUCTS=1"
-l_x86_64-apple-ios l_x86_64-apple-ios-macabi l_x86_64-apple-darwin: LD_ARCH = x86_64
-l_aarch64-apple-ios l_aarch64-apple-ios-sim l_aarch64-apple-ios-macabi: LD_ARCH = arm64
-l_x86_64-apple-ios-macabi l_aarch64-apple-ios-sim l_aarch64-apple-ios-macabi: LEGACY_CARGO_BUILD_FLAGS += -Zbuild-std
+l_x86_64-apple-ios l_x86_64-apple-darwin: LD_ARCH = x86_64
+l_aarch64-apple-ios l_aarch64-apple-ios-sim: LD_ARCH = arm64
+l_aarch64-apple-ios-sim: LEGACY_CARGO_BUILD_FLAGS += -Zbuild-std
 $(ALL_LEGACY_ARCHS_IOS):
 	$(CARGO_ENV_FLAGS) $(CARGO) build --package $(CARGO_PACKAGE) --target $(subst l_,,$@) $(LEGACY_CARGO_BUILD_FLAGS)
 
