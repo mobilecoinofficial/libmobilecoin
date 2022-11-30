@@ -9,6 +9,7 @@ use mc_crypto_box::{AeadError, Error as CryptoBoxError};
 use mc_crypto_keys::KeyError;
 use mc_crypto_noise::CipherError;
 use mc_fog_kex_rng::Error as FogKexRngError;
+use mc_fog_ingest_report::Error;
 use mc_fog_report_validation::FogPubkeyError;
 use mc_transaction_core::{AmountError, BlockVersionError};
 use mc_transaction_builder::TxBuilderError;
