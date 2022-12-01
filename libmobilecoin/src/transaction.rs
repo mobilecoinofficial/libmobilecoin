@@ -25,7 +25,8 @@ use mc_transaction_core::{
     onetime_keys::{recover_onetime_private_key, recover_public_subaddress_spend_key},
     ring_signature::KeyImage,
     tx::{TxOut, TxOutMembershipProof},
-    Amount, BlockVersion, CompressedCommitment, EncryptedMemo, MaskedAmount, MemoPayload, TokenId,
+    Amount, BlockVersion, CompressedCommitment, EncryptedMemo, MaskedAmountV1, MemoPayload,
+    TokenId,
 };
 use mc_transaction_extra::{
     AuthenticatedSenderMemo, AuthenticatedSenderWithPaymentRequestIdMemo, DestinationMemo,
@@ -112,7 +113,7 @@ pub extern "C" fn mc_tx_out_reconstruct_commitment(
 
         let shared_secret = get_tx_out_shared_secret(&view_private_key, &tx_out_public_key);
 
-        let (masked_amount, _) = MaskedAmount::reconstruct_v1(
+        let (masked_amount, _) = MaskedAmountV1::reconstruct(
             tx_out_masked_amount.masked_value,
             &tx_out_masked_amount.masked_token_id,
             &shared_secret,
@@ -239,7 +240,7 @@ pub extern "C" fn mc_tx_out_get_amount(
         let view_private_key = RistrettoPrivate::try_from_ffi(&view_private_key)?;
 
         let shared_secret = get_tx_out_shared_secret(&view_private_key, &tx_out_public_key);
-        let (_masked_amount, amount) = MaskedAmount::reconstruct_v1(
+        let (_masked_amount, amount) = MaskedAmountV1::reconstruct(
             tx_out_masked_amount.masked_value,
             &tx_out_masked_amount.masked_token_id,
             &shared_secret,
