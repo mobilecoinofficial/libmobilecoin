@@ -22,6 +22,14 @@ fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAP
   typealias Version = _2
 }
 
+//// 
+//// *** DISCLAIMER *** 
+////
+//// This proto is deprecated and no longer used, we're re-importing it so we can re-use serialized data in 
+//// some Swift unit tests. Once we convert these tests we should remove this proto.
+//// 
+//// *** END DISCLAIMER *** 
+////
 //// The schema for the decrypted TxOutSearchResult ciphertext
 //// This is the information that the Ingest enclave produces for the user about their TxOut
 ////
