@@ -269,13 +269,28 @@ pub extern "C" fn mc_tx_out_get_amount(
         let view_private_key = RistrettoPrivate::try_from_ffi(&view_private_key)?;
 
         let shared_secret = get_tx_out_shared_secret(&view_private_key, &tx_out_public_key);
-        let (_masked_amount, amount) = MaskedAmount::reconstruct_v1(
-            tx_out_masked_amount.masked_value,
-            &tx_out_masked_amount.masked_token_id,
-            &shared_secret,
-        )?;
 
-        *out_amount.into_mut() = McTxOutAmount::from(amount);
+        // Reconstruct the correct masked amount version
+        match tx_out_masked_amount.masked_amount_version {
+            McMaskedAmountVersion::V1 => {
+                let (_, amount) = MaskedAmount::reconstruct_v1(
+                    tx_out_masked_amount.masked_value,
+                    &tx_out_masked_amount.masked_token_id,
+                    &shared_secret,
+                )?;
+
+                *out_amount.into_mut() = McTxOutAmount::from(amount);
+            }
+            McMaskedAmountVersion::V2 => {
+                let (_, amount) = MaskedAmount::reconstruct_v2(
+                    tx_out_masked_amount.masked_value,
+                    &tx_out_masked_amount.masked_token_id,
+                    &shared_secret,
+                )?;
+
+                *out_amount.into_mut() = McTxOutAmount::from(amount);
+            }
+        }
         Ok(())
     })
 }
