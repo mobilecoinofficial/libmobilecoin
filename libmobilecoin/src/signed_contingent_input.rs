@@ -11,14 +11,18 @@ use core::convert::TryFrom;
 use mc_account_keys::{AccountKey, PublicAddress};
 use mc_crypto_keys::{ReprBytes, RistrettoPrivate, RistrettoPublic};
 use mc_crypto_ring_signature_signer::NoKeysRingSigner;
-use mc_fog_report_validation::FogResolver;
+use mc_fog_report_resolver::FogResolver;
+use mc_transaction_builder::{
+    InputCredentials, ReservedSubaddresses, SignedContingentInputBuilder,
+};
 use mc_transaction_core::{
     onetime_keys::recover_onetime_private_key,
-    tx::{TxOut, TxOutConfirmationNumber},
+    tx::TxOut,
     Amount, BlockVersion, TokenId,
 };
-use mc_transaction_std::{
-    InputCredentials, ReservedSubaddresses, SignedContingentInputBuilder,
+
+use mc_transaction_extra::{
+    TxOutConfirmationNumber,
 };
 
 use crate::transaction::{

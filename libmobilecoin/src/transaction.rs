@@ -24,16 +24,15 @@ use mc_transaction_core::{
     get_tx_out_shared_secret,
     onetime_keys::{recover_onetime_private_key, recover_public_subaddress_spend_key},
     ring_signature::KeyImage,
-    tx::{TxOut, TxOutConfirmationNumber, TxOutMembershipProof},
+    tx::{TxOut, TxOutMembershipProof},
     Amount, BlockVersion, CompressedCommitment, EncryptedMemo, MaskedAmount, MemoPayload, TokenId,
-    SignedContingentInput, SignedContingentInputError,
 };
 use mc_transaction_extra::{
     AuthenticatedSenderMemo, AuthenticatedSenderWithPaymentIntentIdMemo,
     AuthenticatedSenderWithPaymentRequestIdMemo, DestinationMemo,
     DestinationWithPaymentIntentIdMemo, DestinationWithPaymentRequestIdMemo,
     GiftCodeCancellationMemo, GiftCodeFundingMemo, GiftCodeSenderMemo,
-    SenderMemoCredential, TxOutConfirmationNumber,
+    SenderMemoCredential, SignedContingentInput, TxOutConfirmationNumber,
 };
 use mc_util_ffi::*;
 
