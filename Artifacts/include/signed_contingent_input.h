@@ -106,6 +106,18 @@ McData* MC_NULLABLE mc_signed_contingent_input_builder_build(
 )
 MC_ATTRIBUTE_NONNULL(1);
 
+// #[no_mangle]
+// pub extern "C" fn mc_signed_contingent_input_data_is_valid(
+//     sci_data: FfiRefPtr<McBuffer>,
+//     out_valid: FfiMutPtr<bool>,
+//     out_error: FfiOptMutPtr<FfiOptOwnedPtr<McError>>,
+// ) -> bool {
+bool mc_signed_contingent_input_data_is_valid(
+  const McBuffer* MC_NONNULL signed_contingent_input,
+  McError* MC_NULLABLE * MC_NULLABLE out_error
+)
+MC_ATTRIBUTE_NONNULL(1);
+
 
 #ifdef __cplusplus
 }

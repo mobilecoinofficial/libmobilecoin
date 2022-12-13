@@ -22,7 +22,7 @@ use mc_transaction_core::{
 };
 
 use mc_transaction_extra::{
-    TxOutConfirmationNumber,
+    SignedContingentInput, TxOutConfirmationNumber,
 };
 
 use crate::transaction::{
@@ -254,5 +254,30 @@ pub extern "C" fn mc_signed_contingent_input_builder_build(
             .build(&NoKeysRingSigner {}, &mut rng)
             .map_err(|err| LibMcError::InvalidInput(format!("{:?}", err)))?;
         Ok(mc_util_serial::encode(&sci))
+    })
+}
+
+
+/// # Preconditions
+///
+/// * `sci_data` - valid sci data
+///
+/// # Errors
+///
+/// * `LibMcError::InvalidInput`
+#[no_mangle]
+pub extern "C" fn mc_signed_contingent_input_data_is_valid(
+    sci_data: FfiRefPtr<McBuffer>,
+    out_valid: FfiMutPtr<bool>,
+    out_error: FfiOptMutPtr<FfiOptOwnedPtr<McError>>,
+) -> bool {
+    ffi_boundary_with_error(out_error, || {
+
+        let sci : SignedContingentInput = mc_util_serial::decode(&sci_data)
+            .expect("SignedContingentInput decoding from protobuf data failed");
+
+        *out_valid.into_mut() = sci.validate().is_ok();
+
+        Ok(())
     })
 }
