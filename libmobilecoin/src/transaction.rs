@@ -566,7 +566,8 @@ pub extern "C" fn mc_transaction_builder_add_presigned_input(
             .into_mut()
             .as_mut()
             .expect("McTransactionBuilder instance has already been used to build a Tx");
-        transaction_builder.add_presigned_input(sci);
+        transaction_builder.add_presigned_input(sci)
+        .map_err(|err| LibMcError::InvalidInput(format!("{:?}", err)))?;
 
         Ok(())
     })
