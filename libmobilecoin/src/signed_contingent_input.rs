@@ -241,6 +241,7 @@ pub extern "C" fn mc_signed_contingent_input_builder_add_required_change_output(
 pub extern "C" fn mc_signed_contingent_input_builder_build(
     signed_contingent_input_builder: FfiMutPtr<McSignedContingentInputBuilder>,
     rng_callback: FfiOptMutPtr<McRngCallback>,
+    ring: FfiRefPtr<McTransactionBuilderRing>,
     out_error: FfiOptMutPtr<FfiOptOwnedPtr<McError>>,
 ) -> FfiOptOwnedPtr<McData> {
     ffi_boundary_with_error(out_error, || {
@@ -250,9 +251,13 @@ pub extern "C" fn mc_signed_contingent_input_builder_build(
             .expect("SignedContingentInputBuilder instance has already been used to build an SCI");
         let mut rng = SdkRng::from_ffi(rng_callback);
 
-        let sci = signed_contingent_input_builder
+        let mut sci = signed_contingent_input_builder
             .build(&NoKeysRingSigner {}, &mut rng)
             .map_err(|err| LibMcError::InvalidInput(format!("{:?}", err)))?;
+
+        let membership_proofs = ring.iter().map(|element| element.1.clone()).collect();
+        sci.tx_in.proofs = membership_proofs;
+
         Ok(mc_util_serial::encode(&sci))
     })
 }

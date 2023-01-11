@@ -102,6 +102,7 @@ MC_ATTRIBUTE_NONNULL(1, 2, 6);
 McData* MC_NULLABLE mc_signed_contingent_input_builder_build(
   McSignedContingentInputBuilder* MC_NONNULL signed_contingent_input_builder,
   McRngCallback* MC_NULLABLE rng_callback,
+  const McTransactionBuilderRing* MC_NONNULL ring,
   McError* MC_NULLABLE * MC_NULLABLE out_error
 )
 MC_ATTRIBUTE_NONNULL(1);
