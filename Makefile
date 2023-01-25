@@ -11,7 +11,7 @@ define BINARY_copy
 endef
 
 .PHONY: default
-default: setup build clean-artifacts copy generate
+default: setup patch-cmake build clean-artifacts copy generate
 
 .PHONY: setup
 setup:
@@ -99,6 +99,14 @@ lint-podspec:
 .PHONY: publish-podspec
 publish-podspec:
 	bundle exec pod trunk push LibMobileCoin.podspec --allow-warnings
+
+.PHONY: patch-cmake
+patch-cmake:
+	tools/patch-cmake.sh
+
+.PHONY: unpatch-cmake
+unpatch-cmake:
+	tools/unpatch-cmake.sh
 
 .PHONY: clean
 clean:
