@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CMAKE_DIR="$(readlink -f $(which cmake) | rev | cut -d'/' -f3- | rev)"
+CMAKE_DIR="$(perl -MCwd -e 'print Cwd::abs_path shift' $(which cmake) | rev | cut -d'/' -f3- | rev)"
 
 echo -e "\n### Patching iOS-Initialize.cmake file in $CMAKE_DIR ###"
 
