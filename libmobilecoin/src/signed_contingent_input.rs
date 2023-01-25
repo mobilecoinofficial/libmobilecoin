@@ -136,7 +136,6 @@ pub extern "C" fn mc_signed_contingent_input_builder_free(
 ///
 /// # Errors
 ///
-/// * `LibMcError::AttestationVerification`
 /// * `LibMcError::InvalidInput`
 #[no_mangle]
 pub extern "C" fn mc_signed_contingent_input_builder_add_required_output(
@@ -188,7 +187,6 @@ pub extern "C" fn mc_signed_contingent_input_builder_add_required_output(
 ///
 /// # Errors
 ///
-/// * `LibMcError::AttestationVerification`
 /// * `LibMcError::InvalidInput`
 #[no_mangle]
 pub extern "C" fn mc_signed_contingent_input_builder_add_required_change_output(
