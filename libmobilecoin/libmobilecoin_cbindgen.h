@@ -752,7 +752,6 @@ void mc_signed_contingent_input_builder_free(FfiOptOwnedPtr<McSignedContingentIn
  *
  * # Errors
  *
- * * `LibMcError::AttestationVerification`
  * * `LibMcError::InvalidInput`
  */
 FfiOptOwnedPtr<McData> mc_signed_contingent_input_builder_add_required_output(FfiMutPtr<McSignedContingentInputBuilder> signed_contingent_input_builder,
@@ -774,7 +773,6 @@ FfiOptOwnedPtr<McData> mc_signed_contingent_input_builder_add_required_output(Ff
  *
  * # Errors
  *
- * * `LibMcError::AttestationVerification`
  * * `LibMcError::InvalidInput`
  */
 FfiOptOwnedPtr<McData> mc_signed_contingent_input_builder_add_required_change_output(FfiRefPtr<McAccountKey> account_key,
