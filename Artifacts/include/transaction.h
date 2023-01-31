@@ -274,6 +274,49 @@ MC_ATTRIBUTE_NONNULL(1, 4, 6, 7);
 ///
 /// * `LibMcError::AttestationVerification`
 /// * `LibMcError::InvalidInput`
+McData* MC_NULLABLE mc_transaction_builder_add_change_output_unmixed(
+  const McAccountKey* MC_NONNULL account_key,
+  McTransactionBuilder* MC_NONNULL transaction_builder,
+  uint64_t amount,
+  McRngCallback* MC_NULLABLE rng_callback,
+  McMutableBuffer* MC_NONNULL out_tx_out_confirmation_number,
+  McMutableBuffer* MC_NONNULL out_tx_out_shared_secret,
+  McError* MC_NULLABLE * MC_NULLABLE out_error
+)
+MC_ATTRIBUTE_NONNULL(1, 2, 6, 7);
+
+/// # Preconditions
+///
+/// * `transaction_builder` - must not have been previously consumed by a call to `build`.
+/// * `recipient_address` - must be a valid `PublicAddress`.
+/// * `out_subaddress_spend_public_key` - length must be >= 32.
+///
+/// # Errors
+///
+/// * `LibMcError::AttestationVerification`
+/// * `LibMcError::InvalidInput`
+McData* MC_NULLABLE mc_transaction_builder_add_output_unmixed(
+  McTransactionBuilder* MC_NONNULL transaction_builder,
+  uint64_t amount,
+  const McPublicAddress* MC_NONNULL recipient_address,
+  McRngCallback* MC_NULLABLE rng_callback,
+  McMutableBuffer* MC_NONNULL out_tx_out_confirmation_number,
+  McMutableBuffer* MC_NONNULL out_tx_out_shared_secret,
+  McError* MC_NULLABLE * MC_NULLABLE out_error
+)
+MC_ATTRIBUTE_NONNULL(1, 4, 6, 7);
+
+/// # Preconditions
+///
+/// * `account_kay` - must be a valid account key, default change address computed from account key
+/// * `transaction_builder` - must not have been previously consumed by a call
+///   to `build`.
+/// * `out_tx_out_confirmation_number` - length must be >= 32.
+///
+/// # Errors
+///
+/// * `LibMcError::AttestationVerification`
+/// * `LibMcError::InvalidInput`
 McData* MC_NULLABLE mc_transaction_builder_add_change_output(
   const McAccountKey* MC_NONNULL account_key,
   McTransactionBuilder* MC_NONNULL transaction_builder,
@@ -285,7 +328,6 @@ McData* MC_NULLABLE mc_transaction_builder_add_change_output(
   McError* MC_NULLABLE * MC_NULLABLE out_error
 )
 MC_ATTRIBUTE_NONNULL(1, 2, 6, 7);
-
 /// # Preconditions
 ///
 /// * `account_key` - must be a valid account key as the gift code subaddress

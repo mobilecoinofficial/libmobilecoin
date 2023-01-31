@@ -11,7 +11,7 @@ define BINARY_copy
 endef
 
 .PHONY: default
-default: setup patch-cmake build clean-artifacts copy generate
+default: setup build clean-artifacts copy generate
 
 .PHONY: setup
 setup:
