@@ -251,7 +251,7 @@ MC_ATTRIBUTE_NONNULL(1, 2);
 ///
 /// * `LibMcError::AttestationVerification`
 /// * `LibMcError::InvalidInput`
-McData* MC_NULLABLE mc_transaction_builder_add_output(
+McData* MC_NULLABLE mc_transaction_builder_add_output_mixed(
   McTransactionBuilder* MC_NONNULL transaction_builder,
   uint64_t amount,
   uint64_t token_id,
@@ -274,7 +274,7 @@ MC_ATTRIBUTE_NONNULL(1, 4, 6, 7);
 ///
 /// * `LibMcError::AttestationVerification`
 /// * `LibMcError::InvalidInput`
-McData* MC_NULLABLE mc_transaction_builder_add_change_output_unmixed(
+McData* MC_NULLABLE mc_transaction_builder_add_change_output(
   const McAccountKey* MC_NONNULL account_key,
   McTransactionBuilder* MC_NONNULL transaction_builder,
   uint64_t amount,
@@ -295,7 +295,7 @@ MC_ATTRIBUTE_NONNULL(1, 2, 6, 7);
 ///
 /// * `LibMcError::AttestationVerification`
 /// * `LibMcError::InvalidInput`
-McData* MC_NULLABLE mc_transaction_builder_add_output_unmixed(
+McData* MC_NULLABLE mc_transaction_builder_add_output(
   McTransactionBuilder* MC_NONNULL transaction_builder,
   uint64_t amount,
   const McPublicAddress* MC_NONNULL recipient_address,
@@ -317,7 +317,7 @@ MC_ATTRIBUTE_NONNULL(1, 4, 6, 7);
 ///
 /// * `LibMcError::AttestationVerification`
 /// * `LibMcError::InvalidInput`
-McData* MC_NULLABLE mc_transaction_builder_add_change_output(
+McData* MC_NULLABLE mc_transaction_builder_add_change_output_mixed(
   const McAccountKey* MC_NONNULL account_key,
   McTransactionBuilder* MC_NONNULL transaction_builder,
   uint64_t amount,
