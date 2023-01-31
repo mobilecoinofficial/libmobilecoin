@@ -17,7 +17,6 @@ default: setup patch-cmake build clean-artifacts copy generate
 setup:
 	cd "$(LIBMOBILECOIN_LIB_DIR)"
 	bundle install
-	tools/patch-cmake.sh
 
 # Unexport conditional environment variables so the build is more predictable
 unexport SGX_MODE
