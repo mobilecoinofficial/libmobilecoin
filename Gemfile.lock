@@ -72,6 +72,7 @@ GEM
     nanaimo (0.3.0)
     nap (1.1.0)
     netrc (0.11.0)
+    pkg-config (1.5.1)
     public_suffix (4.0.6)
     rexml (3.2.5)
     ruby-macho (1.4.0)
@@ -92,6 +93,7 @@ PLATFORMS
 
 DEPENDENCIES
   cocoapods!
+  pkg-config!
   rexml!
 
 BUNDLED WITH
