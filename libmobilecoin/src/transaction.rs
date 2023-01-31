@@ -585,7 +585,7 @@ pub extern "C" fn mc_transaction_builder_add_presigned_input(
 /// * `LibMcError::AttestationVerification`
 /// * `LibMcError::InvalidInput`
 #[no_mangle]
-pub extern "C" fn mc_transaction_builder_add_output(
+pub extern "C" fn mc_transaction_builder_add_output_mixed(
     transaction_builder: FfiMutPtr<McTransactionBuilder>,
     amount: u64,
     token_id: u64,
@@ -641,7 +641,7 @@ pub extern "C" fn mc_transaction_builder_add_output(
 /// * `LibMcError::AttestationVerification`
 /// * `LibMcError::InvalidInput`
 #[no_mangle]
-pub extern "C" fn mc_transaction_builder_add_output_unmixed(
+pub extern "C" fn mc_transaction_builder_add_output(
     transaction_builder: FfiMutPtr<McTransactionBuilder>,
     amount: u64,
     recipient_address: FfiRefPtr<McPublicAddress>,
@@ -699,7 +699,7 @@ pub extern "C" fn mc_transaction_builder_add_output_unmixed(
 /// * `LibMcError::AttestationVerification`
 /// * `LibMcError::InvalidInput`
 #[no_mangle]
-pub extern "C" fn mc_transaction_builder_add_change_output(
+pub extern "C" fn mc_transaction_builder_add_change_output_mixed(
     account_key: FfiRefPtr<McAccountKey>,
     transaction_builder: FfiMutPtr<McTransactionBuilder>,
     amount: u64,
@@ -757,7 +757,7 @@ pub extern "C" fn mc_transaction_builder_add_change_output(
 /// * `LibMcError::AttestationVerification`
 /// * `LibMcError::InvalidInput`
 #[no_mangle]
-pub extern "C" fn mc_transaction_builder_add_change_output_unmixed(
+pub extern "C" fn mc_transaction_builder_add_change_output(
     account_key: FfiRefPtr<McAccountKey>,
     transaction_builder: FfiMutPtr<McTransactionBuilder>,
     amount: u64,
