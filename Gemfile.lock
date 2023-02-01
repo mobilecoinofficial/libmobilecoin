@@ -22,7 +22,18 @@ GIT
       ruby-macho (>= 2.3.0, < 3.0)
       xcodeproj (>= 1.21.0, < 2.0)
 
+GIT
+  remote: https://github.com/sporkmonger/addressable
+  revision: 1fdd676753fb2f44c9d7e0953c97c3e6becfb36a
+  specs:
+    addressable (2.8.1)
+      public_suffix (>= 2.0.2, < 6.0)
+
 GEM
+  specs:
+
+GEM
+  remote: https://rubygems.org/
   specs:
     CFPropertyList (3.0.6)
       rexml
@@ -32,8 +43,6 @@ GEM
       minitest (>= 5.1)
       tzinfo (~> 2.0)
       zeitwerk (~> 2.3)
-    addressable (2.8.1)
-      public_suffix (>= 2.0.2, < 6.0)
     algoliasearch (1.27.5)
       httpclient (~> 2.8, >= 2.8.3)
       json (>= 1.5.1)
@@ -76,7 +85,9 @@ GEM
     nanaimo (0.3.0)
     nap (1.1.0)
     netrc (0.11.0)
+    pkg-config (1.5.1)
     public_suffix (4.0.7)
+    rexml (3.2.5)
     ruby-macho (2.5.1)
     typhoeus (1.4.0)
       ethon (>= 0.9.0)
@@ -91,17 +102,13 @@ GEM
       rexml (~> 3.2.4)
     zeitwerk (2.6.6)
 
-GEM
-  remote: https://rubygems.org/
-  specs:
-    pkg-config (1.5.1)
-    rexml (3.2.5)
-
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  addressable (= 2.8.1)!
   cocoapods!
+  cocoapods-deintegrate (~> 1.0, >= 1.0.4)!
   pkg-config!
   rexml!
 
