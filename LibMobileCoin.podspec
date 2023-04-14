@@ -43,7 +43,7 @@ Pod::Spec.new do |s|
      subspec.source_files = [
        "Artifacts/include/*.h",
        "Sources/Generated/Proto/*.{grpc,pb,http}.swift",
-       "Sources/Generated/Interface/*.swift",
+       "Sources/Interface/*.swift",
      ]
  
      subspec.dependency "gRPC-Swift"
@@ -58,7 +58,7 @@ Pod::Spec.new do |s|
      subspec.source_files = [
        "Artifacts/include/*.h",
        "Sources/Generated/Proto/*.{pb,http}.swift",
-       "Sources/Generated/Interface/*.swift",
+       "Sources/Interface/*.swift",
      ]
  
      subspec.dependency "SwiftProtobuf", "~> 1.5"
