@@ -1,0 +1,4 @@
+module LibMobileCoin {
+    header "libmobilecoin_cbindgen.h"
+    export *
+}
