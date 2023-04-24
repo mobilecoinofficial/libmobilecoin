@@ -3,15 +3,6 @@ import PackageDescription
 import Foundation
 let package = Package(
     name: "LibMobileCoin",
-    dependencies: [
-        // Here we define our package's external dependencies
-        // and from where they can be fetched:
-        .package(
-            url: "https://github.com/apple/swift-protobuf",
-            from: "1.5.0"
-        ),
-        .package(url: "https://github.com/grpc/grpc-swift.git", from: "1.0.0")
-    ],
     platforms: [
         .iOS(.v13),
             .macOS(.v11)
@@ -24,14 +15,23 @@ let package = Package(
             name: "CoreHTTP",
             targets: ["CoreHTTP"]),
     ],
+    dependencies: [
+        // Here we define our package's external dependencies
+        // and from where they can be fetched:
+        .package(
+            url: "https://github.com/apple/swift-protobuf",
+            from: "1.5.0"
+        ),
+        .package(url: "https://github.com/grpc/grpc-swift.git", from: "1.0.0")
+    ],
     targets: [
         .target(
             name: "Core",
+            dependencies: ["SwiftProtobuf","GRPC","LibMobileCoinFramework"],
             path: "Sources",
             exclude: [
                 "*.http",
-            ],
-            dependencies: ["SwiftProtobuf","GRPC","LibMobileCoinFramework"]),
+            ]),
         .target(
             name: "CoreHTTP",
             dependencies: ["SwiftProtobuf","LibMobileCoinFramework"]),
