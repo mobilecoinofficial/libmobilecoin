@@ -2,23 +2,42 @@
 import PackageDescription
 import Foundation
 let package = Package(
-        name: "LibMobileCoin",
-        platforms: [
-            .iOS(.v13), 
+    name: "LibMobileCoin",
+    dependencies: [
+        // Here we define our package's external dependencies
+        // and from where they can be fetched:
+        .package(
+            url: "https://github.com/apple/swift-protobuf",
+            from: "1.5.0"
+        ),
+        .package(url: "https://github.com/grpc/grpc-swift.git", from: "1.0.0")
+    ],
+    platforms: [
+        .iOS(.v13),
             .macOS(.v11)
-        ],
-        products: [
-            .library(
-                name: "LibMobileCoin",
-                targets: ["LibMobileCoin"]),
-        ],
-        targets: [
-            .target(
-                name: "LibMobileCoin",
-                dependencies: ["LibMobileCoinFramework"]),
-            .binaryTarget(
-                name: "LibMobileCoinFramework",
-                url: "https://github.com/mobilecoinofficial/libmobilecoin/blob/master/Artifacts/bundle.zip",
-                checksum: "87a1a60112bc3d2dc5b6b3b3ea87b09abd9c4d11dbdceb90e98dc74b672855c3"),
-        ]
+    ],
+    products: [
+        .library(
+            name: "Core",
+            targets: ["Core"]),
+        .library(
+            name: "CoreHTTP",
+            targets: ["CoreHTTP"]),
+    ],
+    targets: [
+        .target(
+            name: "Core",
+            path: "Sources",
+            exclude: [
+                "*.http",
+            ],
+            dependencies: ["SwiftProtobuf","GRPC","LibMobileCoinFramework"]),
+        .target(
+            name: "CoreHTTP",
+            dependencies: ["SwiftProtobuf","LibMobileCoinFramework"]),
+        .binaryTarget(
+            name: "LibMobileCoinFramework",
+            url: "https://github.com/mobilecoinofficial/libmobilecoin/blob/adam/%23184377543-3/Artifacts/bundle.zip",
+            checksum: "f6aa5e86d7657bd032a8c95f9a320085d258b6f554098812d191ed8b1f781498"),
+    ]
 )
