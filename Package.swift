@@ -13,7 +13,7 @@ let package = Package(
             targets: ["Core"]),
         .library(
             name: "CoreHTTP",
-            targets: ["CoreHTTP"]),
+            targets: ["CoreHTTP"])
     ],
     dependencies: [
         // Here we define our package's external dependencies
@@ -27,17 +27,17 @@ let package = Package(
     targets: [
         .target(
             name: "Core",
-            dependencies: ["SwiftProtobuf","GRPC","LibMobileCoinFramework"],
+            dependencies: ["SwiftProtobuf", "GRPC", "LibMobileCoinFramework"],
             path: "Sources",
             exclude: [
-                "*.http",
+                "*.http"
             ]),
         .target(
             name: "CoreHTTP",
-            dependencies: ["SwiftProtobuf","LibMobileCoinFramework"]),
+            dependencies: ["SwiftProtobuf", "LibMobileCoinFramework"]),
         .binaryTarget(
             name: "LibMobileCoinFramework",
             url: "https://github.com/mobilecoinofficial/libmobilecoin/blob/adam/%23184377543-3/Artifacts/bundle.zip",
-            checksum: "63e609ed9818e407c110aa9eb65d8fb94d24ddea6be2ff6db920aa7facf726e5"),
+            checksum: "63e609ed9818e407c110aa9eb65d8fb94d24ddea6be2ff6db920aa7facf726e5")
     ]
 )
