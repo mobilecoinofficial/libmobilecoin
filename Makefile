@@ -29,6 +29,10 @@ unexport CARGO_PROFILE
 build:
 	cd "$(LIBMOBILECOIN_LIB_DIR)" && $(MAKE)
 
+.PHONY: framework
+framework:
+	cd "$(LIBMOBILECOIN_LIB_DIR)" && $(MAKE) xcframework
+
 .PHONY: clean-artifacts
 clean-artifacts:
 	rm -r "$(ARTIFACTS_DIR)" 2>/dev/null || true
