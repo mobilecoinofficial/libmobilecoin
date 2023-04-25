@@ -36,7 +36,7 @@ let package = Package(
             name: "CoreHTTP",
             dependencies: ["swift-protobuf", "LibMobileCoinFramework"]),
         .binaryTarget(
-            name: "LibMobileCoinFramework",
+            name: "LibMobileCoin",
             url: "https://yus.s3.us-east-1.amazonaws.com/bundle.zip",
             // url: "https://github.com/mobilecoinofficial/libmobilecoin/blob/adam/%23184377543-3/Artifacts/bundle.zip",
             checksum: "sha256checksum")

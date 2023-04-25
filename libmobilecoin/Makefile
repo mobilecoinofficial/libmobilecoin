@@ -174,6 +174,8 @@ xcframework:
 		-output out/ios/LibMobileCoin.xcframework
 	zip -r out/ios/bundle.zip out/ios/LibMobileCoin.xcframework
 	openssl dgst -sha256 out/ios/bundle.zip | sed 's/^.*= //' > out/ios/xcframework_sha256.txt
+	openssl dgst -sha256 out/ios/bundle.zip 
+	cat out/ios/xcframework_sha256.txt
 	cp out/ios/bundle.zip ../Artifacts
 	sed "s/sha256checksum/$(shell cat out/ios/xcframework_sha256.txt)/" Package_template.swift > ../Package.swift
 	cat ../Package.swift
