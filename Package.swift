@@ -27,20 +27,17 @@ let package = Package(
     targets: [
         .target(
             name: "Core",
-            dependencies: ["swift-protobuf","grpc-swift","LibMobileCoinFramework"],
-            path: "Sources"
-        ),
-        .target(
-            name: "CoreHTTP",
-            dependencies: ["swift-protobuf","LibMobileCoinFramework"]),
+            dependencies: ["swift-protobuf", "grpc-swift", "LibMobileCoinFramework"],
             path: "Sources",
             exclude: [
-                "*grpc.http",
-            ]
-        ),
+                "*.http"
+            ]),
+        .target(
+            name: "CoreHTTP",
+            dependencies: ["swift-protobuf", "LibMobileCoinFramework"]),
         .binaryTarget(
             name: "LibMobileCoinFramework",
             url: "https://github.com/mobilecoinofficial/libmobilecoin/blob/adam/%23184377543-3/Artifacts/bundle.zip",
-            checksum: "57296f5272a05c82a9a31d1f56f360ba63218a2c2a1bf22778529bf2da09994b"),
+            checksum: "5b52de2c14fa83131d237719fa474cc0a333d6b056e2e2fd48b1f4ca0c633bac")
     ]
 )
