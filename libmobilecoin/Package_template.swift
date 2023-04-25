@@ -32,7 +32,7 @@ let package = Package(
          ),
         .target(
             name: "Common",
-            dependencies: ["swift-protobuf"],
+            dependencies: [.product(name: "SwiftProtobuf", package: "swift-protobuf")],
             path: "Sources/Generated/Proto/PB"
          ),
         .target(
@@ -41,14 +41,14 @@ let package = Package(
             path: "Sources/Interface"
         ),
         .target(
-            name: "Core",
-            dependencies: ["Common", "CoreHTTP", "TestVectorUtils", "swift-protobuf", "grpc-swift", "LibMobileCoin"],
-            path: "Sources/Generated/Proto/GRPC"
+            name: "CoreHTTP",
+            dependencies: ["Common", "HTTPInterface", "TestVectorUtils", "LibMobileCoin"],
+            path: "Sources/Generated/Proto/HTTP"
         ),
         .target(
-            name: "CoreHTTP",
-            dependencies: ["Common", "HTTPInterface", "TestVectorUtils", "swift-protobuf", "LibMobileCoin"],
-            path: "Sources/Generated/Proto/HTTP"
+            name: "Core",
+            dependencies: ["CoreHTTP", .product(name: "GRPC", package: "grpc-swift")],
+            path: "Sources/Generated/Proto/GRPC"
         ),
         .binaryTarget(
             name: "LibMobileCoin",
