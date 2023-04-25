@@ -33,7 +33,7 @@ let package = Package(
         .target(
             name: "Common",
             dependencies: ["swift-protobuf"],
-            path: "Sources/Common"
+            path: "Sources/Generated/Proto/PB"
          ),
         .target(
             name: "HTTPInterface",
