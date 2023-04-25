@@ -10,10 +10,10 @@ let package = Package(
     products: [
         .library(
             name: "LibMobileCoinCoreProduct",
-            targets: ["LibMobileCoinHTTP", "LibMobileCoinGRPC", "LibMobileCoinCommon", "LibMobileCoin"]),
+            targets: ["LibMobileCoinTestVector", "LibMobileCoinHTTP", "LibMobileCoinGRPC", "LibMobileCoinCommon", "LibMobileCoin"]),
         .library(
             name: "LibMobileCoinCoreHTTPProduct",
-            targets: ["LibMobileCoinHTTP", "LibMobileCoinCommon", "LibMobileCoin"])
+            targets: ["LibMobileCoinTestVector", "LibMobileCoinHTTP", "LibMobileCoinCommon", "LibMobileCoin"])
     ],
     dependencies: [
         // Here we define our package's external dependencies
@@ -25,6 +25,14 @@ let package = Package(
         .package(url: "https://github.com/grpc/grpc-swift.git", from: "1.0.0")
     ],
     targets: [
+        .target(
+            name: "LibMobileCoinTestVector",
+            dependencies: [],
+            path: "Sources/TestVector",
+            resources: [
+                .copy("Vendor/mobilecoin/test-vectors/vectors")
+            ]
+         ),
         .target(
             name: "LibMobileCoinCommon",
             dependencies: [.product(name: "SwiftProtobuf", package: "swift-protobuf")],
