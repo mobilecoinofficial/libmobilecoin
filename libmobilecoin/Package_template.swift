@@ -32,12 +32,12 @@ let package = Package(
          ),
         .target(
             name: "LibMobileCoinHTTP",
-            dependencies: [.target(name: "Common")],
+            dependencies: [.target(name: "LibMobileCoinCommon")],
             path: "Sources/HTTP"
         ),
         .target(
             name: "LibMobileCoinGRPC",
-            dependencies: [.target(name: "Common"), .product(name: "GRPC", package: "grpc-swift")],
+            dependencies: [.target(name: "LibMobileCoinCommon"), .product(name: "GRPC", package: "grpc-swift")],
             path: "Sources/GRPC"
         ),
         .binaryTarget(
