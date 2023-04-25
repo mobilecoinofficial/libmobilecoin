@@ -63,6 +63,7 @@ RUN protoc \
     --swift_opt=Visibility=Public \
     --grpc-swift_out=Sources/GRPC \
     --grpc-swift_opt=Client=true,Server=false,Visibility=Public \
+    --grpc-swift_opt=ExtraModuleImports=LibMobileCoinCommon \
     -IVendor/mobilecoin/api/proto \
     -IVendor/mobilecoin/attest/api/proto \
     -IVendor/mobilecoin/consensus/api/proto \
@@ -89,6 +90,7 @@ RUN protoc \
     --plugin=/root/swift-plugins/bin/protoc-gen-http-swift \
     --http-swift_out=Sources/HTTP \
     --http-swift_opt=Client=true,Visibility=Public \
+    --http-swift_opt=ExtraModuleImports=LibMobileCoinCommon \
     -IVendor/mobilecoin/api/proto \
     -IVendor/mobilecoin/attest/api/proto \
     -IVendor/mobilecoin/consensus/api/proto \
