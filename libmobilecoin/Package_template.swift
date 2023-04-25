@@ -38,7 +38,7 @@ let package = Package(
         .target(
             name: "Core",
             dependencies: [.target(name: "Common"), .product(name: "GRPC", package: "grpc-swift")],
-            path: "Sources/Generated/Proto/GRPC"
+            path: "Sources/GRPC"
         ),
         .binaryTarget(
             name: "LibMobileCoin",
