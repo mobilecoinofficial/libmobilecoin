@@ -9,11 +9,11 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "LibMobileCoinCore",
-            targets: ["Core", "LibMobileCoin"]),
+            name: "LibMobileCoinCoreProduct",
+            targets: ["LibMobileCoinCore", "LibMobileCoin"]),
         .library(
-            name: "LibMobileCoinCoreHTTP",
-            targets: ["CoreHTTP", "LibMobileCoin"])
+            name: "LibMobileCoinCoreHTTPProduct",
+            targets: ["LibMobileCoinCoreHTTP", "LibMobileCoin"])
     ],
     dependencies: [
         // Here we define our package's external dependencies
@@ -31,12 +31,12 @@ let package = Package(
             path: "Sources/Common"
          ),
         .target(
-            name: "CoreHTTP",
+            name: "LibMobileCoinCoreHTTP",
             dependencies: [.target(name: "Common")],
             path: "Sources/HTTP"
         ),
         .target(
-            name: "Core",
+            name: "LibMobileCoinCore",
             dependencies: [.target(name: "Common"), .product(name: "GRPC", package: "grpc-swift")],
             path: "Sources/GRPC"
         ),
