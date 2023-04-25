@@ -1,4 +1,4 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.7
 import PackageDescription
 import Foundation
 let package = Package(
@@ -30,7 +30,7 @@ let package = Package(
             dependencies: [],
             path: "Sources/TestVector",
             resources: [
-                .copy("Vendor/mobilecoin/test-vectors/vectors/")
+                .copy("../../Vendor/mobilecoin/test-vectors/vectors/")
             ]
          ),
         .target(

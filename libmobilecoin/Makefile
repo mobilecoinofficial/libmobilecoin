@@ -174,6 +174,7 @@ xcframework:
 		-output out/ios/LibMobileCoin.xcframework
 	cd out/ios && zip -r -X bundle.zip LibMobileCoin.xcframework
 	cp out/ios/bundle.zip ../Artifacts
+	cp -R ../Vendor/mobilecoin/test-vectors/vectors ../Sources/TestVector
 
 .PHONY: gen-spm
 gen-spm:
