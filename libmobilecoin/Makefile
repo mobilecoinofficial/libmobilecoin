@@ -177,10 +177,8 @@ xcframework:
 
 .PHONY: gen-spm
 gen-spm:
-	openssl dgst -sha256 ../Artifacts/bundle.zip | sed 's/^.*= //' > out/ios/xcframework_sha256.txt
 	openssl dgst -sha256 ../Artifacts/bundle.zip
-	cat out/ios/xcframework_sha256.txt
-	sed "s/sha256checksum/$(shell cat out/ios/xcframework_sha256.txt)/" Package_template.swift > ../Package.swift
+	sed "s/sha256checksum/$(shell openssl dgst -sha256 ../Artifacts/bundle.zip  | sed 's/^.*= //')/" Package_template.swift > ../Package.swift
 	cat ../Package.swift
 	cd ../; swift package dump-package
 	aws s3 sync ../Artifacts s3://yus

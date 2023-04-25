@@ -42,7 +42,9 @@ Pod::Spec.new do |s|
  
      subspec.source_files = [
        "Artifacts/include/*.h",
-       "Sources/Generated/Proto/*.{grpc,pb,http}.swift",
+       "Sources/Generated/Proto/HTTP/*.{http}.swift",
+       "Sources/Generated/Proto/GRPC/*.{grpc}.swift",
+       "Sources/Generated/Proto/*.{pb}.swift",
        "Sources/Interface/*.swift",
      ]
  
@@ -57,7 +59,8 @@ Pod::Spec.new do |s|
  
      subspec.source_files = [
        "Artifacts/include/*.h",
-       "Sources/Generated/Proto/*.{pb,http}.swift",
+       "Sources/Generated/Proto/HTTP/*.{http}.swift",
+       "Sources/Generated/Proto/*.{pb}.swift",
        "Sources/Interface/*.swift",
      ]
  

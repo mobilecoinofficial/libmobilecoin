@@ -56,11 +56,12 @@ COPY Vendor/mobilecoin/fog/api/proto/fog_common.proto \
     libmobilecoin/legacy/legacyview.proto \
     Vendor/mobilecoin/fog/api/proto/
 
-RUN mkdir -p Sources/Generated/Proto
+RUN mkdir -p Sources/Generated/Proto/GRPC
+RUN mkdir -p Sources/Generated/Proto/Common
 RUN protoc \
-    --swift_out=Sources/Generated/Proto \
+    --swift_out=Sources/Generated/Proto/Common \
     --swift_opt=Visibility=Public \
-    --grpc-swift_out=Sources/Generated/Proto \
+    --grpc-swift_out=Sources/Generated/Proto/GRPC \
     --grpc-swift_opt=Client=true,Server=false,Visibility=Public \
     -IVendor/mobilecoin/api/proto \
     -IVendor/mobilecoin/attest/api/proto \
@@ -83,9 +84,10 @@ RUN protoc \
     view.proto \
     legacyview.proto
 
+RUN mkdir -p Sources/Generated/Proto/HTTP
 RUN protoc \
     --plugin=/root/swift-plugins/bin/protoc-gen-http-swift \
-    --http-swift_out=Sources/Generated/Proto \
+    --http-swift_out=Sources/Generated/Proto/HTTP \
     --http-swift_opt=Client=true,Visibility=Public \
     -IVendor/mobilecoin/api/proto \
     -IVendor/mobilecoin/attest/api/proto \

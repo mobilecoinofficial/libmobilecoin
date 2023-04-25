@@ -35,12 +35,12 @@ let package = Package(
             dependencies: ["swift-protobuf", "LibMobileCoin"],
             path: "Sources",
             exclude: [
-                "Generated/Proto/*.grpc.swift"
+                "Generated/Proto/GRPC"
             ]),
         .binaryTarget(
             name: "LibMobileCoin",
             url: "https://yus.s3.us-east-1.amazonaws.com/bundle.zip",
             // url: "https://github.com/mobilecoinofficial/libmobilecoin/blob/adam/%23184377543-3/Artifacts/bundle.zip",
-            checksum: "682acac1563b8d58306ed9cf920bc5ada41d46532a6316d7352d6c6d34ab1d40")
+            checksum: "8228b2ae1c07d092e8714ebf5d064ca61303726a79c971cff5980c84f27bc344")
     ]
 )
