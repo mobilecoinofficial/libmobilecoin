@@ -149,33 +149,33 @@ cbindgen:
 .PHONY: xcframework
 xcframework:
 	lipo -create \
-  	target/x86_64-apple-darwin/mobile-release/libmobilecoin.a \
-  	target/aarch64-apple-darwin/mobile-release/libmobilecoin.a \
-  	-output out/ios/target/libmobilecoin_macos.a
+		target/x86_64-apple-darwin/mobile-release/libmobilecoin.a \
+		target/aarch64-apple-darwin/mobile-release/libmobilecoin.a \
+		-output out/ios/target/libmobilecoin_macos.a
 	lipo -create \
-  	target/x86_64-apple-ios/mobile-release/libmobilecoin.a \
-  	target/aarch64-apple-ios-sim/mobile-release/libmobilecoin.a \
-  	-output out/ios/target/libmobilecoin_iossimulator.a
+		target/x86_64-apple-ios/mobile-release/libmobilecoin.a \
+		target/aarch64-apple-ios-sim/mobile-release/libmobilecoin.a \
+		-output out/ios/target/libmobilecoin_iossimulator.a
 	lipo -create \
-  	target/x86_64-apple-ios-macabi/mobile-release/libmobilecoin.a \
-  	target/aarch64-apple-ios-macabi/mobile-release/libmobilecoin.a \
-  	-output out/ios/target/libmobilecoin_maccatalyst.a
+		target/x86_64-apple-ios-macabi/mobile-release/libmobilecoin.a \
+		target/aarch64-apple-ios-macabi/mobile-release/libmobilecoin.a \
+		-output out/ios/target/libmobilecoin_maccatalyst.a
 	cp libmobilecoin_cbindgen.h include
 	rm -rf out/ios/LibMobileCoin.xcframework
 	xcodebuild -create-xcframework \
-  	-library out/ios/target/libmobilecoin_macos.a \
-  	-headers ./include/ \
-  	-library out/ios/target/libmobilecoin_iossimulator.a \
-  	-headers ./include/ \
-  	-library out/ios/target/libmobilecoin_maccatalyst.a \
-  	-headers ./include/ \
-  	-library out/ios/target/aarch64-apple-ios/mobile-release/libmobilecoin.a \
-  	-headers ./include/ \
-  	-output out/ios/LibMobileCoin.xcframework
+		-library out/ios/target/libmobilecoin_macos.a \
+		-headers ./include/ \
+		-library out/ios/target/libmobilecoin_iossimulator.a \
+		-headers ./include/ \
+		-library out/ios/target/libmobilecoin_maccatalyst.a \
+		-headers ./include/ \
+		-library out/ios/target/aarch64-apple-ios/mobile-release/libmobilecoin.a \
+		-headers ./include/ \
+		-output out/ios/LibMobileCoin.xcframework
 	zip -r out/ios/bundle.zip out/ios/LibMobileCoin.xcframework
 	openssl dgst -sha256 out/ios/bundle.zip | sed 's/^.*= //' > out/ios/xcframework_sha256.txt
 	cp out/ios/bundle.zip ../Artifacts
-	CHECKSUM="$(shell cat out/ios/xcframework_sha256.txt)" && sed "s/sha256checksum/$$CHECKSUM/" Package_template.swift > ../Package.swift
+	sed "s/sha256checksum/$(shell cat out/ios/xcframework_sha256.txt)/" Package_template.swift > ../Package.swift
 	cat ../Package.swift
 	cd ../; swift package dump-package
 	aws s3 sync ../Artifacts s3://yus
