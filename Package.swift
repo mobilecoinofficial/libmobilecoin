@@ -9,11 +9,11 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "Core",
-            targets: ["Core"]),
+            name: "LibMobileCoinCore",
+            targets: ["Core", "LibMobileCoin"]),
         .library(
-            name: "CoreHTTP",
-            targets: ["CoreHTTP"])
+            name: "LibMobileCoinCoreHTTP",
+            targets: ["CoreHTTP", "LibMobileCoin"])
     ],
     dependencies: [
         // Here we define our package's external dependencies
@@ -26,28 +26,18 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "TestVectorUtils",
-            dependencies: [],
-            path: "Sources/TestVector/Util"
-         ),
-        .target(
             name: "Common",
             dependencies: [.product(name: "SwiftProtobuf", package: "swift-protobuf")],
-            path: "Sources/Generated/Proto/PB"
+            path: "Sources/Common"
          ),
         .target(
-            name: "HTTPInterface",
-            dependencies: [],
-            path: "Sources/Interface"
-        ),
-        .target(
             name: "CoreHTTP",
-            dependencies: ["Common", "HTTPInterface", "TestVectorUtils", "LibMobileCoin"],
-            path: "Sources/Generated/Proto/HTTP"
+            dependencies: [.target(name: "Common")],
+            path: "Sources/HTTP"
         ),
         .target(
             name: "Core",
-            dependencies: ["CoreHTTP", .product(name: "GRPC", package: "grpc-swift")],
+            dependencies: [.target(name: "Common"), .product(name: "GRPC", package: "grpc-swift")],
             path: "Sources/Generated/Proto/GRPC"
         ),
         .binaryTarget(
