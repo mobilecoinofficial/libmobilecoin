@@ -29,12 +29,14 @@ let package = Package(
             name: "Core",
             dependencies: ["swift-protobuf", "grpc-swift", "LibMobileCoin"],
             path: "Sources",
-            exclude: [
-                "*.http"
-            ]),
+            exclude: [ ]),
         .target(
             name: "CoreHTTP",
-            dependencies: ["swift-protobuf", "LibMobileCoin"]),
+            dependencies: ["swift-protobuf", "LibMobileCoin"],
+            path: "Sources",
+            exclude: [
+                "*grpc.swift"
+            ]),
         .binaryTarget(
             name: "LibMobileCoin",
             url: "https://yus.s3.us-east-1.amazonaws.com/bundle.zip",
