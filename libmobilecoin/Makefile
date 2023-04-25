@@ -172,7 +172,8 @@ xcframework:
 		-library out/ios/target/aarch64-apple-ios/mobile-release/libmobilecoin.a \
 		-headers ./include/ \
 		-output out/ios/LibMobileCoin.xcframework
-	zip -r out/ios/bundle.zip out/ios/LibMobileCoin.xcframework
+	cd out/ios && zip -r bundle.zip LibMobileCoin.xcframework
+	cp out/ios/bundle.zip ../Artifacts
 
 .PHONY: gen-spm
 gen-spm:
