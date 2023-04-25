@@ -26,17 +26,20 @@ let package = Package(
     ],
     targets: [
         .target(
+            name: "Common",
+            dependencies: ["swift-protobuf", "LibMobileCoin"],
+            path: ["Sources/Common", "Sources/TestVector/Util"]
+         ),
+        .target(
             name: "Core",
-            dependencies: ["swift-protobuf", "grpc-swift", "LibMobileCoin"],
-            path: "Sources",
-            exclude: [ ]),
+            dependencies: ["Common", "CoreHTTP", "swift-protobuf", "grpc-swift", "LibMobileCoin"],
+            path: ["Sources/Generated/Proto/GRPC"]
+        ),
         .target(
             name: "CoreHTTP",
-            dependencies: ["swift-protobuf", "LibMobileCoin"],
-            path: "Sources",
-            exclude: [
-                "Generated/Proto/GRPC"
-            ]),
+            dependencies: ["Common", "swift-protobuf", "LibMobileCoin"],
+            path: ["Sources/Generated/Proto/HTTP", "Sources/Interface"]
+        ),
         .binaryTarget(
             name: "LibMobileCoin",
             url: "https://yus.s3.us-east-1.amazonaws.com/bundle.zip",
@@ -44,3 +47,4 @@ let package = Package(
             checksum: "sha256checksum")
     ]
 )
+
