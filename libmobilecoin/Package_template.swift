@@ -10,10 +10,10 @@ let package = Package(
     products: [
         .library(
             name: "Core",
-            targets: ["Core"]),
+            targets: ["Common", "HTTPInterface", "CoreHTTP", "Core"]),
         .library(
             name: "CoreHTTP",
-            targets: ["CoreHTTP"])
+            targets: ["Common", "HTTPInterface", "CoreHTTP"])
     ],
     dependencies: [
         // Here we define our package's external dependencies

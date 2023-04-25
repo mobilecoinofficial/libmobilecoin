@@ -56,12 +56,12 @@ COPY Vendor/mobilecoin/fog/api/proto/fog_common.proto \
     libmobilecoin/legacy/legacyview.proto \
     Vendor/mobilecoin/fog/api/proto/
 
-RUN mkdir -p Sources/Generated/Proto/GRPC
-RUN mkdir -p Sources/Generated/Proto/PB
+RUN mkdir -p Sources/GRPC
+RUN mkdir -p Sources/Common
 RUN protoc \
-    --swift_out=Sources/Generated/Proto/PB \
+    --swift_out=Sources/Common \
     --swift_opt=Visibility=Public \
-    --grpc-swift_out=Sources/Generated/Proto/GRPC \
+    --grpc-swift_out=Sources/GRPC \
     --grpc-swift_opt=Client=true,Server=false,Visibility=Public \
     -IVendor/mobilecoin/api/proto \
     -IVendor/mobilecoin/attest/api/proto \
@@ -84,10 +84,10 @@ RUN protoc \
     view.proto \
     legacyview.proto
 
-RUN mkdir -p Sources/Generated/Proto/HTTP
+RUN mkdir -p Sources/HTTP
 RUN protoc \
     --plugin=/root/swift-plugins/bin/protoc-gen-http-swift \
-    --http-swift_out=Sources/Generated/Proto/HTTP \
+    --http-swift_out=Sources/HTTP \
     --http-swift_opt=Client=true,Visibility=Public \
     -IVendor/mobilecoin/api/proto \
     -IVendor/mobilecoin/attest/api/proto \
@@ -113,5 +113,5 @@ RUN protoc \
 FROM scratch
 
 COPY --from=build \
-    /root/project/Sources/Generated/Proto/ \
-    /Sources/Generated/Proto/
+    /root/project/Sources/ \
+    /Sources/
