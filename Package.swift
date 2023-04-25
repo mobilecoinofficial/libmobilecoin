@@ -35,7 +35,7 @@ let package = Package(
             dependencies: ["swift-protobuf", "LibMobileCoin"],
             path: "Sources",
             exclude: [
-                "*grpc.swift"
+                "**.grpc.swift"
             ]),
         .binaryTarget(
             name: "LibMobileCoin",
