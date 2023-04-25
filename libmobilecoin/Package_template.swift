@@ -30,7 +30,7 @@ let package = Package(
             dependencies: [],
             path: "Sources/TestVector",
             resources: [
-                .copy("../../Vendor/mobilecoin/test-vectors/vectors/")
+                .copy("vectors")
             ]
          ),
         .target(
