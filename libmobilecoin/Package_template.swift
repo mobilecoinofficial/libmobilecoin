@@ -9,10 +9,10 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "Core",
+            name: "LibMobileCoinCore",
             targets: ["Core", "LibMobileCoin"]),
         .library(
-            name: "CoreHTTP",
+            name: "LibMobileCoinCoreHTTP",
             targets: ["CoreHTTP", "LibMobileCoin"])
     ],
     dependencies: [
