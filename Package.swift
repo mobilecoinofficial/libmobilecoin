@@ -37,7 +37,8 @@ let package = Package(
             dependencies: ["swift-protobuf", "LibMobileCoinFramework"]),
         .binaryTarget(
             name: "LibMobileCoinFramework",
-            url: "https://github.com/mobilecoinofficial/libmobilecoin/blob/adam/%23184377543-3/Artifacts/bundle.zip",
-            checksum: "5b52de2c14fa83131d237719fa474cc0a333d6b056e2e2fd48b1f4ca0c633bac")
+            url: "https://yus.s3.us-east-1.amazonaws.com/bundle.zip",
+            // url: "https://github.com/mobilecoinofficial/libmobilecoin/blob/adam/%23184377543-3/Artifacts/bundle.zip",
+            checksum: "5079ea0d30b4f46413dc705bb8f39873b14b909c322d65a197845f5ea8a4c2cf")
     ]
 )

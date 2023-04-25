@@ -178,3 +178,4 @@ xcframework:
 	CHECKSUM="$(shell cat out/ios/xcframework_sha256.txt)" && sed "s/sha256checksum/$$CHECKSUM/" Package_template.swift > ../Package.swift
 	cat ../Package.swift
 	cd ../; swift package dump-package
+	aws s3 sync ../Artifacts s3://yus
