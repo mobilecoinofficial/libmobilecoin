@@ -26,19 +26,29 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "Common",
-            dependencies: ["swift-protobuf", "LibMobileCoin"],
-            path: ["Sources/Common", "Sources/TestVector/Util"]
+            name: "TestVectorUtils",
+            dependencies: [],
+            path: "Sources/TestVector/Util"
          ),
         .target(
+            name: "Common",
+            dependencies: ["swift-protobuf"],
+            path: "Sources/Common"
+         ),
+        .target(
+            name: "HTTPInterface",
+            dependencies: [],
+            path: "Sources/Interface"
+        ),
+        .target(
             name: "Core",
-            dependencies: ["Common", "CoreHTTP", "swift-protobuf", "grpc-swift", "LibMobileCoin"],
-            path: ["Sources/Generated/Proto/GRPC"]
+            dependencies: ["Common", "CoreHTTP", "TestVectorUtils", "swift-protobuf", "grpc-swift", "LibMobileCoin"],
+            path: "Sources/Generated/Proto/GRPC"
         ),
         .target(
             name: "CoreHTTP",
-            dependencies: ["Common", "swift-protobuf", "LibMobileCoin"],
-            path: ["Sources/Generated/Proto/HTTP", "Sources/Interface"]
+            dependencies: ["Common", "HTTPInterface", "TestVectorUtils", "swift-protobuf", "LibMobileCoin"],
+            path: "Sources/Generated/Proto/HTTP"
         ),
         .binaryTarget(
             name: "LibMobileCoin",
@@ -47,3 +57,4 @@ let package = Package(
             checksum: "8228b2ae1c07d092e8714ebf5d064ca61303726a79c971cff5980c84f27bc344")
     ]
 )
+

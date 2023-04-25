@@ -57,9 +57,9 @@ COPY Vendor/mobilecoin/fog/api/proto/fog_common.proto \
     Vendor/mobilecoin/fog/api/proto/
 
 RUN mkdir -p Sources/Generated/Proto/GRPC
-RUN mkdir -p Sources/Generated/Proto/Common
+RUN mkdir -p Sources/Generated/Proto/PB
 RUN protoc \
-    --swift_out=Sources/Generated/Proto/Common \
+    --swift_out=Sources/Generated/Proto/PB \
     --swift_opt=Visibility=Public \
     --grpc-swift_out=Sources/Generated/Proto/GRPC \
     --grpc-swift_opt=Client=true,Server=false,Visibility=Public \
