@@ -2,7 +2,7 @@
 import PackageDescription
 import Foundation
 let package = Package(
-    name: "LibMobileCoin",
+    name: "libmobilecoin",
     platforms: [
         .iOS(.v13),
             .macOS(.v11)
@@ -27,14 +27,14 @@ let package = Package(
     targets: [
         .target(
             name: "Core",
-            dependencies: ["swift-protobuf", "grpc-swift", "LibMobileCoinFramework"],
+            dependencies: ["swift-protobuf", "grpc-swift", "LibMobileCoin"],
             path: "Sources",
             exclude: [
                 "*.http"
             ]),
         .target(
             name: "CoreHTTP",
-            dependencies: ["swift-protobuf", "LibMobileCoinFramework"]),
+            dependencies: ["swift-protobuf", "LibMobileCoin"]),
         .binaryTarget(
             name: "LibMobileCoin",
             url: "https://yus.s3.us-east-1.amazonaws.com/bundle.zip",
