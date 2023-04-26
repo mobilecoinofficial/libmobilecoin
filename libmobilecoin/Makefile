@@ -176,7 +176,7 @@ xcframework:
 	rm -rf ../Sources/TestVector/vectors
 	cp -R ../Vendor/mobilecoin/test-vectors/vectors ../Sources/TestVector
 	cd ../Sources/TestVector/vectors && find . -type f -name '*.jsonl' -exec mv -fi '{}' ./ ';'
-	cd ../Sources/TestVector/vectors find .  -mindepth 1 -maxdepth 1 -type d -exec rm -rf '{}' ';'
+	cd ../Sources/TestVector/vectors && find .  -mindepth 1 -maxdepth 1 -type d -exec rm -rf '{}' ';'
 
 .PHONY: gen-spm
 gen-spm:
