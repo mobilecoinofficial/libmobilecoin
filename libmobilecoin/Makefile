@@ -51,7 +51,7 @@ endef
 ####################################
 
 .PHONY: all
-all: setup ios
+all: setup ios spm
 	
 CARGO_BUILD_FLAGS += --lib -Z avoid-dev-deps
 ifeq ($(CARGO_PROFILE),release)
@@ -140,7 +140,7 @@ setup-dev:
 	cargo install cbindgen
 
 .PHONY: spm
-spm: cbindgen xcframework gen-spm
+spm: xcframework gen-spm
 	
 .PHONY: cbindgen
 cbindgen:
@@ -160,7 +160,6 @@ xcframework:
 		target/x86_64-apple-ios-macabi/mobile-release/libmobilecoin.a \
 		target/aarch64-apple-ios-macabi/mobile-release/libmobilecoin.a \
 		-output out/ios/target/libmobilecoin_maccatalyst.a
-	cp libmobilecoin_cbindgen.h include
 	rm -rf out/ios/LibMobileCoin.xcframework
 	xcodebuild -create-xcframework \
 		-library out/ios/target/libmobilecoin_macos.a \
@@ -174,7 +173,10 @@ xcframework:
 		-output out/ios/LibMobileCoin.xcframework
 	cd out/ios && zip -r -X bundle.zip LibMobileCoin.xcframework
 	cp out/ios/bundle.zip ../Artifacts
+	rm -rf ../Sources/TestVector/vectors
 	cp -R ../Vendor/mobilecoin/test-vectors/vectors ../Sources/TestVector
+	cd ../Sources/TestVector/vectors && find . -type f -name '*.jsonl' -exec mv -fi '{}' ./ ';'
+	find .  -mindepth 1 -maxdepth 1 -type d -exec rm -rf '{}' ';'
 
 .PHONY: gen-spm
 gen-spm:
