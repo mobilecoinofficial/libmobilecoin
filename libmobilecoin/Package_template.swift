@@ -10,13 +10,13 @@ let package = Package(
     products: [
         .library(
             name: "LibMobileCoinCore",
-            targets: ["LibMobileCoinTestVector", "LibMobileCoinHTTP", "LibMobileCoinGRPC", "LibMobileCoinCommon", "LibMobileCoin"]),
+            targets: ["LibMobileCoinTestVector", "LibMobileCoinHTTP", "LibMobileCoinGRPC", "LibMobileCoinCommon", "LibMobileCoinLibrary"]),
         .library(
             name: "LibMobileCoinCoreGRPC",
-            targets: ["LibMobileCoinTestVector", "LibMobileCoinGRPC", "LibMobileCoinCommon", "LibMobileCoin"]),
+            targets: ["LibMobileCoinTestVector", "LibMobileCoinGRPC", "LibMobileCoinCommon", "LibMobileCoinLibrary"]),
         .library(
             name: "LibMobileCoinCoreHTTP",
-            targets: ["LibMobileCoinTestVector", "LibMobileCoinHTTP", "LibMobileCoinCommon", "LibMobileCoin"])
+            targets: ["LibMobileCoinTestVector", "LibMobileCoinHTTP", "LibMobileCoinCommon", "LibMobileCoinLibrary"])
     ],
     dependencies: [
         // Here we define our package's external dependencies
@@ -52,7 +52,7 @@ let package = Package(
             path: "Sources/GRPC"
         ),
         .binaryTarget(
-            name: "LibMobileCoin",
+            name: "LibMobileCoinLibrary",
             url: "https://yus.s3.us-east-1.amazonaws.com/bundle.zip",
             // url: "https://github.com/mobilecoinofficial/libmobilecoin/blob/adam/%23184377543-3/Artifacts/bundle.zip",
             checksum: "sha256checksum")

@@ -31,7 +31,7 @@ Pod::Spec.new do |s|
        'Artifacts/**/libmobilecoin.a',
      ]
      subspec.resources = [
-       "Vendor/mobilecoin/test-vectors/vectors/**/*.*",
+       "Sources/TestVector/vectors/*.*",
      ]
    end
 
@@ -42,10 +42,10 @@ Pod::Spec.new do |s|
  
      subspec.source_files = [
        "Artifacts/include/*.h",
-       "Sources/Generated/Proto/HTTP/*.{http}.swift",
-       "Sources/Generated/Proto/GRPC/*.{grpc}.swift",
-       "Sources/Generated/Proto/*.{pb}.swift",
-       "Sources/Interface/*.swift",
+       "Sources/HTTP/*.{http}.swift",
+       "Sources/HTTP/Interface/*.swift",
+       "Sources/GRPC/*.{grpc}.swift",
+       "Sources/Common/*.{pb}.swift",
      ]
  
      subspec.dependency "gRPC-Swift"
@@ -59,11 +59,26 @@ Pod::Spec.new do |s|
  
      subspec.source_files = [
        "Artifacts/include/*.h",
-       "Sources/Generated/Proto/HTTP/*.{http}.swift",
-       "Sources/Generated/Proto/*.{pb}.swift",
-       "Sources/Interface/*.swift",
+       "Sources/HTTP/*.{http}.swift",
+       "Sources/HTTP/Interface/*.swift",
+       "Sources/Common/*.{pb}.swift",
      ]
  
+     subspec.dependency "SwiftProtobuf", "~> 1.5"
+   end
+
+   s.subspec "CoreGRPC" do |subspec|
+     subspec.preserve_paths = [
+       'Artifacts/**/libmobilecoin.a',
+     ]
+ 
+     subspec.source_files = 
+       "Artifacts/include/*.h",
+       "Sources/GRPC/*.{grpc}.swift",
+       "Sources/Common/*.{pb}.swift",
+     ]
+ 
+     subspec.dependency "gRPC-Swift"
      subspec.dependency "SwiftProtobuf", "~> 1.5"
    end
 
