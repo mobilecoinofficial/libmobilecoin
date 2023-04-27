@@ -26,7 +26,11 @@ Pod::Spec.new do |s|
   s.default_subspecs = "Core"
 
    s.subspec "TestVectors" do |subspec|
-     subspec.source_files = "Sources/TestVector/**/*.swift"
+     subspec.source_files = [
+       "Sources/TestVector/Util/Bundle+TestVector.swift",
+       "Sources/TestVector/Util/TestVectorError.swift"
+     ]
+
      subspec.preserve_paths = [
        'Artifacts/**/libmobilecoin.a',
      ]
@@ -72,7 +76,7 @@ Pod::Spec.new do |s|
        'Artifacts/**/libmobilecoin.a',
      ]
  
-     subspec.source_files = 
+     subspec.source_files = [
        "Artifacts/include/*.h",
        "Sources/GRPC/*.{grpc}.swift",
        "Sources/Common/*.{pb}.swift",

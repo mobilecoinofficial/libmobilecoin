@@ -160,7 +160,7 @@ xcframework:
 		target/x86_64-apple-ios-macabi/mobile-release/libmobilecoin.a \
 		target/aarch64-apple-ios-macabi/mobile-release/libmobilecoin.a \
 		-output out/ios/target/libmobilecoin_maccatalyst.a
-	rm -rf out/ios/LibMobileCoin.xcframework
+	rm -rf out/ios/LibMobileCoinLibrary.xcframework
 	xcodebuild -create-xcframework \
 		-library out/ios/target/libmobilecoin_macos.a \
 		-headers ./include/ \
@@ -170,8 +170,8 @@ xcframework:
 		-headers ./include/ \
 		-library out/ios/target/aarch64-apple-ios/mobile-release/libmobilecoin.a \
 		-headers ./include/ \
-		-output out/ios/LibMobileCoin.xcframework
-	cd out/ios && zip -r -X bundle.zip LibMobileCoin.xcframework
+		-output out/ios/LibMobileCoinLibrary.xcframework
+	cd out/ios && zip -r -X bundle.zip LibMobileCoinLibrary.xcframework
 	cp out/ios/bundle.zip ../Artifacts
 	rm -rf ../Sources/TestVector/vectors
 	cp -R ../Vendor/mobilecoin/test-vectors/vectors ../Sources/TestVector
