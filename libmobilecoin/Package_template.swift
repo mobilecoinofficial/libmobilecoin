@@ -9,10 +9,13 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "LibMobileCoinCoreProduct",
+            name: "LibMobileCoinCore",
             targets: ["LibMobileCoinTestVector", "LibMobileCoinHTTP", "LibMobileCoinGRPC", "LibMobileCoinCommon", "LibMobileCoin"]),
         .library(
-            name: "LibMobileCoinCoreHTTPProduct",
+            name: "LibMobileCoinCoreGRPC",
+            targets: ["LibMobileCoinTestVector", "LibMobileCoinGRPC", "LibMobileCoinCommon", "LibMobileCoin"]),
+        .library(
+            name: "LibMobileCoinCoreHTTP",
             targets: ["LibMobileCoinTestVector", "LibMobileCoinHTTP", "LibMobileCoinCommon", "LibMobileCoin"])
     ],
     dependencies: [

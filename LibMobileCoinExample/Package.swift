@@ -24,7 +24,7 @@ let package = Package(
         .target(
             name: "LibMobileCoinExample",
             dependencies: [
-                .product(name: "LibMobileCoinCoreProduct", package: "libmobilecoin"),
+                .product(name: "LibMobileCoinCore", package: "libmobilecoin"),
             ]),
         .testTarget(
             name: "LibMobileCoinExampleTests",
