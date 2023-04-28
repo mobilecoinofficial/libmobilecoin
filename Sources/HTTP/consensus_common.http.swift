@@ -20,8 +20,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
+#if canImport(LibMobileCoinCommon)
 import LibMobileCoinCommon
+#endif
+#if canImport(SwiftProtobuf)
 import SwiftProtobuf
+#endif
 
 
 //// Blockchain API shared between clients and peers.

@@ -20,8 +20,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
+#if canImport(LibMobileCoinCommon)
 import LibMobileCoinCommon
+#endif
+#if canImport(SwiftProtobuf)
 import SwiftProtobuf
+#endif
 
 
 /// Usage: instantiate `FogLedger_FogMerkleProofAPIRestClient`, then call methods of this protocol to make API calls.
