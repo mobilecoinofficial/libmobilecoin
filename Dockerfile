@@ -85,6 +85,10 @@ RUN protoc \
     view.proto \
     legacyview.proto
 
+WORKDIR /root/project
+RUN cd Sources/GRPC && find . -name "*grpc.swift" | xargs -I {} sed -i'' -e 's/import LibMobileCoinCommon/\#if canImport(LibMobileCoinCommon)\nimport LibMobileCoinCommon\n#endif/' {} ;
+
+WORKDIR /root/project
 RUN mkdir -p Sources/HTTP
 RUN protoc \
     --plugin=/root/swift-plugins/bin/protoc-gen-http-swift \

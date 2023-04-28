@@ -21,7 +21,9 @@
 // limitations under the License.
 //
 import GRPC
+#if canImport(LibMobileCoinCommon)
 import LibMobileCoinCommon
+#endif
 import NIO
 import SwiftProtobuf
 
