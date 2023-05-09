@@ -644,11 +644,7 @@ jobs:
       - restore-build-artifact-cache:
           build-target: aarch64-apple-ios-sim 
       - restore-build-artifact-cache:
-          build-target: aarch64-apple-ios-macabi 
-      - restore-build-artifact-cache:
           build-target: aarch64-apple-ios 
-      - restore-build-artifact-cache:
-          build-target: x86_64-apple-ios-macabi 
       - restore-build-artifact-cache:
           build-target: x86_64-apple-ios 
       - restore-build-artifact-cache:
@@ -775,26 +771,10 @@ workflows:
             parameters:
               xcode-version: [*default-xcode-version]
 
-      # m1-catalyst
-      - build-artifacts:
-          name: build-artifacts-m1-catalyst-xcode-<< matrix.xcode-version >>
-          build-target: "aarch64-apple-ios-macabi" 
-          matrix:
-            parameters:
-              xcode-version: [*default-xcode-version]
-
       # ios-device
       - build-artifacts:
           name: build-artifacts-ios-device-xcode-<< matrix.xcode-version >>
           build-target: "aarch64-apple-ios" 
-          matrix:
-            parameters:
-              xcode-version: [*default-xcode-version]
-
-      # intel-catalyst
-      - build-artifacts:
-          name: build-artifacts-intel-catalyst-xcode-<< matrix.xcode-version >>
-          build-target: "x86_64-apple-ios-macabi" 
           matrix:
             parameters:
               xcode-version: [*default-xcode-version]
