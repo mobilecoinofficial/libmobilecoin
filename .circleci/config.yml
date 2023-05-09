@@ -799,9 +799,7 @@ workflows:
           name: copy-artifacats
           requires:
             - build-artifacts-m1-ios-sim-xcode-<< matrix.xcode-version >>
-            - build-artifacts-m1-catalyst-xcode-<< matrix.xcode-version >>
             - build-artifacts-ios-device-xcode-<< matrix.xcode-version >>
-            - build-artifacts-intel-catalyst-xcode-<< matrix.xcode-version >>
             - build-artifacts-intel-ios-sim-xcode-<< matrix.xcode-version >>
             - build-artifacts-intel-macos-xcode-<< matrix.xcode-version >>
           matrix:
