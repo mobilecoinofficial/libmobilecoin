@@ -294,6 +294,7 @@ commands:
             brew list --versions
             bundle env
             bundle exec pod env
+            bundle config unset deployment
             printenv
 
   set-ruby-version:
