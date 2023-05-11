@@ -140,7 +140,7 @@ setup-dev:
 	cargo install cbindgen
 
 .PHONY: spm
-spm: xcframework gen-spm
+spm: xcframework
 	
 .PHONY: cbindgen
 cbindgen:
@@ -165,17 +165,18 @@ xcframework:
 		-library out/ios/target/aarch64-apple-ios/mobile-release/libmobilecoin.a \
 		-headers ./include/ \
 		-output out/ios/LibMobileCoinLibrary.xcframework
-	cd out/ios && zip -r -X bundle.zip LibMobileCoinLibrary.xcframework
-	cp out/ios/bundle.zip ../Artifacts
+	#cd out/ios && zip -r -X bundle.zip LibMobileCoinLibrary.xcframework
+	#cp out/ios/bundle.zip ../Artifacts
+	cp out/ios/LibMobileCoinLibrary.xcframework ../Artifacts
 	rm -rf ../Sources/TestVector/vectors
 	cp -R ../Vendor/mobilecoin/test-vectors/vectors ../Sources/TestVector
 	cd ../Sources/TestVector/vectors && find . -type f -name '*.jsonl' -exec mv -fi '{}' ./ ';'
 	cd ../Sources/TestVector/vectors && find .  -mindepth 1 -maxdepth 1 -type d -exec rm -rf '{}' ';'
 
-.PHONY: gen-spm
-gen-spm:
-	openssl dgst -sha256 ../Artifacts/bundle.zip
-	sed "s/sha256checksum/$(shell openssl dgst -sha256 ../Artifacts/bundle.zip  | sed 's/^.*= //')/" Package_template.swift > ../Package.swift
-	cat ../Package.swift
-	cd ../; swift package dump-package
-	aws s3 sync ../Artifacts s3://yus
+#.PHONY: gen-spm
+#gen-spm:
+	#openssl dgst -sha256 ../Artifacts/bundle.zip
+	#sed "s/sha256checksum/$(shell openssl dgst -sha256 ../Artifacts/bundle.zip  | sed 's/^.*= //')/" Package_template.swift > ../Package.swift
+	#cat ../Package.swift
+	#cd ../; swift package dump-package
+	#aws s3 sync ../Artifacts s3://yus
