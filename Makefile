@@ -3,6 +3,7 @@ LIBMOBILECOIN_LIB_DIR = libmobilecoin
 LIBMOBILECOIN_ARTIFACTS_DIR = $(LIBMOBILECOIN_LIB_DIR)/out/ios
 LIBMOBILECOIN_ARTIFACTS_HEADERS = $(LIBMOBILECOIN_LIB_DIR)/out/ios/include
 ARTIFACTS_DIR = Artifacts
+TEST_VECTOR_DIR = Sources/TestVector
 IOS_TARGETS = aarch64-apple-ios-sim aarch64-apple-ios x86_64-apple-ios x86_64-apple-darwin aarch64-apple-darwin
 
 LIBMOBILECOIN_PROFILE = mobile-release
@@ -48,11 +49,41 @@ copy:
 	cp -R "$(LIBMOBILECOIN_ARTIFACTS_HEADERS)" "$(ARTIFACTS_DIR)"
 
 .PHONY: generate
-generate:
+generate: generate-test-vectors generate-xcframework generate-protoc 
+
+.PHONY: generate-protoc
+generate-protoc:
 	rm -r Sources/Generated/Proto 2>/dev/null || true
 	DOCKER_BUILDKIT=1 docker build . \
 		--build-arg grpc_swift_version=1.0.0 \
 		--output .
+
+.PHONY: generate-test-vectors
+generate-test-vectors:
+	rm -rf $(TEST_VECTOR_DIR)/vectors
+	cp -R $(MOBILECOIN_DIR)/test-vectors/vectors $(TEST_VECTOR_DIR)
+	cd $(TEST_VECTOR_DIR)/vectors && find . -type f -name '*.jsonl' -exec mv -fi '{}' ./ ';'
+	cd $(TEST_VECTOR_DIR)/vectors && find .  -mindepth 1 -maxdepth 1 -type d -exec rm -rf '{}' ';'
+
+.PHONY: generate-xcframework
+generate-xcframework:
+	lipo -create \
+		$(ARTIFACTS_DIR)/target/x86_64-apple-darwin/release/libmobilecoin.a \
+		$(ARTIFACTS_DIR)/target/aarch64-apple-darwin/release/libmobilecoin.a \
+		-output $(LIBMOBILECOIN_ARTIFACTS_DIR)/target/libmobilecoin_macos.a
+	lipo -create \
+		$(ARTIFACTS_DIR)/target/x86_64-apple-ios/release/libmobilecoin.a \
+		$(ARTIFACTS_DIR)/target/aarch64-apple-ios-sim/release/libmobilecoin.a \
+		-output $(LIBMOBILECOIN_ARTIFACTS_DIR)/target/libmobilecoin_iossimulator.a
+	rm -rf $(LIBMOBILECOIN_ARTIFACTS_DIR)/LibMobileCoinLibrary.xcframework
+	xcodebuild -create-xcframework \
+		-library $(LIBMOBILECOIN_ARTIFACTS_DIR)/target/libmobilecoin_macos.a \
+		-headers $(LIBMOBILECOIN_ARTIFACTS_HEADERS)/ \
+		-library $(LIBMOBILECOIN_ARTIFACTS_DIR)/target/libmobilecoin_iossimulator.a \
+		-headers $(LIBMOBILECOIN_ARTIFACTS_HEADERS)/ \
+		-library $(ARTIFACTS_DIR)/target/aarch64-apple-ios/release/libmobilecoin.a \
+		-headers $(LIBMOBILECOIN_ARTIFACTS_HEADERS)/ \
+		-output $(LIBMOBILECOIN_ARTIFACTS_DIR)/LibMobileCoinLibrary.xcframework
 
 .PHONY: lint
 lint: lint-podspec
@@ -69,7 +100,9 @@ publish-hotfix: tag-hotfix publish-podspec
 .PHONY: push-generated
 push-generated:
 	git add Artifacts/*
-	git add Sources/Generated/Proto/*
+	git add Sources/GRPC
+	git add Sources/HTTP
+	git add Sources/Common
 	if ! git diff-index --quiet HEAD; then \
 		git commit -m '[skip ci] commit build Artifacts and generated protos from build machine'; \
 		git push origin HEAD; \
