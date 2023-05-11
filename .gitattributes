@@ -1,1 +1,2 @@
 Artifacts/bundle.zip filter=lfs diff=lfs merge=lfs -text
+Artifacts/LibMobileCoinLibrary.xcframework filter=lfs diff=lfs merge=lfs -text
