@@ -80,8 +80,8 @@ ios: out/ios/target
 .PHONY: $(ALL_ARCHS_IOS)
 x86_64-apple-ios aarch64-apple-ios: CARGO_ENV_FLAGS += CFLAGS="-DPB_NO_PACKED_STRUCTS=1"
 x86_64-apple-ios aarch64-apple-ios: CARGO_ENV_FLAGS += CXXFLAGS="-DPB_NO_PACKED_STRUCTS=1"
-x86_64-apple-ios x86_64-apple-ios-macabi x86_64-apple-darwin: LD_ARCH = x86_64
-aarch64-apple-ios aarch64-apple-ios-sim aarch64-apple-ios-macabi aarch64-apple-darwin: LD_ARCH = arm64
+x86_64-apple-ios x86_64-apple-darwin: LD_ARCH = x86_64
+aarch64-apple-ios aarch64-apple-ios-sim aarch64-apple-darwin: LD_ARCH = arm64
 x86_64-apple-ios-macabi aarch64-apple-ios-sim aarch64-apple-ios-macabi: LEGACY_CARGO_BUILD_FLAGS += -Zbuild-std
 $(ALL_ARCHS_IOS):
 	$(CARGO_ENV_FLAGS) $(CARGO) build --package $(CARGO_PACKAGE) --target $@ $(LEGACY_CARGO_BUILD_FLAGS)
@@ -156,17 +156,11 @@ xcframework:
 		target/x86_64-apple-ios/mobile-release/libmobilecoin.a \
 		target/aarch64-apple-ios-sim/mobile-release/libmobilecoin.a \
 		-output out/ios/target/libmobilecoin_iossimulator.a
-	lipo -create \
-		target/x86_64-apple-ios-macabi/mobile-release/libmobilecoin.a \
-		target/aarch64-apple-ios-macabi/mobile-release/libmobilecoin.a \
-		-output out/ios/target/libmobilecoin_maccatalyst.a
 	rm -rf out/ios/LibMobileCoinLibrary.xcframework
 	xcodebuild -create-xcframework \
 		-library out/ios/target/libmobilecoin_macos.a \
 		-headers ./include/ \
 		-library out/ios/target/libmobilecoin_iossimulator.a \
-		-headers ./include/ \
-		-library out/ios/target/libmobilecoin_maccatalyst.a \
 		-headers ./include/ \
 		-library out/ios/target/aarch64-apple-ios/mobile-release/libmobilecoin.a \
 		-headers ./include/ \
