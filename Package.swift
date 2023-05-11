@@ -55,7 +55,7 @@ let package = Package(
             name: "LibMobileCoinLibrary",
             url: "https://yus.s3.us-east-1.amazonaws.com/bundle.zip",
             // url: "https://github.com/mobilecoinofficial/libmobilecoin/blob/adam/%23184377543-3/Artifacts/bundle.zip",
-            checksum: "b7af4753494d3d163c2a7b67082c2790da312bd1e3527890e415abeab71d0ab6")
+            checksum: "176d6ff91aa3cc93d23d364dd5413843cf9ca518a7a13307b354cc8b6970a027")
     ]
 )
 
