@@ -6,7 +6,8 @@
 
 ### Project Environment Variables
 
-export SGX_MODE ?= HW
+#export SGX_MODE ?= HW
+export SGX_MODE ?= SW
 export IAS_MODE ?= DEV
 
 ### Build Configuration
