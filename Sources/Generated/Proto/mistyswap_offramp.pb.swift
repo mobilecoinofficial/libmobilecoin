@@ -198,14 +198,13 @@ public struct Mistyswap_OfframpResult {
   public init() {}
 }
 
-//// A request to initiate an offramp.
-public struct Mistyswap_InitiateOfframpRequest {
+//// Offramp parameters.
+//// They are separated from the credentials since they are not as sensitive, and it makes it
+//// easier to include them to the client in the response to GetOfframpStatus calls.
+public struct Mistyswap_OfframpParams {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
-
-  //// Mixin credentials, as a JSON string.
-  public var mixinCredentialsJson: String = String()
 
   //// The asset being offramped (the token id we will be swapping from). This
   //// would be MOB or eUSD. This is the mixin asset uuid.
@@ -238,6 +237,32 @@ public struct Mistyswap_InitiateOfframpRequest {
   public init() {}
 }
 
+//// A request to initiate an offramp.
+public struct Mistyswap_InitiateOfframpRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  //// Mixin credentials, as a JSON string.
+  public var mixinCredentialsJson: String = String()
+
+  //// Offramp parameters.
+  public var params: Mistyswap_OfframpParams {
+    get {return _params ?? Mistyswap_OfframpParams()}
+    set {_params = newValue}
+  }
+  /// Returns true if `params` has been explicitly set.
+  public var hasParams: Bool {return self._params != nil}
+  /// Clears the value of `params`. Subsequent reads from it will return its default value.
+  public mutating func clearParams() {self._params = nil}
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _params: Mistyswap_OfframpParams? = nil
+}
+
 //// A successful response to an InitiateOfframpRequest.
 //// Since this is sent over an unencrypted channel, it should not contain anything sensitive.
 public struct Mistyswap_InitiateOfframpResponse {
@@ -257,14 +282,6 @@ public struct Mistyswap_InitiateOfframpResponse {
 
   //// Unique ID derived from the offramp request (set if result code is Ok)
   public var offrampID: Data = Data()
-
-  //// The source asset id (only set if result code is Ok).
-  //// This is only included here for metrics purposes, the client doesn't actually need it since it already knows what it sent.
-  public var srcAssetID: String = String()
-
-  //// The destination asset id (only set if result code is Ok).
-  //// This is only included here for metrics purposes, the client doesn't actually need it since it already knows what it sent.
-  public var dstAssetID: String = String()
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -357,15 +374,15 @@ public struct Mistyswap_Offramp {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  //// The original offramp request.
-  public var request: Mistyswap_InitiateOfframpRequest {
-    get {return _storage._request ?? Mistyswap_InitiateOfframpRequest()}
-    set {_uniqueStorage()._request = newValue}
+  //// The original offramp parameters.
+  public var params: Mistyswap_OfframpParams {
+    get {return _storage._params ?? Mistyswap_OfframpParams()}
+    set {_uniqueStorage()._params = newValue}
   }
-  /// Returns true if `request` has been explicitly set.
-  public var hasRequest: Bool {return _storage._request != nil}
-  /// Clears the value of `request`. Subsequent reads from it will return its default value.
-  public mutating func clearRequest() {_uniqueStorage()._request = nil}
+  /// Returns true if `params` has been explicitly set.
+  public var hasParams: Bool {return _storage._params != nil}
+  /// Clears the value of `params`. Subsequent reads from it will return its default value.
+  public mutating func clearParams() {_uniqueStorage()._params = nil}
 
   //// Current state of the offramp.
   public var state: Mistyswap_OfframpState {
@@ -466,6 +483,7 @@ public struct Mistyswap_GetOfframpStatusResponse {
 extension Mistyswap_OfframpResultCode: @unchecked Sendable {}
 extension Mistyswap_OfframpState: @unchecked Sendable {}
 extension Mistyswap_OfframpResult: @unchecked Sendable {}
+extension Mistyswap_OfframpParams: @unchecked Sendable {}
 extension Mistyswap_InitiateOfframpRequest: @unchecked Sendable {}
 extension Mistyswap_InitiateOfframpResponse: @unchecked Sendable {}
 extension Mistyswap_ForgetOfframpRequest: @unchecked Sendable {}
@@ -556,17 +574,16 @@ extension Mistyswap_OfframpResult: SwiftProtobuf.Message, SwiftProtobuf._Message
   }
 }
 
-extension Mistyswap_InitiateOfframpRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = _protobuf_package + ".InitiateOfframpRequest"
+extension Mistyswap_OfframpParams: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".OfframpParams"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .standard(proto: "mixin_credentials_json"),
-    2: .standard(proto: "src_asset_id"),
-    3: .standard(proto: "src_expected_amount"),
-    4: .standard(proto: "dst_asset_id"),
-    5: .standard(proto: "dst_address"),
-    6: .standard(proto: "dst_address_tag"),
-    7: .standard(proto: "min_dst_received_amount"),
-    8: .standard(proto: "max_fee_amount_in_dst_tokens"),
+    1: .standard(proto: "src_asset_id"),
+    2: .standard(proto: "src_expected_amount"),
+    3: .standard(proto: "dst_asset_id"),
+    4: .standard(proto: "dst_address"),
+    5: .standard(proto: "dst_address_tag"),
+    6: .standard(proto: "min_dst_received_amount"),
+    7: .standard(proto: "max_fee_amount_in_dst_tokens"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -575,49 +592,44 @@ extension Mistyswap_InitiateOfframpRequest: SwiftProtobuf.Message, SwiftProtobuf
       // allocates stack space for every case branch when no optimizations are
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try { try decoder.decodeSingularStringField(value: &self.mixinCredentialsJson) }()
-      case 2: try { try decoder.decodeSingularStringField(value: &self.srcAssetID) }()
-      case 3: try { try decoder.decodeSingularStringField(value: &self.srcExpectedAmount) }()
-      case 4: try { try decoder.decodeSingularStringField(value: &self.dstAssetID) }()
-      case 5: try { try decoder.decodeSingularStringField(value: &self.dstAddress) }()
-      case 6: try { try decoder.decodeSingularStringField(value: &self.dstAddressTag) }()
-      case 7: try { try decoder.decodeSingularStringField(value: &self.minDstReceivedAmount) }()
-      case 8: try { try decoder.decodeSingularStringField(value: &self.maxFeeAmountInDstTokens) }()
+      case 1: try { try decoder.decodeSingularStringField(value: &self.srcAssetID) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.srcExpectedAmount) }()
+      case 3: try { try decoder.decodeSingularStringField(value: &self.dstAssetID) }()
+      case 4: try { try decoder.decodeSingularStringField(value: &self.dstAddress) }()
+      case 5: try { try decoder.decodeSingularStringField(value: &self.dstAddressTag) }()
+      case 6: try { try decoder.decodeSingularStringField(value: &self.minDstReceivedAmount) }()
+      case 7: try { try decoder.decodeSingularStringField(value: &self.maxFeeAmountInDstTokens) }()
       default: break
       }
     }
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if !self.mixinCredentialsJson.isEmpty {
-      try visitor.visitSingularStringField(value: self.mixinCredentialsJson, fieldNumber: 1)
-    }
     if !self.srcAssetID.isEmpty {
-      try visitor.visitSingularStringField(value: self.srcAssetID, fieldNumber: 2)
+      try visitor.visitSingularStringField(value: self.srcAssetID, fieldNumber: 1)
     }
     if !self.srcExpectedAmount.isEmpty {
-      try visitor.visitSingularStringField(value: self.srcExpectedAmount, fieldNumber: 3)
+      try visitor.visitSingularStringField(value: self.srcExpectedAmount, fieldNumber: 2)
     }
     if !self.dstAssetID.isEmpty {
-      try visitor.visitSingularStringField(value: self.dstAssetID, fieldNumber: 4)
+      try visitor.visitSingularStringField(value: self.dstAssetID, fieldNumber: 3)
     }
     if !self.dstAddress.isEmpty {
-      try visitor.visitSingularStringField(value: self.dstAddress, fieldNumber: 5)
+      try visitor.visitSingularStringField(value: self.dstAddress, fieldNumber: 4)
     }
     if !self.dstAddressTag.isEmpty {
-      try visitor.visitSingularStringField(value: self.dstAddressTag, fieldNumber: 6)
+      try visitor.visitSingularStringField(value: self.dstAddressTag, fieldNumber: 5)
     }
     if !self.minDstReceivedAmount.isEmpty {
-      try visitor.visitSingularStringField(value: self.minDstReceivedAmount, fieldNumber: 7)
+      try visitor.visitSingularStringField(value: self.minDstReceivedAmount, fieldNumber: 6)
     }
     if !self.maxFeeAmountInDstTokens.isEmpty {
-      try visitor.visitSingularStringField(value: self.maxFeeAmountInDstTokens, fieldNumber: 8)
+      try visitor.visitSingularStringField(value: self.maxFeeAmountInDstTokens, fieldNumber: 7)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: Mistyswap_InitiateOfframpRequest, rhs: Mistyswap_InitiateOfframpRequest) -> Bool {
-    if lhs.mixinCredentialsJson != rhs.mixinCredentialsJson {return false}
+  public static func ==(lhs: Mistyswap_OfframpParams, rhs: Mistyswap_OfframpParams) -> Bool {
     if lhs.srcAssetID != rhs.srcAssetID {return false}
     if lhs.srcExpectedAmount != rhs.srcExpectedAmount {return false}
     if lhs.dstAssetID != rhs.dstAssetID {return false}
@@ -630,13 +642,53 @@ extension Mistyswap_InitiateOfframpRequest: SwiftProtobuf.Message, SwiftProtobuf
   }
 }
 
+extension Mistyswap_InitiateOfframpRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".InitiateOfframpRequest"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "mixin_credentials_json"),
+    2: .same(proto: "params"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.mixinCredentialsJson) }()
+      case 2: try { try decoder.decodeSingularMessageField(value: &self._params) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    if !self.mixinCredentialsJson.isEmpty {
+      try visitor.visitSingularStringField(value: self.mixinCredentialsJson, fieldNumber: 1)
+    }
+    try { if let v = self._params {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Mistyswap_InitiateOfframpRequest, rhs: Mistyswap_InitiateOfframpRequest) -> Bool {
+    if lhs.mixinCredentialsJson != rhs.mixinCredentialsJson {return false}
+    if lhs._params != rhs._params {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
 extension Mistyswap_InitiateOfframpResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".InitiateOfframpResponse"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "result"),
     2: .standard(proto: "offramp_id"),
-    3: .standard(proto: "src_asset_id"),
-    4: .standard(proto: "dst_asset_id"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -647,8 +699,6 @@ extension Mistyswap_InitiateOfframpResponse: SwiftProtobuf.Message, SwiftProtobu
       switch fieldNumber {
       case 1: try { try decoder.decodeSingularMessageField(value: &self._result) }()
       case 2: try { try decoder.decodeSingularBytesField(value: &self.offrampID) }()
-      case 3: try { try decoder.decodeSingularStringField(value: &self.srcAssetID) }()
-      case 4: try { try decoder.decodeSingularStringField(value: &self.dstAssetID) }()
       default: break
       }
     }
@@ -665,20 +715,12 @@ extension Mistyswap_InitiateOfframpResponse: SwiftProtobuf.Message, SwiftProtobu
     if !self.offrampID.isEmpty {
       try visitor.visitSingularBytesField(value: self.offrampID, fieldNumber: 2)
     }
-    if !self.srcAssetID.isEmpty {
-      try visitor.visitSingularStringField(value: self.srcAssetID, fieldNumber: 3)
-    }
-    if !self.dstAssetID.isEmpty {
-      try visitor.visitSingularStringField(value: self.dstAssetID, fieldNumber: 4)
-    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   public static func ==(lhs: Mistyswap_InitiateOfframpResponse, rhs: Mistyswap_InitiateOfframpResponse) -> Bool {
     if lhs._result != rhs._result {return false}
     if lhs.offrampID != rhs.offrampID {return false}
-    if lhs.srcAssetID != rhs.srcAssetID {return false}
-    if lhs.dstAssetID != rhs.dstAssetID {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -841,7 +883,7 @@ extension Mistyswap_OngoingSwap: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
 extension Mistyswap_Offramp: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".Offramp"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "request"),
+    1: .same(proto: "params"),
     2: .same(proto: "state"),
     3: .standard(proto: "state_details"),
     4: .standard(proto: "mixin_withdrawal_address_json"),
@@ -851,7 +893,7 @@ extension Mistyswap_Offramp: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
   ]
 
   fileprivate class _StorageClass {
-    var _request: Mistyswap_InitiateOfframpRequest? = nil
+    var _params: Mistyswap_OfframpParams? = nil
     var _state: Mistyswap_OfframpState = .osInvalid
     var _stateDetails: String = String()
     var _mixinWithdrawalAddressJson: String = String()
@@ -864,7 +906,7 @@ extension Mistyswap_Offramp: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
     private init() {}
 
     init(copying source: _StorageClass) {
-      _request = source._request
+      _params = source._params
       _state = source._state
       _stateDetails = source._stateDetails
       _mixinWithdrawalAddressJson = source._mixinWithdrawalAddressJson
@@ -889,7 +931,7 @@ extension Mistyswap_Offramp: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
         // allocates stack space for every case branch when no optimizations are
         // enabled. https://github.com/apple/swift-protobuf/issues/1034
         switch fieldNumber {
-        case 1: try { try decoder.decodeSingularMessageField(value: &_storage._request) }()
+        case 1: try { try decoder.decodeSingularMessageField(value: &_storage._params) }()
         case 2: try { try decoder.decodeSingularEnumField(value: &_storage._state) }()
         case 3: try { try decoder.decodeSingularStringField(value: &_storage._stateDetails) }()
         case 4: try { try decoder.decodeSingularStringField(value: &_storage._mixinWithdrawalAddressJson) }()
@@ -908,7 +950,7 @@ extension Mistyswap_Offramp: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
       // allocates stack space for every if/case branch local when no optimizations
       // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
       // https://github.com/apple/swift-protobuf/issues/1182
-      try { if let v = _storage._request {
+      try { if let v = _storage._params {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
       } }()
       if _storage._state != .osInvalid {
@@ -938,7 +980,7 @@ extension Mistyswap_Offramp: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
       let storagesAreEqual: Bool = withExtendedLifetime((lhs._storage, rhs._storage)) { (_args: (_StorageClass, _StorageClass)) in
         let _storage = _args.0
         let rhs_storage = _args.1
-        if _storage._request != rhs_storage._request {return false}
+        if _storage._params != rhs_storage._params {return false}
         if _storage._state != rhs_storage._state {return false}
         if _storage._stateDetails != rhs_storage._stateDetails {return false}
         if _storage._mixinWithdrawalAddressJson != rhs_storage._mixinWithdrawalAddressJson {return false}
