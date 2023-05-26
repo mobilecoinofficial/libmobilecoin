@@ -32,14 +32,19 @@ public protocol Mistyswap_MistyswapOfframpApiRestClientProtocol: HTTPClient {
   func initiateOfframp(
     _ request: Attest_Message,
     callOptions: HTTPCallOptions?
-  ) -> HTTPUnaryCall<Attest_Message, Mistyswap_InitiateOfframpResponse>
+  ) -> HTTPUnaryCall<Attest_Message, Attest_Message>
 
   func forgetOfframp(
-    _ request: Mistyswap_ForgetOfframpRequest,
+    _ request: Attest_Message,
     callOptions: HTTPCallOptions?
-  ) -> HTTPUnaryCall<Mistyswap_ForgetOfframpRequest, Mistyswap_ForgetOfframpResponse>
+  ) -> HTTPUnaryCall<Attest_Message, Attest_Message>
 
   func getOfframpStatus(
+    _ request: Attest_Message,
+    callOptions: HTTPCallOptions?
+  ) -> HTTPUnaryCall<Attest_Message, Attest_Message>
+
+  func getOfframpDebugInfo(
     _ request: Attest_Message,
     callOptions: HTTPCallOptions?
   ) -> HTTPUnaryCall<Attest_Message, Attest_Message>
@@ -51,7 +56,7 @@ extension Mistyswap_MistyswapOfframpApiRestClientProtocol {
   }
 
   //// Initiate (or pick up a previously initiated) offramp.
-  //// Input should be an encrypted InitiateOfframpRequest.
+  //// Input should be an encrypted InitiateOfframpRequest, output is an encrypted InitiateOfframpResponse.
   ///
   /// - Parameters:
   ///   - request: Request to send to InitiateOfframp.
@@ -60,7 +65,7 @@ extension Mistyswap_MistyswapOfframpApiRestClientProtocol {
   public func initiateOfframp(
     _ request: Attest_Message,
     callOptions: HTTPCallOptions? = nil
-  ) -> HTTPUnaryCall<Attest_Message, Mistyswap_InitiateOfframpResponse> {
+  ) -> HTTPUnaryCall<Attest_Message, Attest_Message> {
     return self.makeUnaryCall(
       path: Mistyswap_MistyswapOfframpApiClientMetadata.Methods.initiateOfframp.path,
       request: request,
@@ -69,16 +74,16 @@ extension Mistyswap_MistyswapOfframpApiRestClientProtocol {
   }
 
   //// Forget an offramp.
-  //// Since this is only referencing an offramp_id, it can be sent over an unencrypted channel.
+  //// Input should be an encrypted ForgetOfframpRequest, output is an encrypted ForgetOfframpResponse.
   ///
   /// - Parameters:
   ///   - request: Request to send to ForgetOfframp.
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   public func forgetOfframp(
-    _ request: Mistyswap_ForgetOfframpRequest,
+    _ request: Attest_Message,
     callOptions: HTTPCallOptions? = nil
-  ) -> HTTPUnaryCall<Mistyswap_ForgetOfframpRequest, Mistyswap_ForgetOfframpResponse> {
+  ) -> HTTPUnaryCall<Attest_Message, Attest_Message> {
     return self.makeUnaryCall(
       path: Mistyswap_MistyswapOfframpApiClientMetadata.Methods.forgetOfframp.path,
       request: request,
@@ -99,6 +104,24 @@ extension Mistyswap_MistyswapOfframpApiRestClientProtocol {
   ) -> HTTPUnaryCall<Attest_Message, Attest_Message> {
     return self.makeUnaryCall(
       path: Mistyswap_MistyswapOfframpApiClientMetadata.Methods.getOfframpStatus.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultHTTPCallOptions
+    )
+  }
+
+  //// Get debug info.
+  //// Input should be an encrypted GetOfframpDebugInfoRequest, output is an encrypted GetOfframpDebugInfoResponse.
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to GetOfframpDebugInfo.
+  ///   - callOptions: Call options.
+  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+  public func getOfframpDebugInfo(
+    _ request: Attest_Message,
+    callOptions: HTTPCallOptions? = nil
+  ) -> HTTPUnaryCall<Attest_Message, Attest_Message> {
+    return self.makeUnaryCall(
+      path: Mistyswap_MistyswapOfframpApiClientMetadata.Methods.getOfframpDebugInfo.path,
       request: request,
       callOptions: callOptions ?? self.defaultHTTPCallOptions
     )
@@ -127,6 +150,7 @@ public enum Mistyswap_MistyswapOfframpApiClientMetadata {
       Mistyswap_MistyswapOfframpApiClientMetadata.Methods.initiateOfframp,
       Mistyswap_MistyswapOfframpApiClientMetadata.Methods.forgetOfframp,
       Mistyswap_MistyswapOfframpApiClientMetadata.Methods.getOfframpStatus,
+      Mistyswap_MistyswapOfframpApiClientMetadata.Methods.getOfframpDebugInfo,
     ]
   )
 
@@ -146,6 +170,12 @@ public enum Mistyswap_MistyswapOfframpApiClientMetadata {
     public static let getOfframpStatus = HTTPMethodDescriptor(
       name: "GetOfframpStatus",
       path: "/mistyswap.MistyswapOfframpApi/GetOfframpStatus",
+      type: HTTPCallType.unary
+    )
+
+    public static let getOfframpDebugInfo = HTTPMethodDescriptor(
+      name: "GetOfframpDebugInfo",
+      path: "/mistyswap.MistyswapOfframpApi/GetOfframpDebugInfo",
       type: HTTPCallType.unary
     )
   }
