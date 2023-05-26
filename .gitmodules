@@ -3,4 +3,4 @@
 	url = https://github.com/mobilecoinfoundation/mobilecoin.git
 [submodule "Vendor/misty-swap"]
 	path = Vendor/misty-swap
-	url = git@github.com:mobilecoinofficial/misty-swap.git
+	url = https://github.com/mobilecoinofficial/misty-swap.git
