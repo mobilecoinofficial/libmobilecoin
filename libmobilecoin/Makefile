@@ -8,8 +8,8 @@
 
 # Goto cargo command
 #export SGX_MODE ?= SW
-#export SGX_MODE ?= HW
-#export IAS_MODE ?= DEV
+export SGX_MODE ?= HW
+export IAS_MODE ?= DEV
 
 ### Build Configuration
 
@@ -86,8 +86,7 @@ x86_64-apple-ios x86_64-apple-ios-macabi x86_64-apple-darwin: LD_ARCH = x86_64
 aarch64-apple-ios aarch64-apple-ios-sim aarch64-apple-ios-macabi: LD_ARCH = arm64
 x86_64-apple-ios-macabi aarch64-apple-ios-sim aarch64-apple-ios-macabi: LEGACY_CARGO_BUILD_FLAGS += -Zbuild-std
 $(ALL_ARCHS_IOS):
-	#export MC_SEED="1111111111111111111111111111111111111111111111111111111111111111"; export SGX_MODE=SW; export IAS_MODE=DEV; $(CARGO_ENV_FLAGS) $(CARGO) build --package $(CARGO_PACKAGE) --target $@ $(LEGACY_CARGO_BUILD_FLAGS)
-	export SGX_MODE=HW; export IAS_MODE=DEV; $(CARGO_ENV_FLAGS) $(CARGO) build --package $(CARGO_PACKAGE) --target $@ $(LEGACY_CARGO_BUILD_FLAGS)
+	$(CARGO_ENV_FLAGS) $(CARGO) build --package $(CARGO_PACKAGE) --target $@ $(LEGACY_CARGO_BUILD_FLAGS)
 
 	@# Extract object files from static archive.
 	@cd $(CARGO_TARGET_DIR)/$@/$(BUILD_CONFIG_FOLDER) && \
