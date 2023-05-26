@@ -33,12 +33,12 @@ public protocol Mistyswap_MistyswapOfframpApiClientProtocol: GRPCClient {
   func initiateOfframp(
     _ request: Attest_Message,
     callOptions: CallOptions?
-  ) -> UnaryCall<Attest_Message, Attest_Message>
+  ) -> UnaryCall<Attest_Message, Mistyswap_InitiateOfframpResponse>
 
   func forgetOfframp(
-    _ request: Attest_Message,
+    _ request: Mistyswap_ForgetOfframpRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<Attest_Message, Attest_Message>
+  ) -> UnaryCall<Mistyswap_ForgetOfframpRequest, Mistyswap_ForgetOfframpResponse>
 
   func getOfframpStatus(
     _ request: Attest_Message,
@@ -52,7 +52,7 @@ extension Mistyswap_MistyswapOfframpApiClientProtocol {
   }
 
   //// Initiate (or pick up a previously initiated) offramp.
-  //// Input should be an encrypted InitiateOfframpRequest, output is an encrypted InitiateOfframpResponse.
+  //// Input should be an encrypted InitiateOfframpRequest.
   ///
   /// - Parameters:
   ///   - request: Request to send to InitiateOfframp.
@@ -61,7 +61,7 @@ extension Mistyswap_MistyswapOfframpApiClientProtocol {
   public func initiateOfframp(
     _ request: Attest_Message,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<Attest_Message, Attest_Message> {
+  ) -> UnaryCall<Attest_Message, Mistyswap_InitiateOfframpResponse> {
     return self.makeUnaryCall(
       path: "/mistyswap.MistyswapOfframpApi/InitiateOfframp",
       request: request,
@@ -71,16 +71,16 @@ extension Mistyswap_MistyswapOfframpApiClientProtocol {
   }
 
   //// Forget an offramp.
-  //// Input should be an encrypted ForgetOfframpRequest, output is an encrypted ForgetOfframpResponse.
+  //// Since this is only referencing an offramp_id, it can be sent over an unencrypted channel.
   ///
   /// - Parameters:
   ///   - request: Request to send to ForgetOfframp.
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   public func forgetOfframp(
-    _ request: Attest_Message,
+    _ request: Mistyswap_ForgetOfframpRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<Attest_Message, Attest_Message> {
+  ) -> UnaryCall<Mistyswap_ForgetOfframpRequest, Mistyswap_ForgetOfframpResponse> {
     return self.makeUnaryCall(
       path: "/mistyswap.MistyswapOfframpApi/ForgetOfframp",
       request: request,
@@ -112,10 +112,10 @@ extension Mistyswap_MistyswapOfframpApiClientProtocol {
 public protocol Mistyswap_MistyswapOfframpApiClientInterceptorFactoryProtocol {
 
   /// - Returns: Interceptors to use when invoking 'initiateOfframp'.
-  func makeInitiateOfframpInterceptors() -> [ClientInterceptor<Attest_Message, Attest_Message>]
+  func makeInitiateOfframpInterceptors() -> [ClientInterceptor<Attest_Message, Mistyswap_InitiateOfframpResponse>]
 
   /// - Returns: Interceptors to use when invoking 'forgetOfframp'.
-  func makeForgetOfframpInterceptors() -> [ClientInterceptor<Attest_Message, Attest_Message>]
+  func makeForgetOfframpInterceptors() -> [ClientInterceptor<Mistyswap_ForgetOfframpRequest, Mistyswap_ForgetOfframpResponse>]
 
   /// - Returns: Interceptors to use when invoking 'getOfframpStatus'.
   func makeGetOfframpStatusInterceptors() -> [ClientInterceptor<Attest_Message, Attest_Message>]
