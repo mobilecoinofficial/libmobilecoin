@@ -147,38 +147,3 @@ spm: xcframework
 .PHONY: cbindgen
 cbindgen:
 	cbindgen --crate libmobilecoin -o libmobilecoin_cbindgen.h
-
-.PHONY: xcframework
-xcframework:
-	lipo -create \
-		target/x86_64-apple-darwin/mobile-release/libmobilecoin.a \
-		target/aarch64-apple-darwin/mobile-release/libmobilecoin.a \
-		-output out/ios/target/libmobilecoin_macos.a
-	lipo -create \
-		target/x86_64-apple-ios/mobile-release/libmobilecoin.a \
-		target/aarch64-apple-ios-sim/mobile-release/libmobilecoin.a \
-		-output out/ios/target/libmobilecoin_iossimulator.a
-	rm -rf out/ios/LibMobileCoinLibrary.xcframework
-	xcodebuild -create-xcframework \
-		-library out/ios/target/libmobilecoin_macos.a \
-		-headers ./include/ \
-		-library out/ios/target/libmobilecoin_iossimulator.a \
-		-headers ./include/ \
-		-library out/ios/target/aarch64-apple-ios/mobile-release/libmobilecoin.a \
-		-headers ./include/ \
-		-output out/ios/LibMobileCoinLibrary.xcframework
-	#cd out/ios && zip -r -X bundle.zip LibMobileCoinLibrary.xcframework
-	#cp out/ios/bundle.zip ../Artifacts
-	cp out/ios/LibMobileCoinLibrary.xcframework ../Artifacts
-	rm -rf ../Sources/TestVector/vectors
-	cp -R ../Vendor/mobilecoin/test-vectors/vectors ../Sources/TestVector
-	cd ../Sources/TestVector/vectors && find . -type f -name '*.jsonl' -exec mv -fi '{}' ./ ';'
-	cd ../Sources/TestVector/vectors && find .  -mindepth 1 -maxdepth 1 -type d -exec rm -rf '{}' ';'
-
-#.PHONY: gen-spm
-#gen-spm:
-	#openssl dgst -sha256 ../Artifacts/bundle.zip
-	#sed "s/sha256checksum/$(shell openssl dgst -sha256 ../Artifacts/bundle.zip  | sed 's/^.*= //')/" Package_template.swift > ../Package.swift
-	#cat ../Package.swift
-	#cd ../; swift package dump-package
-	#aws s3 sync ../Artifacts s3://yus
