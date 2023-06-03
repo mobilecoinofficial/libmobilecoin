@@ -17,7 +17,7 @@ default: setup build clean-artifacts copy generate
 
 .PHONY: setup
 setup:
-	cd "$(LIBMOBILECOIN_LIB_DIR)"
+	cd "$(LIBMOBILECOIN_LIB_DIR)" && $(MAKE) setup
 	bundle install
 
 # Unexport conditional environment variables so the build is more predictable
