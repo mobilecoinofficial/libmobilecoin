@@ -53,7 +53,7 @@ endef
 ####################################
 
 .PHONY: all
-all: setup ios spm
+all: setup ios
 	
 CARGO_BUILD_FLAGS += --lib -Z avoid-dev-deps
 ifeq ($(CARGO_PROFILE),release)
@@ -73,7 +73,6 @@ setup:
 	rustup target add x86_64-apple-ios aarch64-apple-ios aarch64-apple-darwin x86_64-apple-darwin
 	rustup component add llvm-tools-preview rust-src
 	rustup run --install stable cargo install cargo-binutils
-	../tools/patch-cmake.sh
 
 
 .PHONY: ios
@@ -141,9 +140,6 @@ clean:
 setup-dev:
 	cargo install cbindgen
 
-.PHONY: spm
-spm: xcframework
-	
 .PHONY: cbindgen
 cbindgen:
 	cbindgen --crate libmobilecoin -o libmobilecoin_cbindgen.h
