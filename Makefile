@@ -154,11 +154,11 @@ clean:
 
 .PHONY: patch-cmake
 patch-cmake:
-        tools/patch-cmake.sh
+	tools/patch-cmake.sh
 
 .PHONY: unpatch-cmake
 unpatch-cmake:
-        tools/unpatch-cmake.sh
+	tools/unpatch-cmake.sh
 
 .PHONY: test-spm
 test-spm:
