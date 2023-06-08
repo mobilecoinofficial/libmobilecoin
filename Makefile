@@ -152,6 +152,14 @@ clean:
 	$(MAKE) -C libmobilecoin clean
 	@rm -r $(MOBILECOIN_DIR)/target 2>/dev/null || true
 
+.PHONY: patch-cmake
+patch-cmake:
+        tools/patch-cmake.sh
+
+.PHONY: unpatch-cmake
+unpatch-cmake:
+        tools/unpatch-cmake.sh
+
 .PHONY: test-spm
 test-spm:
 	cd LibMobileCoinExample && swift package reset && swift test

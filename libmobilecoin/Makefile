@@ -73,6 +73,7 @@ setup:
 	rustup target add x86_64-apple-ios aarch64-apple-ios aarch64-apple-darwin x86_64-apple-darwin
 	rustup component add llvm-tools-preview rust-src
 	rustup run --install stable cargo install cargo-binutils
+	 ../tools/patch-cmake.sh
 
 
 .PHONY: ios
