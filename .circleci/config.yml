@@ -801,7 +801,7 @@ workflows:
 
       # apple-silicon-macos
       - build-artifacts:
-          name: build-artifacts-intel-macos-xcode-<< matrix.xcode-version >>
+          name: build-artifacts-m1-macos-xcode-<< matrix.xcode-version >>
           build-target: "aarch64-apple-darwin"
           matrix:
             parameters:
