@@ -814,6 +814,7 @@ workflows:
             - build-artifacts-ios-device-xcode-<< matrix.xcode-version >>
             - build-artifacts-intel-ios-sim-xcode-<< matrix.xcode-version >>
             - build-artifacts-intel-macos-xcode-<< matrix.xcode-version >>
+            - build-artifacts-m1-macos-xcode-<< matrix.xcode-version >>
           matrix:
             parameters:
               xcode-version: [*default-xcode-version]
