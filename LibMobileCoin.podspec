@@ -32,7 +32,7 @@ Pod::Spec.new do |s|
      ]
 
      subspec.preserve_paths = [
-       'Artifacts/**/libmobilecoin.a',
+       'Artifacts/target/**/libmobilecoin.a',
      ]
      subspec.resources = [
        "Sources/TestVector/vectors/*.*",
@@ -41,7 +41,7 @@ Pod::Spec.new do |s|
 
    s.subspec "Core" do |subspec|
      subspec.preserve_paths = [
-       'Artifacts/**/libmobilecoin.a',
+       'Artifacts/target/**/libmobilecoin.a',
      ]
  
      subspec.source_files = [
@@ -73,7 +73,7 @@ Pod::Spec.new do |s|
 
    s.subspec "CoreGRPC" do |subspec|
      subspec.preserve_paths = [
-       'Artifacts/**/libmobilecoin.a',
+       'Artifacts/target/**/libmobilecoin.a',
      ]
  
      subspec.source_files = [

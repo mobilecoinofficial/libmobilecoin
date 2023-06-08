@@ -67,6 +67,13 @@ generate-test-vectors:
 
 .PHONY: generate-xcframework
 generate-xcframework:
+	rm -rf Artifacts/LibMobileCoinLibrary.xcframework || true
+	rm libmobilecoin/out/ios/target/libmobilecoin_macos.a || true
+	rm libmobilecoin/out/ios/target/libmobilecoin_iossimulator.a || true
+	mkdir -p .build/headers
+	cp Artifacts/include/* .build/headers
+	cp modulemap/module.modulemap .build/headers
+	mkdir -p libmobilecoin/out/ios/target
 	lipo -create \
 		$(ARTIFACTS_DIR)/target/x86_64-apple-darwin/release/libmobilecoin.a \
 		$(ARTIFACTS_DIR)/target/aarch64-apple-darwin/release/libmobilecoin.a \
@@ -78,12 +85,14 @@ generate-xcframework:
 	rm -rf $(LIBMOBILECOIN_ARTIFACTS_DIR)/LibMobileCoinLibrary.xcframework
 	xcodebuild -create-xcframework \
 		-library $(LIBMOBILECOIN_ARTIFACTS_DIR)/target/libmobilecoin_macos.a \
-		-headers $(LIBMOBILECOIN_ARTIFACTS_HEADERS)/ \
+		-headers .build/headers \
 		-library $(LIBMOBILECOIN_ARTIFACTS_DIR)/target/libmobilecoin_iossimulator.a \
-		-headers $(LIBMOBILECOIN_ARTIFACTS_HEADERS)/ \
+		-headers .build/headers \
 		-library $(ARTIFACTS_DIR)/target/aarch64-apple-ios/release/libmobilecoin.a \
-		-headers $(LIBMOBILECOIN_ARTIFACTS_HEADERS)/ \
-		-output $(LIBMOBILECOIN_ARTIFACTS_DIR)/LibMobileCoinLibrary.xcframework
+		-headers .build/headers \
+		-output $(ARTIFACTS_DIR)/LibMobileCoinLibrary.xcframework
+	rm -rf .build/headers
+
 
 .PHONY: lint
 lint: lint-podspec
@@ -137,14 +146,6 @@ lint-podspec:
 .PHONY: publish-podspec
 publish-podspec:
 	bundle exec pod trunk push LibMobileCoin.podspec --allow-warnings
-
-.PHONY: patch-cmake
-patch-cmake:
-	tools/patch-cmake.sh
-
-.PHONY: unpatch-cmake
-unpatch-cmake:
-	tools/unpatch-cmake.sh
 
 .PHONY: clean
 clean:
