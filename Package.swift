@@ -22,10 +22,10 @@ let package = Package(
         // Here we define our package's external dependencies
         // and from where they can be fetched:
         .package(
-            url: "https://github.com/apple/swift-protobuf",
+            url: "https://github.com/apple/swift-protobuf.git",
             from: "1.5.0"
         ),
-        .package(url: "https://github.com/grpc/grpc-swift.git", from: "1.0.0")
+        .package(url: "https://github.com/grpc/grpc-swift.git", from: "1.15.0")
     ],
     targets: [
         .target(
