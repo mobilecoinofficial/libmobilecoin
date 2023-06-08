@@ -1,3 +1,4 @@
+---
 version: 2.1
 
 defaults:
@@ -649,7 +650,9 @@ jobs:
       - restore-build-artifact-cache:
           build-target: x86_64-apple-ios 
       - restore-build-artifact-cache:
-          build-target: x86_64-apple-ios-darwin 
+          build-target: x86_64-apple-darwin 
+      - restore-build-artifact-cache:
+          build-target: aarch64-apple-darwin 
       - restore-build-artifact-headers-cache
       - run:
           name: Copy Artifacts 
@@ -792,6 +795,14 @@ workflows:
       - build-artifacts:
           name: build-artifacts-intel-macos-xcode-<< matrix.xcode-version >>
           build-target: "x86_64-apple-darwin"
+          matrix:
+            parameters:
+              xcode-version: [*default-xcode-version]
+
+      # apple-silicon-macos
+      - build-artifacts:
+          name: build-artifacts-intel-macos-xcode-<< matrix.xcode-version >>
+          build-target: "aarch64-apple-darwin"
           matrix:
             parameters:
               xcode-version: [*default-xcode-version]
