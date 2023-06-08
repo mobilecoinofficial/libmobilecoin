@@ -823,6 +823,9 @@ workflows:
           name: make-generate
           requires:
             - copy-artifacts
+          matrix:
+            parameters:
+              xcode-version: [*default-xcode-version]
 
       - test-example-http-with-mobilecoin-swift:
           name: test-example-http-with-mobilecoin-swift-<< matrix.xcode-version >>
