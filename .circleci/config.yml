@@ -822,8 +822,8 @@ workflows:
             parameters:
               xcode-version: [*default-xcode-version]
 
-      - make-generate-artifacts:
-          name: make-generate
+      - make-generate:
+          name: make-generate-artifacts
           requires:
             - copy-artifacts
           matrix:
