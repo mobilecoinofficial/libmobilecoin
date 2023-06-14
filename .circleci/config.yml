@@ -680,6 +680,11 @@ jobs:
             rm -rf Artifacts
             cp -R /tmp/workspace/Artifacts ./
       - run:
+          name: Install git-lfs
+          command: |
+            sudo apt install git-lfs
+            git lfs install
+      - run:
           name: make generate (proto -> grpc swift) 
           command: |
             make generate
