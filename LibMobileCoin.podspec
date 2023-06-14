@@ -58,7 +58,7 @@ Pod::Spec.new do |s|
 
    s.subspec "CoreHTTP" do |subspec|
      subspec.preserve_paths = [
-       'Artifacts/**/libmobilecoin.a',
+       'Artifacts/target/**/libmobilecoin.a',
      ]
  
      subspec.source_files = [
