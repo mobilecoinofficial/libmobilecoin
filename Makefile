@@ -44,12 +44,15 @@ clean-artifacts:
 	$(foreach arch,$(IOS_TARGETS),mkdir -p $(ARTIFACTS_DIR)/target/$(arch)/release;) 
 
 .PHONY: copy
-copy:
+copy: copy-libs generate-xcframework
+
+.PHONY: copy-libs
+copy-libs:
 	$(call BINARY_copy,target)
 	cp -R "$(LIBMOBILECOIN_ARTIFACTS_HEADERS)" "$(ARTIFACTS_DIR)"
 
 .PHONY: generate
-generate: generate-test-vectors generate-xcframework generate-protoc 
+generate: generate-test-vectors generate-protoc 
 
 .PHONY: generate-protoc
 generate-protoc:

@@ -665,11 +665,8 @@ jobs:
             - Artifacts
 
   make-generate:
-    parameters:
-      xcode-version: { type: string, default: *default-xcode-version }
-    executor:
-      name: macos
-      xcode-version: << parameters.xcode-version >>
+    machine: 
+      image: ubuntu-2004:202111-02
     environment:
       <<: *default-build-environment
     steps:
@@ -823,7 +820,7 @@ workflows:
               xcode-version: [*default-xcode-version]
 
       - make-generate:
-          name: make-generate-artifacts
+          name: make-generate
           requires:
             - copy-artifacts
           matrix:
@@ -833,7 +830,7 @@ workflows:
       - test-example-http-with-mobilecoin-swift:
           name: test-example-http-with-mobilecoin-swift-<< matrix.xcode-version >>
           requires: 
-            - make-generate-artifacts
+            - make-generate
           matrix:
             parameters:
               xcode-version: [*default-xcode-version]
@@ -841,7 +838,7 @@ workflows:
       - test-example-with-mobilecoin-swift:
           name: test-example-with-mobilecoin-swift-<< matrix.xcode-version >>
           requires: 
-            - make-generate-artifacts
+            - make-generate
           matrix:
             parameters:
               xcode-version: ["12.5.1"]
