@@ -665,8 +665,11 @@ jobs:
             - Artifacts
 
   make-generate:
-    machine: 
-      image: ubuntu-2004:202111-02
+    parameters:
+      xcode-version: { type: string, default: *default-xcode-version }
+    executor:
+      name: macos
+      xcode-version: << parameters.xcode-version >>
     environment:
       <<: *default-build-environment
     steps:
