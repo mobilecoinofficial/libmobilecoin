@@ -7,6 +7,7 @@
 
 import XCTest
 import LibMobileCoinGRPC
+import LibMobileCoinCommon
 import GRPC
 
 ///

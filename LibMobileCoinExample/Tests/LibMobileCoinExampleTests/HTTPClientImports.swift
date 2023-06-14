@@ -7,6 +7,7 @@
 
 import XCTest
 import LibMobileCoinHTTP
+import LibMobileCoinCommon
 
 ///
 /// Importing one class from each file to ensure proper SPM packaging.

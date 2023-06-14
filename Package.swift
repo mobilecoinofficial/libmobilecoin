@@ -5,12 +5,15 @@ let package = Package(
     name: "libmobilecoin",
     platforms: [
         .iOS(.v13),
-            .macOS(.v11)
+        .macOS(.v11)
     ],
     products: [
         .library(
             name: "LibMobileCoinCore",
             targets: ["LibMobileCoinTestVector", "LibMobileCoinHTTP", "LibMobileCoinGRPC", "LibMobileCoinCommon", "LibMobileCoinLibrary"]),
+        .library(
+            name: "LibMobileCoinCoreCommon",
+            targets: ["LibMobileCoinTestVector", "LibMobileCoinCommon", "LibMobileCoinLibrary"]),
         .library(
             name: "LibMobileCoinCoreGRPC",
             targets: ["LibMobileCoinTestVector", "LibMobileCoinGRPC", "LibMobileCoinCommon", "LibMobileCoinLibrary"]),
