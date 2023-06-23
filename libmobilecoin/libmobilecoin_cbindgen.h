@@ -45,6 +45,8 @@ typedef struct Option_SignedContingentInputBuilder_FogResolver Option_SignedCont
 
 typedef struct Option_TransactionBuilder_FogResolver Option_TransactionBuilder_FogResolver;
 
+typedef struct Vec_BlockData Vec_BlockData;
+
 typedef struct Vec_u8 Vec_u8;
 
 typedef struct Vec_u8 McData;
@@ -173,6 +175,10 @@ typedef struct McTxOutAmount {
 typedef struct Option_TransactionBuilder_FogResolver McTransactionBuilder;
 
 typedef LightClientVerifier McLightClientVerifier;
+
+typedef struct Vec_BlockData McBlockDataVec;
+
+typedef BlockData McBlockData;
 
 void mc_data_free(FfiOptOwnedPtr<McData> data);
 
@@ -1791,3 +1797,19 @@ FfiOptOwnedPtr<McLightClientVerifier> mc_light_client_verifier_create(FfiStr con
                                                                       FfiOptMutPtr<FfiOptOwnedPtr<McError>> out_error);
 
 void mc_light_client_verifier_free(FfiOptOwnedPtr<McLightClientVerifier> lcv);
+
+bool mc_light_client_verifier_verify_block_data_vec(FfiRefPtr<McLightClientVerifier> lcv,
+                                                    FfiRefPtr<McBlockDataVec> block_data_vec,
+                                                    FfiOptMutPtr<FfiOptOwnedPtr<McError>> out_error);
+
+FfiOptOwnedPtr<McBlockData> mc_block_data_from_archive_block_protobuf(FfiRefPtr<McBuffer> archive_block_protobuf,
+                                                                      FfiOptMutPtr<FfiOptOwnedPtr<McError>> out_error);
+
+void mc_block_data_free(FfiOptOwnedPtr<McBlockData> block_data);
+
+FfiOptOwnedPtr<McBlockDataVec> mc_block_data_vec_create(void);
+
+void mc_block_data_vec_free(FfiOptOwnedPtr<McBlockDataVec> block_data_vec);
+
+bool mc_block_data_vec_add_element(FfiMutPtr<McBlockDataVec> block_data_vec,
+                                   FfiRefPtr<McBlockData> block_data);

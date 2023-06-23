@@ -15,5 +15,6 @@
 #include "slip10.h"
 #include "chacha20_rng.h"
 #include "light_client.h"
+#include "blockchain_types.h"
 
 #endif /* !LIBMOBILECOIN_H_ */

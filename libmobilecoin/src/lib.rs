@@ -14,6 +14,7 @@ pub mod signed_contingent_input;
 pub mod slip10;
 pub mod transaction;
 pub mod light_client;
+pub mod blockchain_types;
 
 mod error;
 
