@@ -172,6 +172,8 @@ typedef struct McTxOutAmount {
 
 typedef struct Option_TransactionBuilder_FogResolver McTransactionBuilder;
 
+typedef LightClientVerifier McLightClientVerifier;
+
 void mc_data_free(FfiOptOwnedPtr<McData> data);
 
 /**
@@ -1784,3 +1786,6 @@ bool mc_memo_decrypt_e_memo_payload(FfiRefPtr<McBuffer> encrypted_memo,
                                     FfiRefPtr<McAccountKey> account_key,
                                     FfiMutPtr<McMutableBuffer> out_memo_payload,
                                     FfiOptMutPtr<FfiOptOwnedPtr<McError>> out_error);
+
+FfiOptOwnedPtr<McLightClientVerifier> mc_light_client_verifier_create(FfiStr config_json,
+                                                                      FfiOptMutPtr<FfiOptOwnedPtr<McError>> out_error);

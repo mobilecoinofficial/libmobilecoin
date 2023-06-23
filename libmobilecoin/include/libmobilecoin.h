@@ -14,5 +14,6 @@
 #include "signed_contingent_input.h"
 #include "slip10.h"
 #include "chacha20_rng.h"
+#include "light_client.h"
 
 #endif /* !LIBMOBILECOIN_H_ */

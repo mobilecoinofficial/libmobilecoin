@@ -13,6 +13,7 @@ pub mod keys;
 pub mod signed_contingent_input;
 pub mod slip10;
 pub mod transaction;
+pub mod light_client;
 
 mod error;
 
