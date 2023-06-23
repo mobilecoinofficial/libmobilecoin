@@ -8,17 +8,19 @@
 /* ==================== Transaction ==================== */
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-typedef struct _LightClientVerifier McLightClientVerifier;
+    typedef struct _LightClientVerifier McLightClientVerifier;
 
-McLightClientVerifier* MC_NULLABLE mc_light_client_verifier_create(
-    const char*  MC_NONNULL config_json,
-    McError* MC_NULLABLE * MC_NULLABLE out_error
-)
-MC_ATTRIBUTE_NONNULL(1);
+    McLightClientVerifier *MC_NULLABLE mc_light_client_verifier_create(
+        const char *MC_NONNULL config_json,
+        McError *MC_NULLABLE *MC_NULLABLE out_error)
+        MC_ATTRIBUTE_NONNULL(1);
 
+    void mc_light_client_verifier_free(McLightClientVerifier *MC_NONNULL lcv)
+        MC_ATTRIBUTE_NONNULL(1);
 
 #ifdef __cplusplus
 }

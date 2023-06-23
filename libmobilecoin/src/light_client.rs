@@ -25,3 +25,12 @@ pub extern "C" fn mc_light_client_verifier_create(
         Ok(LightClientVerifier::from(lvc_conf))
     })
 }
+
+#[no_mangle]
+pub extern "C" fn mc_light_client_verifier_free(
+    lcv: FfiOptOwnedPtr<McLightClientVerifier>,
+)  {
+    ffi_boundary(|| {
+        let _ = lcv;
+    })
+}

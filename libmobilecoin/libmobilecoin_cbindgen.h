@@ -1789,3 +1789,5 @@ bool mc_memo_decrypt_e_memo_payload(FfiRefPtr<McBuffer> encrypted_memo,
 
 FfiOptOwnedPtr<McLightClientVerifier> mc_light_client_verifier_create(FfiStr config_json,
                                                                       FfiOptMutPtr<FfiOptOwnedPtr<McError>> out_error);
+
+void mc_light_client_verifier_free(FfiOptOwnedPtr<McLightClientVerifier> lcv);
