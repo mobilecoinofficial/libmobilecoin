@@ -11,7 +11,7 @@ extern "C"
 #endif
 
     /* ==================== BlockData ==================== */
-    typedef struct _BlockData McBlockData;
+    typedef struct _McBlockData McBlockData;
 
     McBlockData *MC_NULLABLE mc_block_data_from_archive_block_protobuf(
         const McBuffer *MC_NONNULL archive_block_protobuf,
@@ -23,7 +23,7 @@ extern "C"
 
     /* ==================== BlockDataVec ==================== */
 
-    typedef struct _BlockDataVec McBlockDataVec;
+    typedef struct _McBlockDataVec McBlockDataVec;
 
     McBlockDataVec *MC_NULLABLE mc_block_data_vec_create(void);
 
@@ -38,4 +38,4 @@ extern "C"
 }
 #endif
 
-#endif /* !bLOCKCHAIN_TYPES_H_ */
+#endif /* !BLOCKCHAIN_TYPES_H_ */
