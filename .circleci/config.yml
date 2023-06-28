@@ -267,6 +267,13 @@ commands:
   #
   # libmobilecoin-ios-artifacts cocoapods lint/spec publish
   #
+  init-artifacts-submodule:
+    description: Initialize artifacts submodule
+    steps:
+      - run:
+          name: Run git submodule update --init
+          working_directory: Artifacts
+          command: git submodule update --init --depth 1 --recursive
 
   init-mobilecoin-submodule:
     description: Initialize mobilecoin submodule
@@ -567,6 +574,7 @@ jobs:
       SCAN_OUTPUT_TYPES: junit
     steps:
       - checkout
+      - init-artifacts-submodule
       - init-mobilecoin-submodule
       - set-ruby-version
       - install-gems
@@ -586,6 +594,7 @@ jobs:
       <<: *default-environment
     steps:
       - checkout
+      - init-artifacts-submodule
       - init-mobilecoin-submodule
       - set-ruby-version
       - install-gems
@@ -636,6 +645,11 @@ jobs:
       <<: *default-build-environment
     steps:
       - checkout
+      - run:
+          name: Install git-lfs mac
+          command: |
+            git lfs install
+      - init-artifacts-submodule
       - init-mobilecoin-submodule
       - run:
           name: Make output directories
@@ -659,10 +673,21 @@ jobs:
           command: |
             make copy
 
-      - persist_to_workspace:
-          root: ./
-          paths:
-            - Artifacts
+      - set-git-credentials
+      - run:
+          name: Push artifacts to remote w/ LFS
+          working_directory: Artifacts
+          command: |
+            git add .
+            git commit -m 'Add compiled static libraries from CICD'
+            git push origin main
+
+      - run:
+          name: Update libmobilecoin submodule tracked commit hash
+          command: |
+            git add Artifacts
+            git commit -m '[skip ci] Update Artifacts submodule commit hash for compiled static libraries from CICD'
+            git push origin HEAD
 
   make-generate:
     machine: 
@@ -672,18 +697,6 @@ jobs:
     steps:
       - checkout
       - init-mobilecoin-submodule
-      - attach_workspace:
-          at: /tmp/workspace
-      - run:
-          name: Copy artifacts from workspce
-          command: |
-            rm -rf Artifacts
-            cp -R /tmp/workspace/Artifacts ./
-      - run:
-          name: Install git-lfs
-          command: |
-            sudo apt install git-lfs
-            git lfs install
       - run:
           name: make generate (proto -> grpc swift) 
           command: |
@@ -709,6 +722,11 @@ jobs:
       SCAN_OUTPUT_TYPES: junit
     steps:
       - checkout
+      - run:
+          name: Install git-lfs mac
+          command: |
+            git lfs install
+      - init-artifacts-submodule
       - init-mobilecoin-submodule
       - set-ruby-version
       - set-git-credentials
@@ -744,6 +762,11 @@ jobs:
       SCAN_OUTPUT_TYPES: junit
     steps:
       - checkout
+      - run:
+          name: Install git-lfs mac
+          command: |
+            git lfs install
+      - init-artifacts-submodule
       - init-mobilecoin-submodule
       - set-ruby-version
       - set-git-credentials
