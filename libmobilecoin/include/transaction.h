@@ -135,6 +135,26 @@ MC_ATTRIBUTE_NONNULL(1, 2, 3, 4);
 /// # Preconditions
 ///
 /// * `view_private_key` - must be a valid 32-byte Ristretto-format scalar.
+///
+/// # Errors
+///
+/// * `LibMcError::InvalidInput`
+/// * `LibMcError::TransactionCrypto`
+bool mc_tx_out_view_key_match(
+  const McTxOutMaskedAmount* MC_NONNULL tx_out_masked_amount,
+  const McBuffer* MC_NONNULL tx_out_masked_amount_commitment,
+  const McBuffer* MC_NONNULL tx_out_public_key,
+  const McBuffer* MC_NONNULL view_private_key,
+  McTxOutAmount* MC_NONNULL out_amount,
+  McError* MC_NULLABLE * MC_NULLABLE out_error
+)
+MC_ATTRIBUTE_NONNULL(1, 2, 3, 4, 5);
+
+
+
+/// # Preconditions
+///
+/// * `view_private_key` - must be a valid 32-byte Ristretto-format scalar.
 /// * `subaddress_spend_private_key` - must be a valid 32-byte Ristretto-format scalar.
 /// * `out_key_image` - length must be >= 32.
 ///

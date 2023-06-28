@@ -155,7 +155,7 @@ typedef struct Option_SignedContingentInputBuilder_FogResolver McSignedContingen
 
 typedef struct McTxOutMaskedAmount {
   /**
-   * 32-byte `CompressedCommitment`
+   * `masked_value = value XOR_8 Blake2B(value_mask | shared_secret)`
    */
   uint64_t masked_value;
   /**
@@ -915,6 +915,23 @@ bool mc_tx_out_get_amount(FfiRefPtr<McTxOutMaskedAmount> tx_out_masked_amount,
                           FfiRefPtr<McBuffer> view_private_key,
                           FfiMutPtr<McTxOutAmount> out_amount,
                           FfiOptMutPtr<FfiOptOwnedPtr<McError>> out_error);
+
+/**
+ * # Preconditions
+ *
+ * * `view_private_key` - must be a valid 32-byte Ristretto-format scalar.
+ *
+ * # Errors
+ *
+ * * `LibMcError::InvalidInput`
+ * * `LibMcError::TransactionCrypto`
+ */
+bool mc_tx_out_view_key_match(FfiRefPtr<McTxOutMaskedAmount> tx_out_masked_amount,
+                              FfiMutPtr<McBuffer> tx_out_masked_amount_commitment,
+                              FfiRefPtr<McBuffer> tx_out_public_key,
+                              FfiRefPtr<McBuffer> view_private_key,
+                              FfiMutPtr<McTxOutAmount> out_amount,
+                              FfiOptMutPtr<FfiOptOwnedPtr<McError>> out_error);
 
 /**
  * # Preconditions
