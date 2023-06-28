@@ -733,6 +733,13 @@ bool mc_account_key_get_short_address_hash(FfiRefPtr<McPublicAddress> public_add
                                            FfiOptMutPtr<FfiOptOwnedPtr<McError>> out_error);
 
 /**
+ * # Preconditions
+ *
+ * * `out_view_private_key` - length must be >= 32.
+ */
+bool mc_get_burn_address_view_private(FfiMutPtr<McMutableBuffer> out_view_private_key);
+
+/**
  *
  * # Errors
  *
