@@ -2372,7 +2372,7 @@ pub extern "C" fn mc_memo_gift_code_cancellation_memo_get_fee(
 ///
 /// * `encrypted_memo` - must be 66 bytes
 /// * `tx_out_public_key` - must be a valid 32-byte Ristretto-format scalar.
-/// * `account_key` - must be a valid account key
+/// * `view_private_key` - must be a valid 32-byte RistrettoPrivate.
 /// * `out_memo_payload` - length must be >= 16 bytes
 ///
 /// # Errors
@@ -2382,17 +2382,15 @@ pub extern "C" fn mc_memo_gift_code_cancellation_memo_get_fee(
 pub extern "C" fn mc_memo_decrypt_e_memo_payload(
     encrypted_memo: FfiRefPtr<McBuffer>,
     tx_out_public_key: FfiRefPtr<McBuffer>,
-    account_key: FfiRefPtr<McAccountKey>,
+    view_private_key: FfiRefPtr<McBuffer>,
     out_memo_payload: FfiMutPtr<McMutableBuffer>,
     out_error: FfiOptMutPtr<FfiOptOwnedPtr<McError>>,
 ) -> bool {
     ffi_boundary_with_error(out_error, || {
         let tx_out_public_key = RistrettoPublic::try_from_ffi(&tx_out_public_key)?;
-        let account_key_obj =
-            AccountKey::try_from_ffi(&account_key).expect("account_key is invalid");
+        let view_private_key = RistrettoPrivate::try_from_ffi(&view_private_key)?;
         let e_memo = EncryptedMemo::try_from_ffi(&encrypted_memo)?;
-        let shared_secret =
-            get_tx_out_shared_secret(&*account_key_obj.view_private_key(), &tx_out_public_key);
+        let shared_secret = get_tx_out_shared_secret(&view_private_key, &tx_out_public_key);
 
         let memo_payload: MemoPayload = e_memo.decrypt(&shared_secret);
         let memo_payload_generic_array: GenericArray<u8, U66> = memo_payload.into();
