@@ -114,6 +114,8 @@ push-generated:
 	git add Sources/GRPC
 	git add Sources/HTTP
 	git add Sources/Common
+	git config pull.rebase false
+	git pull origin HEAD
 	if ! git diff-index --quiet HEAD; then \
 		git commit -m '[skip ci] commit generated protos from build machine'; \
 		git push origin HEAD; \

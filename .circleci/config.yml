@@ -691,6 +691,7 @@ jobs:
           command: |
             git checkout main
             git config pull.rebase false
+            git pull origin main
             git add .
             git commit -m 'Add compiled static libraries from CICD'
             git push origin main
