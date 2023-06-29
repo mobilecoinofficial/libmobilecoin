@@ -721,14 +721,8 @@ jobs:
           command: |
             make generate
       - init-mobilecoin-submodule
-      - run:
-          name: push generated
-          command: |
-	          git add Sources/GRPC
-	          git add Sources/HTTP
-	          git add Sources/Common
-		        git commit -m '[skip ci] commit generated protos from build machine';
-		        git push origin ${CIRCLE_BRANCH};
+      - make-push-generated
+
 
   test-example-http-with-mobilecoin-swift:
     parameters:
