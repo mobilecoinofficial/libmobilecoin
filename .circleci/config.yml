@@ -265,7 +265,7 @@ commands:
       - prefetch-cargo-deps
 
   #
-  # libmobilecoin-ios-artifacts cocoapods lint/spec publish
+  # libmobilecoin cocoapods lint/spec publish
   #
   init-artifacts-submodule:
     description: Initialize artifacts submodule
@@ -509,9 +509,9 @@ commands:
           name: Clone current branch of LibMobileCoin and its submodules
           working_directory: ~/MobileCoin-Swift
           command: |
-            mkdir -p Vendor/libmobilecoin-ios-artifacts
-            git clone --branch ${CIRCLE_BRANCH} ${CIRCLE_REPOSITORY_URL} Vendor/libmobilecoin-ios-artifacts
-            cd Vendor/libmobilecoin-ios-artifacts
+            mkdir -p Vendor/libmobilecoin
+            git clone --branch ${CIRCLE_BRANCH} ${CIRCLE_REPOSITORY_URL} Vendor/libmobilecoin
+            cd Vendor/libmobilecoin
             git submodule update --init --recursive --depth 1
 
 
@@ -722,7 +722,6 @@ jobs:
             make generate
       - init-mobilecoin-submodule
       - make-push-generated
-
 
   test-example-http-with-mobilecoin-swift:
     parameters:
