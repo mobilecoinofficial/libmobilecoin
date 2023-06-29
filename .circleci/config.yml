@@ -680,14 +680,14 @@ jobs:
           command: |
             git add .
             git commit -m 'Add compiled static libraries from CICD'
-            git push origin main
+            git push origin HEAD:main
 
       - run:
           name: Update libmobilecoin submodule tracked commit hash
           command: |
             git add Artifacts
             git commit -m '[skip ci] Update Artifacts submodule commit hash for compiled static libraries from CICD'
-            git push origin HEAD
+            git push origin ${CIRCLE_BRANCH}
 
   make-generate:
     machine: 
