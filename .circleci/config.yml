@@ -711,12 +711,16 @@ jobs:
     steps:
       - checkout
       - init-mobilecoin-submodule
+      - set-git-credentials
+      - run:
+          name: Pull latest to get new CICD changes
+          command: |
+            git config pull.rebase false
+            git pull origin ${CIRCLE_BRANCH}
       - run:
           name: make generate (proto -> grpc swift) 
           command: |
             make generate
-
-      - set-git-credentials
       - make-push-generated
 
   test-example-http-with-mobilecoin-swift:
