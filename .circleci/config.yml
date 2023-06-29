@@ -82,8 +82,8 @@ commands:
           working_directory: Vendor/mobilecoin
           command: |
             brew --version
-            brew update --preinstall
-            brew --version
+            #brew update --preinstall
+            #brew --version
       - run:
           name: Install Homebrew dependencies
           working_directory: Vendor/mobilecoin
