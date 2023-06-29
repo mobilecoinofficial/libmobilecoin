@@ -729,7 +729,7 @@ jobs:
 	          git add Sources/Common
 	          if ! git diff-index --quiet HEAD; then \
 		          git commit -m '[skip ci] commit generated protos from build machine'; \
-		          git push origin HEAD; \
+		          git push origin ${CIRCLE_BRANCH}; \
 	          fi
 
   test-example-http-with-mobilecoin-swift:
