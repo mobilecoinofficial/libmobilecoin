@@ -524,6 +524,16 @@ commands:
             git config user.email "mobilecoin-ci@mobilecoin.com"
             git config user.name "mobilecoin-ci"
 
+  set-artifacts-git-credentials:
+    description: Set git credentials
+    steps:
+      - run:
+          name: Set Artifacts git credentials
+          working_directory: Artifacts
+          command: |
+            git config user.email "mobilecoin-ci@mobilecoin.com"
+            git config user.name "mobilecoin-ci"
+
   lint-locally-podspec:
     steps:
       - run:
@@ -674,13 +684,16 @@ jobs:
             make copy
 
       - set-git-credentials
+      - set-artifacts-git-credentials
       - run:
           name: Push artifacts to remote w/ LFS
           working_directory: Artifacts
           command: |
+            git checkout main
+            git config pull.rebase false
             git add .
             git commit -m 'Add compiled static libraries from CICD'
-            git push origin HEAD:main
+            git push origin main
 
       - run:
           name: Update libmobilecoin submodule tracked commit hash
