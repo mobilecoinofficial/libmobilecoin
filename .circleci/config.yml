@@ -710,18 +710,27 @@ jobs:
       <<: *default-build-environment
     steps:
       - checkout
-      - init-mobilecoin-submodule
       - set-git-credentials
       - run:
           name: Pull latest to get new CICD changes
           command: |
-            git config pull.rebase false
-            git pull origin ${CIRCLE_BRANCH}
+            git fetch origin ${CIRCLE_BRANCH} && git reset --hard origin/${CIRCLE_BRANCH}
+            git submodule update --init
       - run:
           name: make generate (proto -> grpc swift) 
           command: |
             make generate
-      - make-push-generated
+      - init-mobilecoin-submodule
+      - run:
+          name: push generated
+          command: |
+	          git add Sources/GRPC
+	          git add Sources/HTTP
+	          git add Sources/Common
+	          if ! git diff-index --quiet HEAD; then \
+		          git commit -m '[skip ci] commit generated protos from build machine'; \
+		          git push origin HEAD; \
+	          fi
 
   test-example-http-with-mobilecoin-swift:
     parameters:
