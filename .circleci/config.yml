@@ -273,7 +273,7 @@ commands:
       - run:
           name: Run git submodule update --init
           working_directory: Artifacts
-          command: git submodule update --init --depth 1 --recursive
+          command: git submodule update --init --depth 1 Artifacts
 
   init-mobilecoin-submodule:
     description: Initialize mobilecoin submodule
@@ -281,7 +281,7 @@ commands:
       - run:
           name: Run git submodule update --init
           working_directory: Vendor/mobilecoin
-          command: git submodule update --init --depth 1 --recursive
+          command: git submodule update --init --depth 1 --recursive Vendor/mobilecoin 
 
   print-mobilecoin-submodule-hash:
     description: Save mobilecoin submodule hash to file
@@ -716,7 +716,6 @@ jobs:
           name: Pull latest to get new CICD changes
           command: |
             git fetch origin ${CIRCLE_BRANCH} && git reset --hard origin/${CIRCLE_BRANCH}
-            git submodule update --init
       - run:
           name: make generate (proto -> grpc swift) 
           command: |
