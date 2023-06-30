@@ -689,12 +689,13 @@ jobs:
           name: Push artifacts to remote w/ LFS
           working_directory: Artifacts
           command: |
-            git checkout main
+            git checkout -b ${CIRCLE_BRANCH} || true
+            git checkout ${CIRCLE_BRANCH}
             git config pull.rebase false
-            git pull origin main
+            git pull origin ${CIRCLE_BRANCH}
             git add .
             git commit -m 'Add compiled static libraries from CICD'
-            git push origin main
+            git push origin ${CIRCLE_BRANCH}
 
       - run:
           name: Update libmobilecoin submodule tracked commit hash
