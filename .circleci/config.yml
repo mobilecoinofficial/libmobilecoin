@@ -1,4 +1,4 @@
----
+--
 version: 2.1
 
 defaults:
@@ -642,6 +642,10 @@ jobs:
           build-target: <<parameters.build-target>>
       - skip-if-cache-file-exists:
           file: ~/project/libmobilecoin/out/ios/target/<<parameters.build-target>>/mobile-release/libmobilecoin.a
+      - run:
+          name: Install git-lfs mac
+          command: |
+            git lfs install
       - prepare-for-build: { os: macos }
       - restore-rustup-cache:
           build-target: <<parameters.build-target>>
