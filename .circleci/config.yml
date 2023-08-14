@@ -93,6 +93,7 @@ commands:
             brew install ninja
             brew install pkg-config
             brew bundle --no-upgrade
+      - save-homebrew-cache
 
   save-homebrew-cache:
     steps:
@@ -510,7 +511,7 @@ commands:
           working_directory: ~/MobileCoin-Swift
           command: |
             mkdir -p Vendor/libmobilecoin
-            git clone --branch ${CIRCLE_BRANCH} ${CIRCLE_REPOSITORY_URL} Vendor/libmobilecoin --depth 1
+            git clone --branch ${CIRCLE_BRANCH} ${CIRCLE_REPOSITORY_URL} Vendor/libmobilecoin 
             cd Vendor/libmobilecoin
             git submodule update --init --recursive --depth 1
 
