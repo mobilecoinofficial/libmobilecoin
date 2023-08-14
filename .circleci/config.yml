@@ -162,9 +162,8 @@ commands:
       - print-mobilecoin-submodule-hash
       - restore_cache:
           name: Restore build artifact libmobilecoin.a cache for target <<parameters.build-target>>
-          working_directory: libmobilecoin
           keys: 
-            - v2-build-artifact-<<parameters.build-target>>-{{ checksum "libmobilecoin_and_vendor_mobilecoin.hash" }}
+            - v2-build-artifact-<<parameters.build-target>>-{{ checksum "libmobilecoin/libmobilecoin_and_vendor_mobilecoin.hash" }}
 
   save-build-artifact-cache:
     parameters:
@@ -175,7 +174,7 @@ commands:
       - print-mobilecoin-submodule-hash
       - save_cache:
           name: Save build artifact libmobilecoin.a cache for target <<parameters.build-target>>
-          key: v2-build-artifact-<<parameters.build-target>>-{{ checksum "libmobilecoin_and_vendor_mobilecoin.hash" }}
+          key: v2-build-artifact-<<parameters.build-target>>-{{ checksum "libmobilecoin/libmobilecoin_and_vendor_mobilecoin.hash" }}
           paths:
             - ~/project/libmobilecoin/out/ios/target/<<parameters.build-target>>/mobile-release
 
@@ -187,16 +186,15 @@ commands:
       - print-mobilecoin-submodule-hash
       - restore_cache:
           name: Restore build artifact headers cache
-          working_directory: libmobilecoin
           keys: 
-            - v2-build-artifact-headers-{{ checksum "libmobilecoin_and_vendor_mobilecoin.hash" }}
+            - v2-build-artifact-headers-{{ checksum "libmobilecoin/libmobilecoin_and_vendor_mobilecoin.hash" }}
 
   save-build-artifact-headers-cache:
     steps:
       - print-mobilecoin-submodule-hash
       - save_cache:
           name: Save build artifact headers cache
-          key: v2-build-artifact-headers-{{ checksum "libmobilecoin_and_vendor_mobilecoin.hash" }}
+          key: v2-build-artifact-headers-{{ checksum "libmobilecoin/libmobilecoin_and_vendor_mobilecoin.hash" }}
           paths:
             - ~/project/libmobilecoin/out/ios/include
 
@@ -211,9 +209,8 @@ commands:
     steps:
       - restore_cache:
           name: Restore Rustup cache for target <<parameters.build-target>>
-          working_directory: libmobilecoin
           keys: 
-            - v0-rustup-<<parameters.build-target>>-{{ checksum "libmobilecoin/toolchain-config.env" }}
+            - v0-rustup-<<parameters.build-target>>-{{ checksum "libmobilecoin/libmobilecoin/toolchain-config.env" }}
 
   save-rustup-cache:
     parameters:
@@ -223,7 +220,7 @@ commands:
     steps:
       - save_cache:
           name: Save Rustup cache for target aarch64-apple-ios-sim
-          key: v0-rustup-<<parameters.build-target>>-{{ checksum "libmobilecoin/toolchain-config.env" }}
+          key: v0-rustup-<<parameters.build-target>>-{{ checksum "libmobilecoin/libmobilecoin/toolchain-config.env" }}
           paths:
             - ~/.rustup/toolchains
 
@@ -291,7 +288,7 @@ commands:
       - run:
           name: Save submodule hash to file for checksumming
           command: |
-            cat <(git submodule status) <(git ls-files -s libmobilecoin | git hash-object --stdin) > libmobilecoin_and_vendor_mobilecoin.hash
+            cat <(git submodule status) <(git ls-files -s libmobilecoin | git hash-object --stdin) > libmobilecoin/libmobilecoin_and_vendor_mobilecoin.hash
 
   print-tool-versions:
     description: Print versions of various tools used
@@ -329,9 +326,8 @@ commands:
     steps:
       - restore_cache:
           name: Restore Ruby gem cache
-          working_directory: libmobilecoin
           keys:
-            - v0-ruby-<< parameters.ruby-version >>-gems-{{ checksum "Gemfile.lock" }}
+            - v0-ruby-<< parameters.ruby-version >>-gems-{{ checksum "libmobilecoin/Gemfile.lock" }}
             - v0-ruby-<< parameters.ruby-version >>-gems-
       - run:
           name: Install root bundler dependencies
@@ -343,8 +339,7 @@ commands:
             bundle check || bundle install
       - save_cache:
           name: Save Ruby gem cache
-          working_directory: libmobilecoin
-          key: v0-ruby-<< parameters.ruby-version >>-gems-{{ checksum "Gemfile.lock" }}
+          key: v0-ruby-<< parameters.ruby-version >>-gems-{{ checksum "libmobilecoin/Gemfile.lock" }}
           paths:
             - .vendor/bundle
 
