@@ -288,7 +288,7 @@ commands:
       - run:
           name: Save submodule hash to file for checksumming
           command: |
-            cat <(git submodule status) <(git ls-files -s libmobilecoin | git hash-object --stdin) > libmobilecoin/libmobilecoin_and_vendor_mobilecoin.hash
+            cat <(git submodule status) <(git ls-files -s libmobilecoin/libmobilecoin | git hash-object --stdin) > libmobilecoin/libmobilecoin_and_vendor_mobilecoin.hash
   print-tool-versions:
     description: Print versions of various tools used
     steps:
@@ -510,7 +510,7 @@ commands:
           working_directory: ~/MobileCoin-Swift
           command: |
             mkdir -p Vendor/libmobilecoin
-            git clone --branch ${CIRCLE_BRANCH} ${CIRCLE_REPOSITORY_URL} Vendor/libmobilecoin
+            git clone --branch ${CIRCLE_BRANCH} ${CIRCLE_REPOSITORY_URL} Vendor/libmobilecoin --depth 1
             cd Vendor/libmobilecoin
             git submodule update --init --recursive --depth 1
 
@@ -650,7 +650,7 @@ jobs:
       - restore-rustup-cache:
           build-target: <<parameters.build-target>>
       - run:
-          working_directory: libmobilecoin
+          working_directory: libmobilecoin/libmobilecoin
           name: Build libmobilecoin static libraries
           command: |
             make setup
@@ -680,7 +680,7 @@ jobs:
       - init-mobilecoin-submodule
       - run:
           name: Make output directories
-          working_directory: libmobilecoin
+          working_directory: libmobilecoin/libmobilecoin
           command: |
             mkdir -p out/ios/target
 
