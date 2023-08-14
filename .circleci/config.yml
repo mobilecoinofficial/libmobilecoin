@@ -82,13 +82,13 @@ commands:
           working_directory: libmobilecoin/Vendor/mobilecoin
           command: |
             brew --version
-            #brew update --preinstall
             #brew --version
       - run:
           name: Install Homebrew dependencies
           working_directory: libmobilecoin/Vendor/mobilecoin
           command: |
             rm '/usr/local/lib/python3.9/site-packages/six.py'
+            brew update-reset
             brew install llvm
             brew install ninja
             brew install pkg-config
