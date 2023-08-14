@@ -520,6 +520,7 @@ commands:
     steps:
       - run:
           name: Set git credentials
+          working_directory: libmobilecoin
           command: |
             git config user.email "mobilecoin-ci@mobilecoin.com"
             git config user.name "mobilecoin-ci"
@@ -538,6 +539,7 @@ commands:
     steps:
       - run:
           name: Lint podspec locally
+          working_directory: libmobilecoin
           command: make lint-locally
 
   publish-to-trunk:
@@ -547,6 +549,7 @@ commands:
             - "16:4d:90:f0:c4:2b:2e:ac:96:7b:6b:8b:e0:ce:72:28"
       - run:
           name: Publish Pod to Trunk
+          working_directory: libmobilecoin
           command: make publish
 
   make-push-generated:
@@ -556,12 +559,14 @@ commands:
             - "0b:63:05:5c:f9:37:25:a8:85:7a:8e:2c:8d:96:1a:39"
       - run:
           name: Push generated to remote
+          working_directory: libmobilecoin
           command: make push-generated
 
   check-dirty-git:
     steps:
       - run:
           name: Check dirty git
+          working_directory: libmobilecoin
           command: |
             if [[ -n $(git status --porcelain) ]]; then
               echo "repo is dirty"
