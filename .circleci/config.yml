@@ -36,7 +36,7 @@ commands:
     steps:
       - run:
           name: Version Info
-          working_directory: libmobilecoin/Vendor/mobilecoin
+          working_directory: Vendor/mobilecoin
           command: |
             set -x
 
@@ -56,7 +56,7 @@ commands:
     steps:
       - run:
           name: Configure Cargo to use git cli
-          working_directory: libmobilecoin/Vendor/mobilecoin
+          working_directory: Vendor/mobilecoin
           command: |
             mkdir -p ~/.cargo
             echo '[net]' >> ~/.cargo/config
@@ -79,14 +79,14 @@ commands:
           key: v1-homebrew-{{ arch }}
       - run:
           name: Update Homebrew
-          working_directory: libmobilecoin/Vendor/mobilecoin
+          working_directory: Vendor/mobilecoin
           command: |
             brew --version
             #brew update --preinstall
             #brew --version
       - run:
           name: Install Homebrew dependencies
-          working_directory: libmobilecoin/Vendor/mobilecoin
+          working_directory: Vendor/mobilecoin
           command: |
             rm '/usr/local/lib/python3.9/site-packages/six.py'
             brew install llvm
@@ -98,7 +98,7 @@ commands:
     steps:
       - run:
           name: Prepare Homebrew cache for saving
-          working_directory: libmobilecoin/Vendor/mobilecoin
+          working_directory: Vendor/mobilecoin
           command: |
             # Make sure latest versions are installed
             time brew bundle
@@ -241,7 +241,7 @@ commands:
     steps:
       - run:
           name: Fetch project Cargo dependencies
-          working_directory: libmobilecoin/Vendor/mobilecoin
+          working_directory: Vendor/mobilecoin
           command: |
             set -x
             time cargo fetch --locked
@@ -255,9 +255,6 @@ commands:
       cbindgen: { type: boolean, default: false }
       os: { type: enum, enum: [ "linux", "macos", "windows" ], default: linux }
     steps:
-      - run:
-          name: Clone GitHub repository
-          command: git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH"
       - when:
           condition: { equal: [ << parameters.os >>, macos ] }
           steps: [ restore-homebrew-cache ]
@@ -282,7 +279,7 @@ commands:
     steps:
       - run:
           name: Run git submodule update --init
-          working_directory: libmobilecoin/Vendor/mobilecoin
+          working_directory: Vendor/mobilecoin
           command: git submodule update --init --depth 1 --recursive
 
   print-mobilecoin-submodule-hash:
@@ -531,7 +528,7 @@ commands:
     steps:
       - run:
           name: Set Artifacts git credentials
-          working_directory: libmobilecoin/Artifacts
+          working_directory: Artifacts
           command: |
             git config user.email "mobilecoin-ci@mobilecoin.com"
             git config user.name "mobilecoin-ci"
@@ -701,7 +698,7 @@ jobs:
       - set-artifacts-git-credentials
       - run:
           name: Push artifacts to remote w/ LFS
-          working_directory: libmobilecoin/Artifacts
+          working_directory: Artifacts
           command: |
             git checkout -b ${CIRCLE_BRANCH} || true
             git checkout ${CIRCLE_BRANCH}
