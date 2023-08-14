@@ -256,8 +256,8 @@ commands:
       os: { type: enum, enum: [ "linux", "macos", "windows" ], default: linux }
     steps:
       - run:
-        name: Clone GitHub repository
-        command:  git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH"
+          name: Clone GitHub repository
+          command: git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH"
       - when:
           condition: { equal: [ << parameters.os >>, macos ] }
           steps: [ restore-homebrew-cache ]
@@ -586,8 +586,8 @@ jobs:
       SCAN_OUTPUT_TYPES: junit
     steps:
       - run:
-        name: Clone GitHub repository
-        command:  git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH"
+          name: Clone GitHub repository
+          command: git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH"
       - init-artifacts-submodule
       - init-mobilecoin-submodule
       - set-ruby-version
@@ -608,8 +608,8 @@ jobs:
       <<: *default-environment
     steps:
       - run:
-        name: Clone GitHub repository
-        command:  git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH"
+          name: Clone GitHub repository
+          command: git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH"
       - init-artifacts-submodule
       - init-mobilecoin-submodule
       - set-ruby-version
@@ -632,8 +632,8 @@ jobs:
       OPENSSL_BIN: /usr/local/opt/openssl/bin/openssl
     steps:
       - run:
-        name: Clone GitHub repository
-        command:  git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH"
+          name: Clone GitHub repository
+          command: git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH"
       - init-mobilecoin-submodule
       - restore-build-artifact-cache:
           build-target: <<parameters.build-target>>
@@ -663,8 +663,8 @@ jobs:
       <<: *default-build-environment
     steps:
       - run:
-        name: Clone GitHub repository
-        command:  git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH"
+          name: Clone GitHub repository
+          command: git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH"
       - run:
           name: Install git-lfs mac
           command: |
@@ -721,8 +721,8 @@ jobs:
       <<: *default-build-environment
     steps:
       - run:
-        name: Clone GitHub repository
-        command:  git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH"
+          name: Clone GitHub repository
+          command: git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH"
       - set-git-credentials
       - run:
           name: Pull latest to get new CICD changes
@@ -752,8 +752,8 @@ jobs:
       SCAN_OUTPUT_TYPES: junit
     steps:
       - run:
-        name: Clone GitHub repository
-        command:  git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH"
+          name: Clone GitHub repository
+          command: git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH"
       - run:
           name: Install git-lfs mac
           command: |
@@ -794,8 +794,8 @@ jobs:
       SCAN_OUTPUT_TYPES: junit
     steps:
       - run:
-        name: Clone GitHub repository
-        command:  git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH"
+          name: Clone GitHub repository
+          command: git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH"
       - run:
           name: Install git-lfs mac
           command: |
