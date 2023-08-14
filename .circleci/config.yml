@@ -274,7 +274,6 @@ commands:
     steps:
       - run:
           name: Run git submodule update --init
-          working_directory: Artifacts
           command: git submodule update --init --depth 1 Artifacts
 
   init-mobilecoin-submodule:
