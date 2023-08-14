@@ -255,7 +255,9 @@ commands:
       cbindgen: { type: boolean, default: false }
       os: { type: enum, enum: [ "linux", "macos", "windows" ], default: linux }
     steps:
-      - checkout
+      - run:
+        name: Clone GitHub repository
+        command:  git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH"
       - when:
           condition: { equal: [ << parameters.os >>, macos ] }
           steps: [ restore-homebrew-cache ]
@@ -281,7 +283,7 @@ commands:
       - run:
           name: Run git submodule update --init
           working_directory: Vendor/mobilecoin
-          command: git submodule update --init --depth 1 --recursive Vendor/mobilecoin 
+          command: git submodule update --init --depth 1 --recursive
 
   print-mobilecoin-submodule-hash:
     description: Save mobilecoin submodule hash to file
@@ -583,7 +585,9 @@ jobs:
       SCAN_OUTPUT_DIRECTORY: ../output/scan
       SCAN_OUTPUT_TYPES: junit
     steps:
-      - checkout
+      - run:
+        name: Clone GitHub repository
+        command:  git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH"
       - init-artifacts-submodule
       - init-mobilecoin-submodule
       - set-ruby-version
@@ -603,7 +607,9 @@ jobs:
     environment:
       <<: *default-environment
     steps:
-      - checkout
+      - run:
+        name: Clone GitHub repository
+        command:  git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH"
       - init-artifacts-submodule
       - init-mobilecoin-submodule
       - set-ruby-version
@@ -625,7 +631,9 @@ jobs:
       <<: *default-build-environment
       OPENSSL_BIN: /usr/local/opt/openssl/bin/openssl
     steps:
-      - checkout
+      - run:
+        name: Clone GitHub repository
+        command:  git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH"
       - init-mobilecoin-submodule
       - restore-build-artifact-cache:
           build-target: <<parameters.build-target>>
@@ -654,7 +662,9 @@ jobs:
     environment:
       <<: *default-build-environment
     steps:
-      - checkout
+      - run:
+        name: Clone GitHub repository
+        command:  git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH"
       - run:
           name: Install git-lfs mac
           command: |
@@ -710,7 +720,9 @@ jobs:
     environment:
       <<: *default-build-environment
     steps:
-      - checkout
+      - run:
+        name: Clone GitHub repository
+        command:  git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH"
       - set-git-credentials
       - run:
           name: Pull latest to get new CICD changes
@@ -739,7 +751,9 @@ jobs:
       SCAN_OUTPUT_DIRECTORY: ../output/scan
       SCAN_OUTPUT_TYPES: junit
     steps:
-      - checkout
+      - run:
+        name: Clone GitHub repository
+        command:  git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH"
       - run:
           name: Install git-lfs mac
           command: |
@@ -779,7 +793,9 @@ jobs:
       SCAN_OUTPUT_DIRECTORY: ../output/scan
       SCAN_OUTPUT_TYPES: junit
     steps:
-      - checkout
+      - run:
+        name: Clone GitHub repository
+        command:  git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH"
       - run:
           name: Install git-lfs mac
           command: |
