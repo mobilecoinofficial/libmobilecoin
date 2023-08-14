@@ -162,6 +162,7 @@ commands:
       - print-mobilecoin-submodule-hash
       - restore_cache:
           name: Restore build artifact libmobilecoin.a cache for target <<parameters.build-target>>
+          working_directory: libmobilecoin
           keys: 
             - v2-build-artifact-<<parameters.build-target>>-{{ checksum "libmobilecoin_and_vendor_mobilecoin.hash" }}
 
@@ -186,6 +187,7 @@ commands:
       - print-mobilecoin-submodule-hash
       - restore_cache:
           name: Restore build artifact headers cache
+          working_directory: libmobilecoin
           keys: 
             - v2-build-artifact-headers-{{ checksum "libmobilecoin_and_vendor_mobilecoin.hash" }}
 
@@ -209,6 +211,7 @@ commands:
     steps:
       - restore_cache:
           name: Restore Rustup cache for target <<parameters.build-target>>
+          working_directory: libmobilecoin
           keys: 
             - v0-rustup-<<parameters.build-target>>-{{ checksum "libmobilecoin/toolchain-config.env" }}
 
@@ -329,11 +332,13 @@ commands:
     steps:
       - restore_cache:
           name: Restore Ruby gem cache
+          working_directory: libmobilecoin
           keys:
             - v0-ruby-<< parameters.ruby-version >>-gems-{{ checksum "Gemfile.lock" }}
             - v0-ruby-<< parameters.ruby-version >>-gems-
       - run:
           name: Install root bundler dependencies
+          working_directory: libmobilecoin
           command: |
             bundle config set --local deployment 'true'
             bundle config set --local path '.vendor/bundle'
@@ -341,6 +346,7 @@ commands:
             bundle check || bundle install
       - save_cache:
           name: Save Ruby gem cache
+          working_directory: libmobilecoin
           key: v0-ruby-<< parameters.ruby-version >>-gems-{{ checksum "Gemfile.lock" }}
           paths:
             - .vendor/bundle
