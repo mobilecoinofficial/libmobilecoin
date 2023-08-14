@@ -294,6 +294,7 @@ commands:
     steps:
       - run:
           name: Print tool versions
+          working_directory: libmobilecoin
           command: |
             set -x
             brew config
@@ -340,7 +341,7 @@ commands:
           name: Save Ruby gem cache
           key: v0-ruby-<< parameters.ruby-version >>-gems-{{ checksum "libmobilecoin/Gemfile.lock" }}
           paths:
-            - .vendor/bundle
+            - libmobilecoin/.vendor/bundle
 
   # 
   # MobileCoin-Swift for testing
