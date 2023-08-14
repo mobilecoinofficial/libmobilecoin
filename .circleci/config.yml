@@ -573,6 +573,7 @@ commands:
 
 jobs:
   init-and-lint:
+    working_directory: ~/libmobilecoin
     parameters:
       xcode-version:
         type: string
@@ -598,6 +599,7 @@ jobs:
       - check-dirty-git
 
   publish-pod-release:
+    working_directory: ~/libmobilecoin
     parameters:
       xcode-version:
         type: string
@@ -619,6 +621,7 @@ jobs:
       - publish-to-trunk
       
   build-artifacts:
+    working_directory: ~/libmobilecoin
     parameters:
       xcode-version: { type: string, default: *default-xcode-version }
       build-target:
@@ -654,6 +657,7 @@ jobs:
           build-target: <<parameters.build-target>>
 
   copy-artifacts:
+    working_directory: ~/libmobilecoin
     parameters:
       xcode-version: { type: string, default: *default-xcode-version }
     executor:
@@ -715,6 +719,7 @@ jobs:
             git push origin ${CIRCLE_BRANCH}
 
   make-generate:
+    working_directory: ~/libmobilecoin
     machine: 
       image: ubuntu-2004:202111-02
     environment:
@@ -736,6 +741,7 @@ jobs:
       - make-push-generated
 
   test-example-http-with-mobilecoin-swift:
+    working_directory: ~/libmobilecoin
     parameters:
       xcode-version:
         type: string
@@ -778,6 +784,7 @@ jobs:
             make test
             
   test-example-with-mobilecoin-swift:
+    working_directory: ~/libmobilecoin
     parameters:
       xcode-version:
         type: string
