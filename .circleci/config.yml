@@ -258,9 +258,6 @@ commands:
       cbindgen: { type: boolean, default: false }
       os: { type: enum, enum: [ "linux", "macos", "windows" ], default: linux }
     steps:
-      - run:
-          name: Clone GitHub repository
-          command: git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH"
       - when:
           condition: { equal: [ << parameters.os >>, macos ] }
           steps: [ restore-homebrew-cache ]
