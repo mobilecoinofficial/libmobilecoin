@@ -1,4 +1,4 @@
---
+---
 version: 2.1
 
 defaults:
@@ -289,7 +289,6 @@ commands:
           name: Save submodule hash to file for checksumming
           command: |
             cat <(git submodule status) <(git ls-files -s libmobilecoin | git hash-object --stdin) > libmobilecoin/libmobilecoin_and_vendor_mobilecoin.hash
-
   print-tool-versions:
     description: Print versions of various tools used
     steps:
