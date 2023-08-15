@@ -739,13 +739,14 @@ jobs:
       - set-git-credentials
       - run:
           name: Pull latest to get new CICD changes
+          working_directory: libmobilecoin/Artifacts
           command: |
             git fetch origin ${CIRCLE_BRANCH} && git reset --hard origin/${CIRCLE_BRANCH}
+      - init-mobilecoin-submodule
       - run:
           name: make generate (proto -> grpc swift) 
           command: |
             make generate
-      - init-mobilecoin-submodule
       - make-push-generated
 
   test-example-http-with-mobilecoin-swift:
