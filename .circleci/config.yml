@@ -745,6 +745,7 @@ jobs:
       - init-mobilecoin-submodule
       - run:
           name: make generate (proto -> grpc swift) 
+          working_directory: libmobilecoin
           command: |
             make generate
       - make-push-generated
