@@ -74,11 +74,11 @@ commands:
 
   restore-homebrew-cache:
     steps:
-      - restore_cache:
-          name: Restore Homebrew cache
-          keys: 
-            v1-homebrew-{{ arch }}-{{ .Revision }}
-            v1-homebrew-{{ arch }}-
+      #- restore_cache:
+          #name: Restore Homebrew cache
+          #keys: 
+            #v1-homebrew-{{ arch }}-{{ .Revision }}
+            #v1-homebrew-{{ arch }}-
       - run:
           name: Update Homebrew
           working_directory: libmobilecoin/Vendor/mobilecoin
@@ -95,7 +95,7 @@ commands:
             brew install ninja
             brew install pkg-config
             brew bundle --no-upgrade
-      - save-homebrew-cache
+      #- save-homebrew-cache
 
   save-homebrew-cache:
     steps:
