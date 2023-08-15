@@ -292,7 +292,7 @@ commands:
           name: Save submodule hash to file for checksumming
           working_directory: libmobilecoin
           command: |
-            cat <(git submodule status) <(git ls-files -s libmobilecoin | git hash-object --stdin) > libmobilecoin_and_vendor_mobilecoin.hash
+            cat <(git submodule status Vendor/mobilecoin) <(git ls-files -s libmobilecoin | git hash-object --stdin) > libmobilecoin_and_vendor_mobilecoin.hash
   print-tool-versions:
     description: Print versions of various tools used
     steps:
