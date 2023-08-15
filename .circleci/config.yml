@@ -76,7 +76,9 @@ commands:
     steps:
       - restore_cache:
           name: Restore Homebrew cache
-          key: v1-homebrew-{{ arch }}
+          keys: 
+            v1-homebrew-{{ arch }}-{{ .Revision }}
+            v1-homebrew-{{ arch }}-
       - run:
           name: Update Homebrew
           working_directory: libmobilecoin/Vendor/mobilecoin
@@ -177,7 +179,7 @@ commands:
           name: Save build artifact libmobilecoin.a cache for target <<parameters.build-target>>
           key: v2-build-artifact-<<parameters.build-target>>-{{ checksum "libmobilecoin/libmobilecoin_and_vendor_mobilecoin.hash" }}
           paths:
-            - ~/project/libmobilecoin/out/ios/target/<<parameters.build-target>>/mobile-release
+            - libmobilecoin/libmobilecoin/out/ios/target/<<parameters.build-target>>/mobile-release
 
   #
   # LibMobileCoin Headers
@@ -197,7 +199,7 @@ commands:
           name: Save build artifact headers cache
           key: v2-build-artifact-headers-{{ checksum "libmobilecoin/libmobilecoin_and_vendor_mobilecoin.hash" }}
           paths:
-            - ~/project/libmobilecoin/out/ios/include
+            - libmobilecoin/libmobilecoin/out/ios/include
 
   #
   # Rustup Toolchain Cache's
@@ -288,8 +290,9 @@ commands:
     steps:
       - run:
           name: Save submodule hash to file for checksumming
+          working_directory: libmobilecoin
           command: |
-            cat <(git submodule status) <(git ls-files -s libmobilecoin/libmobilecoin | git hash-object --stdin) > libmobilecoin/libmobilecoin_and_vendor_mobilecoin.hash
+            cat <(git submodule status) <(git ls-files -s libmobilecoin | git hash-object --stdin) > libmobilecoin_and_vendor_mobilecoin.hash
   print-tool-versions:
     description: Print versions of various tools used
     steps:
@@ -642,7 +645,7 @@ jobs:
       - restore-build-artifact-cache:
           build-target: <<parameters.build-target>>
       - skip-if-cache-file-exists:
-          file: ~/project/libmobilecoin/out/ios/target/<<parameters.build-target>>/mobile-release/libmobilecoin.a
+          file: libmobilecoin/libmobilecoin/out/ios/target/<<parameters.build-target>>/mobile-release/libmobilecoin.a
       - run:
           name: Install git-lfs mac
           command: |
