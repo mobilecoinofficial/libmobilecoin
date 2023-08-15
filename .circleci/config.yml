@@ -110,7 +110,7 @@ commands:
             brew info
       - save_cache:
           name: Save Homebrew cache
-          key: v0-homebrew-{{ arch }}-{{ .Revision }}
+          key: v1-homebrew-{{ arch }}-{{ .Revision }}
           paths:
             - /usr/local/Cellar
 
@@ -698,6 +698,7 @@ jobs:
       - restore-build-artifact-headers-cache
       - run:
           name: Copy Artifacts 
+          working_directory: libmobilecoin
           command: |
             make copy
 
@@ -717,6 +718,7 @@ jobs:
 
       - run:
           name: Update libmobilecoin submodule tracked commit hash
+          working_directory: libmobilecoin
           command: |
             git add Artifacts
             git commit -m '[skip ci] Update Artifacts submodule commit hash for compiled static libraries from CICD'
