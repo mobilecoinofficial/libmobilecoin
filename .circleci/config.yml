@@ -843,6 +843,11 @@ workflows:
           matrix:
             parameters:
               xcode-version: [*default-xcode-version]
+          filters:
+            branches:
+              ignore:
+                 - master
+                 - /release\/.*/
 
       # ios-sim
       - build-artifacts:
@@ -851,6 +856,11 @@ workflows:
           matrix:
             parameters:
               xcode-version: [*default-xcode-version]
+          filters:
+            branches:
+              ignore:
+                 - master
+                 - /release\/.*/
 
       # ios-device
       - build-artifacts:
@@ -859,6 +869,11 @@ workflows:
           matrix:
             parameters:
               xcode-version: [*default-xcode-version]
+          filters:
+            branches:
+              ignore:
+                 - master
+                 - /release\/.*/
 
       # intel-ios-sim
       - build-artifacts:
@@ -867,6 +882,11 @@ workflows:
           matrix:
             parameters:
               xcode-version: [*default-xcode-version]
+          filters:
+            branches:
+              ignore:
+                 - master
+                 - /release\/.*/
 
       # intel-macos
       - build-artifacts:
@@ -875,6 +895,11 @@ workflows:
           matrix:
             parameters:
               xcode-version: [*default-xcode-version]
+          filters:
+            branches:
+              ignore:
+                 - master
+                 - /release\/.*/
 
       # apple-silicon-macos
       - build-artifacts:
@@ -883,6 +908,11 @@ workflows:
           matrix:
             parameters:
               xcode-version: [*default-xcode-version]
+          filters:
+            branches:
+              ignore:
+                 - master
+                 - /release\/.*/
 
       - copy-artifacts:
           name: copy-artifacats
@@ -895,11 +925,21 @@ workflows:
           matrix:
             parameters:
               xcode-version: [*default-xcode-version]
+          filters:
+            branches:
+              ignore:
+                 - master
+                 - /release\/.*/
 
       - make-generate:
           name: make-generate
           requires:
             - copy-artifacts
+          filters:
+            branches:
+              ignore:
+                 - master
+                 - /release\/.*/
 
       - test-example-http-with-mobilecoin-swift:
           name: test-example-http-with-mobilecoin-swift-<< matrix.xcode-version >>
@@ -908,6 +948,11 @@ workflows:
           matrix:
             parameters:
               xcode-version: [*default-xcode-version]
+          filters:
+            branches:
+              ignore:
+                 - master
+                 - /release\/.*/
 
       - test-example-with-mobilecoin-swift:
           name: test-example-with-mobilecoin-swift-<< matrix.xcode-version >>
@@ -916,6 +961,11 @@ workflows:
           matrix:
             parameters:
               xcode-version: ["12.5.1"]
+          filters:
+            branches:
+              ignore:
+                 - master
+                 - /release\/.*/
 
       - publish-pod-release:
           filters:
