@@ -917,7 +917,7 @@ workflows:
                  - /release\/.*/
 
       - copy-artifacts:
-          name: copy-artifacats
+          name: copy-artifacts
           requires:
             - build-artifacts-m1-ios-sim-xcode-<< matrix.xcode-version >>
             - build-artifacts-ios-device-xcode-<< matrix.xcode-version >>
