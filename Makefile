@@ -123,7 +123,7 @@ push-generated:
 
 # When we merge feature branches into master, we should squash-merge the Artifacts branch
 # into Artifacts origin/main. This gives a concise history, and lets us remove old 
-# feature branches from Artifacts without remove commit-hashes that libmobilecoin
+# feature branches from Artifacts without removing commit-hashes that libmobilecoin
 # may be pointing too.
 .PHONY: save-release-artifacts
 save-release-artifacts:
