@@ -149,15 +149,6 @@ save-release-artifacts:
 			git commit -m '[skip ci] Update Artifacts commit after squashing latest Artifacts into its origin/main branch.'; \
 		fi
 	
-
-.PHONY: check-condition
-check-condition:
-	@if [ -d "my_directory" ]; then \
-		echo "Directory exists."; \
-	else \
-		echo "Directory does not exist."; \
-	fi
-
 .PHONY: tag-release
 tag-release:
 	@[[ "$$(git rev-parse --abbrev-ref HEAD)" == "master" ]] || \
