@@ -142,7 +142,7 @@ save-release-artifacts:
 			git push origin main; \
 			cd .. && \
 			git add Artifacts && \
-			git commit -m '[skip ci] Update Artifacts commit after squashing latest Artifacts into its origin/main branch.' \
+			git commit -m '[skip ci] Update Artifacts commit after squashing latest Artifacts into its origin/main branch.'; \
 		fi
 	
 
