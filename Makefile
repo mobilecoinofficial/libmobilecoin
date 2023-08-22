@@ -121,16 +121,34 @@ push-generated:
 
 # Release
 
+# When we merge feature branches into master, we should squash-merge the Artifacts branch
+# into Artifacts origin/main. This gives a concise history, and lets us remove old 
+# feature branches from Artifacts without removing commit-hashes that libmobilecoin
+# may be pointing too.
 .PHONY: save-release-artifacts
 save-release-artifacts:
 	@[[ "$$(git rev-parse --abbrev-ref HEAD)" == "master" ]] || \
 		{ echo 'Error: Must be on branch "master" when tagging a release.'; exit 1; }
-	VERSION="$$(bundle exec pod ipc spec LibMobileCoin.podspec | jq -r '.version')" && \
-		SHORTSHA="$$(git rev-parse --short HEAD)" && \
-		TIME="$$(date +%s)" && \
 		cd Artifacts && \
-		git checkout -b "master-$$VERSION-$$SHORTSHA-$$TIME" && \
-		git push origin "master-$$VERSION-$$SHORTSHA-$$TIME"
+		git checkout -b pre-squash-artifacts && \
+		git remote set-branches --add origin main && \
+		git fetch && \
+		git checkout -b main --track origin/main || true \
+		git checkout pre-squash-artifacts && \
+		git rebase -X theirs main && \
+		git checkout main && \
+		git merge -X theirs --squash pre-squash-artifacts; \
+		if [[ git diff-index --quiet --cached HEAD ]]; then \
+			echo "No changes in Artifacts staging area."; \
+		else \
+			echo "Changes found in Artifacts staging area."; \
+			git commit -m '[skip ci] Add artifacts to main branch'; \
+			git push origin main; \
+			cd .. && \
+			git add Artifacts && \
+			git commit -m '[skip ci] Update Artifacts commit after squashing latest Artifacts into its origin/main branch.'; \
+			git push origin master; \
+		fi
 	
 .PHONY: tag-release
 tag-release:
