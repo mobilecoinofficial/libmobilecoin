@@ -147,6 +147,7 @@ save-release-artifacts:
 			cd .. && \
 			git add Artifacts && \
 			git commit -m '[skip ci] Update Artifacts commit after squashing latest Artifacts into its origin/main branch.'; \
+			git push origin master; \
 		fi
 	
 .PHONY: tag-release
