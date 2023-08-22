@@ -138,7 +138,7 @@ save-release-artifacts:
 		git rebase -X theirs main && \
 		git checkout main && \
 		git merge -X theirs --squash pre-squash-artifacts; \
-		if [ git diff-index --quiet --cached HEAD ]; then \
+		if [[ git diff-index --quiet --cached HEAD ]]; then \
 			echo "No changes in Artifacts staging area."; \
 		else \
 			echo "Changes found in Artifacts staging area."; \
