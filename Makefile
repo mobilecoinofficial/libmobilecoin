@@ -134,12 +134,16 @@ save-release-artifacts:
 		git rebase -X theirs main && \
 		git checkout main && \
 		git merge -X theirs --squash pre-squash-artifacts; \
-		if [ git diff-index --quiet --cached HEAD ]; \
-		then \
-    	echo "Empty"; \
-  	else \
-    	echo "Not empty"; \
-  	fi
+		if [ git diff-index --quiet --cached HEAD ]; then \
+			echo "No changes in Artifacts staging area."; \
+		else \
+			echo "Changes found in Artifacts staging area."; \
+			git commit -m '[skip ci] Add artifacts to main branch'; \
+			git push origin main; \
+			cd .. && \
+			git add Artifacts && \
+			git commit -m '[skip ci] Update Artifacts commit after squashing latest Artifacts into its origin/main branch.' \
+		fi
 	
 
 .PHONY: check-condition
