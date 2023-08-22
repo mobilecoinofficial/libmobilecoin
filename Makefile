@@ -125,12 +125,23 @@ push-generated:
 save-release-artifacts:
 	@[[ "$$(git rev-parse --abbrev-ref HEAD)" == "master" ]] || \
 		{ echo 'Error: Must be on branch "master" when tagging a release.'; exit 1; }
-	VERSION="$$(bundle exec pod ipc spec LibMobileCoin.podspec | jq -r '.version')" && \
-		SHORTSHA="$$(git rev-parse --short HEAD)" && \
-		TIME="$$(date +%s)" && \
 		cd Artifacts && \
-		git checkout -b "master-$$VERSION-$$SHORTSHA-$$TIME" && \
-		git push origin "master-$$VERSION-$$SHORTSHA-$$TIME"
+		git checkout -b pre-squash-artifacts && \
+		git remote set-branches --add origin main && \
+		git fetch && \
+		git checkout -b main --track origin/main
+		git checkout pre-squash-artifacts
+		git rebase -X theirs main && \
+		git checkout main && \
+		git merge -X theirs --squash pre-squash-artifacts && \
+		if git diff-index --quiet --cached HEAD; then \
+    	echo "No changes in staging area."\
+		else \
+  		echo "Changes found in staging area." && \
+	  	git commit -m '[skip ci] Add artifacts to main branch' && \
+	  	git push origin main \
+		fi \
+		echo "complete"
 	
 .PHONY: tag-release
 tag-release:
