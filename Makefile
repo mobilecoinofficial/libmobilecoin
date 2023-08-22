@@ -129,20 +129,27 @@ save-release-artifacts:
 		git checkout -b pre-squash-artifacts && \
 		git remote set-branches --add origin main && \
 		git fetch && \
-		git checkout -b main --track origin/main
-		git checkout pre-squash-artifacts
+		git checkout -b main --track origin/main || true \
+		git checkout pre-squash-artifacts && \
 		git rebase -X theirs main && \
 		git checkout main && \
-		git merge -X theirs --squash pre-squash-artifacts && \
-		if git diff-index --quiet --cached HEAD; then \
-    	echo "No changes in staging area."\
-		else \
-  		echo "Changes found in staging area." && \
-	  	git commit -m '[skip ci] Add artifacts to main branch' && \
-	  	git push origin main \
-		fi \
-		echo "complete"
+		git merge -X theirs --squash pre-squash-artifacts; \
+		if [ git diff-index --quiet --cached HEAD ]; \
+		then \
+    	echo "Empty"; \
+  	else \
+    	echo "Not empty"; \
+  	fi
 	
+
+.PHONY: check-condition
+check-condition:
+	@if [ -d "my_directory" ]; then \
+		echo "Directory exists."; \
+	else \
+		echo "Directory does not exist."; \
+	fi
+
 .PHONY: tag-release
 tag-release:
 	@[[ "$$(git rev-parse --abbrev-ref HEAD)" == "master" ]] || \
