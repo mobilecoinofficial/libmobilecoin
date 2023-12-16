@@ -8,8 +8,10 @@ use mc_attest_ake::{
     AuthPending, AuthResponseInput, AuthResponseOutput, ClientInitiate, Ready, Start, Transition,
 };
 use mc_attest_core::{MrEnclave, MrSigner};
+use mc_attest_verifier_types::prost;
 use mc_attest_verifier::{MrEnclaveVerifier, MrSignerVerifier, Verifier, DEBUG_ENCLAVE};
-use mc_common::ResponderId;
+use mc_attestation_verifier::{TrustedIdentity, TrustedMrEnclaveIdentity, TrustedMrSignerIdentity};
+use mc_common::{ResponderId, time::{SystemTimeProvider, TimeProvider}};
 use mc_crypto_keys::X25519;
 use mc_crypto_noise::NoiseCipher;
 use mc_rand::McRng;
@@ -19,12 +21,15 @@ use sha2::Sha512;
 pub type McMrEnclaveVerifier = MrEnclaveVerifier;
 impl_into_ffi!(MrEnclaveVerifier);
 
+pub type McTrustedMrEnclaveIdentity = TrustedMrEnclaveIdentity;
+impl_into_ffi!(TrustedMrEnclaveIdentity);
+
 #[no_mangle]
-pub extern "C" fn mc_mr_enclave_verifier_free(
-    mr_enclave_verifier: FfiOptOwnedPtr<McMrEnclaveVerifier>,
+pub extern "C" fn mc_trusted_identity_mr_enclave_free(
+    mr_enclave_trusted_identity: FfiOptOwnedPtr<McTrustedMrEnclaveIdentity>,
 ) {
     ffi_boundary(|| {
-        let _ = mr_enclave_verifier;
+        let _ = mr_enclave_trusted_identity;
     })
 }
 
@@ -35,12 +40,22 @@ pub extern "C" fn mc_mr_enclave_verifier_free(
 ///
 /// * `mr_enclave` - must be 32 bytes in length.
 #[no_mangle]
-pub extern "C" fn mc_mr_enclave_verifier_create(
+pub extern "C" fn mc_trusted_identity_mr_enclave_create(
     mr_enclave: FfiRefPtr<McBuffer>,
-) -> FfiOptOwnedPtr<McMrEnclaveVerifier> {
+) -> FfiOptOwnedPtr<McTrustedMrEnclaveIdentity> {
     ffi_boundary(|| {
+        let test_config_advisories = vec![]
+        let test_hardening_advisories = vec![]
+
         let mr_enclave = MrEnclave::try_from_ffi(&mr_enclave).expect("mr_enclave is invalid");
-        MrEnclaveVerifier::new(mr_enclave)
+
+        let trusted_mr_enclave_identity = TrustedMrEnclaveIdentity::new(
+            mr_enclave,
+            &test_config_advisories,
+            &test_hardening_advisories,
+        );
+
+        trusted_mr_enclave_identity
     })
 }
 
@@ -161,6 +176,11 @@ pub extern "C" fn mc_mr_signer_verifier_allow_hardening_advisory(
 pub type McVerifier = Verifier;
 impl_into_ffi!(Verifier);
 
+pub type McTrustedIdentity = TrustedIdentity;
+impl_into_ffi!(TrustedIdentity);
+
+pub struct McTrustedIdentities (Vec<McTrustedIdentity>);
+
 /// Construct a new builder using the baked-in IAS root certificates and debug
 /// settings.
 #[no_mangle]
@@ -172,10 +192,27 @@ pub extern "C" fn mc_verifier_create() -> FfiOptOwnedPtr<McVerifier> {
     })
 }
 
+/// Construct a new builder using the baked-in IAS root certificates and debug
+/// settings.
+#[no_mangle]
+pub extern "C" fn mc_trusted_identities_create() -> FfiOptOwnedPtr<McTrustedIdentities> {
+    ffi_boundary(|| {
+        let trusted_identities = TrustedIdentities(Vec::new());
+        trusted_identities
+    })
+}
+
 #[no_mangle]
 pub extern "C" fn mc_verifier_free(verifier: FfiOptOwnedPtr<McVerifier>) {
     ffi_boundary(|| {
         let _ = verifier;
+    })
+}
+
+#[no_mangle]
+pub extern "C" fn mc_trusted_identities_free(trusted_identities: FfiOptOwnedPtr<McTrustedIdentities>) {
+    ffi_boundary(|| {
+        let _ = trusted_identities;
     })
 }
 
