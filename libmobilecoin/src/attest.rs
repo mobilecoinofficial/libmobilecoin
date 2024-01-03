@@ -181,7 +181,7 @@ impl_into_ffi!(TrustedIdentity);
 
 pub struct McTrustedIdentities (Vec<McTrustedIdentity>);
 
-/// Construct a new builder using the baked-in IAS root certificates and debug
+/// Construct a new Verifier builder using the baked-in IAS root certificates and debug
 /// settings.
 #[no_mangle]
 pub extern "C" fn mc_verifier_create() -> FfiOptOwnedPtr<McVerifier> {
@@ -192,7 +192,7 @@ pub extern "C" fn mc_verifier_create() -> FfiOptOwnedPtr<McVerifier> {
     })
 }
 
-/// Construct a new builder using the baked-in IAS root certificates and debug
+/// Construct a new TrustedIdentities builder using the baked-in IAS root certificates and debug
 /// settings.
 #[no_mangle]
 pub extern "C" fn mc_trusted_identities_create() -> FfiOptOwnedPtr<McTrustedIdentities> {
