@@ -25,6 +25,9 @@ impl_into_ffi!(MrEnclaveVerifier);
 pub type McTrustedMrEnclaveIdentity = TrustedMrEnclaveIdentity;
 impl_into_ffi!(TrustedMrEnclaveIdentity);
 
+pub type McTrustedMrSignerIdentity = TrustedMrSignerIdentity;
+impl_into_ffi!(TrustedMrSignerIdentity);
+
 #[no_mangle]
 pub extern "C" fn mc_trusted_identity_mr_enclave_free(
     mr_enclave_trusted_identity: FfiOptOwnedPtr<McTrustedMrEnclaveIdentity>,
@@ -60,6 +63,53 @@ pub extern "C" fn mc_trusted_identity_mr_enclave_create(
     })
 }
 
+#[no_mangle]
+/// TEMPORARY COPY PASTE
+/// TEMPORARY COPY PASTE
+/// TEMPORARY COPY PASTE
+pub extern "C" fn mc_trusted_identity_mr_signer_free(
+    mr_enclave_trusted_identity: FfiOptOwnedPtr<McTrustedMrEnclaveIdentity>,
+) {
+    ffi_boundary(|| {
+        let _ = mr_enclave_trusted_identity;
+    })
+}
+
+/// TEMPORARY COPY PASTE
+/// TEMPORARY COPY PASTE
+/// TEMPORARY COPY PASTE
+/// Create a new status verifier that will check for the existence of the
+/// given MrEnclave.
+///
+/// # Preconditions
+///
+/// * `mr_enclave` - must be 32 bytes in length.
+/// TEMPORARY COPY PASTE
+/// TEMPORARY COPY PASTE
+/// TEMPORARY COPY PASTE
+#[no_mangle]
+pub extern "C" fn mc_trusted_identity_mr_signer_create(
+    mr_signer: FfiRefPtr<McBuffer>,
+    expected_product_id: u16,
+    minimum_security_version: u16,
+) -> FfiOptOwnedPtr<McTrustedMrSignerIdentity> {
+    ffi_boundary(|| {
+        let test_config_advisories: Vec<String> = vec![];
+        let test_hardening_advisories: Vec<String> = vec![];
+
+        let mr_signer = MrSigner::try_from_ffi(&mr_signer).expect("mr_signer is invalid");
+
+        let trusted_mr_signer_identity = TrustedMrSignerIdentity::new(
+            mr_signer,
+            expected_product_id.into(),
+            minimum_security_version.into(),
+            &test_config_advisories,
+            &test_hardening_advisories,
+        );
+
+        trusted_mr_signer_identity
+    })
+}
 /// Assume an enclave with the specified measurement does not need
 /// BIOS configuration changes to address the provided advisory ID.
 ///

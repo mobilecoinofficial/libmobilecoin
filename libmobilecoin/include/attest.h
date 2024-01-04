@@ -19,6 +19,8 @@ typedef struct _McMrEnclaveVerifier McMrEnclaveVerifier;
 
 typedef struct _McTrustedMrEnclaveIdentity McTrustedMrEnclaveIdentity;
 
+typedef struct _McTrustedMrSignerIdentity McTrustedMrSignerIdentity;
+
 /// A `VerifyIasReportData` implementation that will check if the enclave in
 /// question has the given MrSigner value, and has no other IAS report status
 /// issues.
@@ -52,12 +54,21 @@ McTrustedMrEnclaveIdentity* MC_NULLABLE mc_trusted_identity_mr_enclave_create(
 )
 MC_ATTRIBUTE_NONNULL(1);
 
+McTrustedMrSignerIdentity* MC_NULLABLE mc_trusted_identity_mr_signer_create(
+  const McBuffer* MC_NONNULL mr_signer
+)
+MC_ATTRIBUTE_NONNULL(1);
+
 void mc_mr_enclave_verifier_free(
   McMrEnclaveVerifier* MC_NULLABLE mr_enclave_verifier
 );
 
 void mc_trusted_identity_mr_enclave_free(
   McTrustedMrEnclaveIdentity* MC_NULLABLE mr_enclave_trusted_identity
+);
+
+void mc_trusted_identity_mr_signer_free(
+  McTrustedMrSignerIdentity* MC_NULLABLE mr_signer_trusted_identity
 );
 
 /// Assume an enclave with the specified measurement does not need
