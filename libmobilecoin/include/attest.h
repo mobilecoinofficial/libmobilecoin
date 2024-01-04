@@ -17,6 +17,8 @@ extern "C" {
 /// question has the given MrEnclave, and has no other IAS report status issues.
 typedef struct _McMrEnclaveVerifier McMrEnclaveVerifier;
 
+typedef struct _McTrustedMrEnclaveIdentity McTrustedMrEnclaveIdentity;
+
 /// A `VerifyIasReportData` implementation that will check if the enclave in
 /// question has the given MrSigner value, and has no other IAS report status
 /// issues.
@@ -25,6 +27,10 @@ typedef struct _McMrSignerVerifier McMrSignerVerifier;
 /// A builder structure used to construct a report verifier based on the
 /// criteria specified.
 typedef struct _McVerifier McVerifier;
+
+typedef struct _McTrustedIdentity McTrustedIdentity;
+
+typedef struct _McTrustedIdentities McTrustedIdentities;
 
 typedef struct _McAttestAke McAttestAke;
 
@@ -41,8 +47,17 @@ McMrEnclaveVerifier* MC_NULLABLE mc_mr_enclave_verifier_create(
 )
 MC_ATTRIBUTE_NONNULL(1);
 
+McTrustedMrEnclaveIdentity* MC_NULLABLE mc_trusted_identity_mr_enclave_create(
+  const McBuffer* MC_NONNULL mr_enclave
+)
+MC_ATTRIBUTE_NONNULL(1);
+
 void mc_mr_enclave_verifier_free(
   McMrEnclaveVerifier* MC_NULLABLE mr_enclave_verifier
+);
+
+void mc_trusted_identity_mr_enclave_free(
+  McTrustedMrEnclaveIdentity* MC_NULLABLE mr_enclave_trusted_identity
 );
 
 /// Assume an enclave with the specified measurement does not need
@@ -53,11 +68,11 @@ void mc_mr_enclave_verifier_free(
 /// # Preconditions
 ///
 /// * `advisory_id` - must be a nul-terminated C string containing valid UTF-8.
-bool mc_mr_enclave_verifier_allow_config_advisory(
-  McMrEnclaveVerifier* MC_NONNULL mr_enclave_verifier,
-  const char* MC_NONNULL advisory_id
-)
-MC_ATTRIBUTE_NONNULL(1, 2);
+//bool mc_mr_enclave_verifier_allow_config_advisory(
+  //McMrEnclaveVerifier* MC_NONNULL mr_enclave_verifier,
+  //const char* MC_NONNULL advisory_id
+//)
+//MC_ATTRIBUTE_NONNULL(1, 2);
 
 /// Assume the given MrEnclave value has the appropriate software/build-time
 /// hardening for the given advisory ID.
@@ -67,11 +82,11 @@ MC_ATTRIBUTE_NONNULL(1, 2);
 /// # Preconditions
 ///
 /// * `advisory_id` - must be a nul-terminated C string containing valid UTF-8.
-bool mc_mr_enclave_verifier_allow_hardening_advisory(
-  McMrEnclaveVerifier* MC_NONNULL mr_enclave_verifier,
-  const char* MC_NONNULL advisory_id
-)
-MC_ATTRIBUTE_NONNULL(1, 2);
+//bool mc_mr_enclave_verifier_allow_hardening_advisory(
+  //McMrEnclaveVerifier* MC_NONNULL mr_enclave_verifier,
+  //const char* MC_NONNULL advisory_id
+//)
+//MC_ATTRIBUTE_NONNULL(1, 2);
 
 /* ==== McMrSignerVerifier ==== */
 
@@ -193,7 +208,7 @@ MC_ATTRIBUTE_NONNULL(1, 2);
 bool mc_attest_ake_process_auth_response(
   McAttestAke* MC_NONNULL attest_ake,
   const McBuffer* MC_NONNULL auth_response_data,
-  const McVerifier* MC_NONNULL verifier,
+  const McTrustedIdentities* MC_NONNULL trusted_identities,
   McError* MC_NULLABLE * MC_NULLABLE out_error
 )
 MC_ATTRIBUTE_NONNULL(1, 2, 3);

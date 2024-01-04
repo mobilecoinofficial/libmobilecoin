@@ -466,47 +466,47 @@ impl_into_ffi!(Option<TransactionBuilder<FogResolver>>);
 ///
 /// * `LibMcError::InvalidInput`
 #[no_mangle]
-pub extern "C" fn mc_transaction_builder_create(
-    fee: u64,
-    token_id: u64,
-    tombstone_block: u64,
-    fog_resolver: FfiOptRefPtr<McFogResolver>,
-    memo_builder: FfiMutPtr<McTxOutMemoBuilder>,
-    block_version: u32,
-    out_error: FfiOptMutPtr<FfiOptOwnedPtr<McError>>,
-) -> FfiOptOwnedPtr<McTransactionBuilder> {
-    ffi_boundary_with_error(out_error, || {
-        let fog_resolver =
-            fog_resolver
-                .as_ref()
-                .map_or_else(FogResolver::default, |fog_resolver| {
-                    // It is safe to add an expect here (which should never occur) because
-                    // fogReportUrl is already checked in mc_fog_resolver_add_report_response
-                    // to be convertible to FogUri
-                    FogResolver::new(fog_resolver.0.clone(), &fog_resolver.1)
-                        .expect("FogResolver could not be constructed from the provided materials")
-                });
-        let block_version = BlockVersion::try_from(block_version)?;
+//pub extern "C" fn mc_transaction_builder_create(
+    //fee: u64,
+    //token_id: u64,
+    //tombstone_block: u64,
+    //fog_resolver: FfiOptRefPtr<McFogResolver>,
+    //memo_builder: FfiMutPtr<McTxOutMemoBuilder>,
+    //block_version: u32,
+    //out_error: FfiOptMutPtr<FfiOptOwnedPtr<McError>>,
+//) -> FfiOptOwnedPtr<McTransactionBuilder> {
+    //ffi_boundary_with_error(out_error, || {
+        //let fog_resolver =
+            //fog_resolver
+                //.as_ref()
+                //.map_or_else(FogResolver::default, |fog_resolver| {
+                    //// It is safe to add an expect here (which should never occur) because
+                    //// fogReportUrl is already checked in mc_fog_resolver_add_report_response
+                    //// to be convertible to FogUri
+                    //FogResolver::new(fog_resolver.0.clone(), &fog_resolver.1)
+                        //.expect("FogResolver could not be constructed from the provided materials")
+                //});
+        //let block_version = BlockVersion::try_from(block_version)?;
 
-        let memo_builder_box = memo_builder
-            .into_mut()
-            .take()
-            .expect("McTxOutMemoBuilder has already been used to build a Tx");
+        //let memo_builder_box = memo_builder
+            //.into_mut()
+            //.take()
+            //.expect("McTxOutMemoBuilder has already been used to build a Tx");
 
-        let fee_amount = Amount::new(fee, TokenId::from(token_id));
+        //let fee_amount = Amount::new(fee, TokenId::from(token_id));
 
-        let mut transaction_builder = TransactionBuilder::new_with_box(
-            block_version,
-            fee_amount,
-            fog_resolver,
-            memo_builder_box,
-        )
-        .expect("failure not expected");
+        //let mut transaction_builder = TransactionBuilder::new_with_box(
+            //block_version,
+            //fee_amount,
+            //fog_resolver,
+            //memo_builder_box,
+        //)
+        //.expect("failure not expected");
 
-        transaction_builder.set_tombstone_block(tombstone_block);
-        Ok(Some(transaction_builder))
-    })
-}
+        //transaction_builder.set_tombstone_block(tombstone_block);
+        //Ok(Some(transaction_builder))
+    //})
+//}
 
 #[no_mangle]
 pub extern "C" fn mc_transaction_builder_free(

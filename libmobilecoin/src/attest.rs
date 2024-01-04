@@ -1,8 +1,9 @@
-// Copyright (c) 2018-2022 The MobileCoin Foundation
+// Copyright (c) 2018-2022 The MobileCoin Foundatio, timen
 
 use crate::{common::*, LibMcError};
 use aes_gcm::Aes256Gcm;
 use core::str::FromStr;
+use der::DateTime;
 use libc::ssize_t;
 use mc_attest_ake::{
     AuthPending, AuthResponseInput, AuthResponseOutput, ClientInitiate, Ready, Start, Transition,
@@ -44,8 +45,8 @@ pub extern "C" fn mc_trusted_identity_mr_enclave_create(
     mr_enclave: FfiRefPtr<McBuffer>,
 ) -> FfiOptOwnedPtr<McTrustedMrEnclaveIdentity> {
     ffi_boundary(|| {
-        let test_config_advisories = vec![]
-        let test_hardening_advisories = vec![]
+        let test_config_advisories: Vec<String> = vec![];
+        let test_hardening_advisories: Vec<String> = vec![];
 
         let mr_enclave = MrEnclave::try_from_ffi(&mr_enclave).expect("mr_enclave is invalid");
 
@@ -68,17 +69,17 @@ pub extern "C" fn mc_trusted_identity_mr_enclave_create(
 ///
 /// * `advisory_id` - must be a nul-terminated C string containing valid UTF-8.
 #[no_mangle]
-pub extern "C" fn mc_mr_enclave_verifier_allow_config_advisory(
-    mr_enclave_verifier: FfiMutPtr<McMrEnclaveVerifier>,
-    advisory_id: FfiStr,
-) -> bool {
-    ffi_boundary(|| {
-        let advisory_id = <&str>::try_from_ffi(advisory_id).expect("advisory_id is invalid");
-        mr_enclave_verifier
-            .into_mut()
-            .allow_config_advisory(advisory_id);
-    })
-}
+//pub extern "C" fn mc_mr_enclave_verifier_allow_config_advisory(
+    //mr_enclave_verifier: FfiMutPtr<McMrEnclaveVerifier>,
+    //advisory_id: FfiStr,
+//) -> bool {
+    //ffi_boundary(|| {
+        //let advisory_id = <&str>::try_from_ffi(advisory_id).expect("advisory_id is invalid");
+        //mr_enclave_verifier
+            //.into_mut()
+            //.allow_config_advisory(advisory_id);
+    //})
+//}
 
 /// Assume the given MrEnclave value has the appropriate software/build-time
 /// hardening for the given advisory ID.
@@ -89,17 +90,17 @@ pub extern "C" fn mc_mr_enclave_verifier_allow_config_advisory(
 ///
 /// * `advisory_id` - must be a nul-terminated C string containing valid UTF-8.
 #[no_mangle]
-pub extern "C" fn mc_mr_enclave_verifier_allow_hardening_advisory(
-    mr_enclave_verifier: FfiMutPtr<McMrEnclaveVerifier>,
-    advisory_id: FfiStr,
-) -> bool {
-    ffi_boundary(|| {
-        let advisory_id = <&str>::try_from_ffi(advisory_id).expect("advisory_id is invalid");
-        mr_enclave_verifier
-            .into_mut()
-            .allow_hardening_advisory(advisory_id);
-    })
-}
+//pub extern "C" fn mc_mr_enclave_verifier_allow_hardening_advisory(
+    //mr_enclave_verifier: FfiMutPtr<McMrEnclaveVerifier>,
+    //advisory_id: FfiStr,
+//) -> bool {
+    //ffi_boundary(|| {
+        //let advisory_id = <&str>::try_from_ffi(advisory_id).expect("advisory_id is invalid");
+        //mr_enclave_verifier
+            //.into_mut()
+            //.allow_hardening_advisory(advisory_id);
+    //})
+//}
 
 pub type McMrSignerVerifier = MrSignerVerifier;
 impl_into_ffi!(MrSignerVerifier);
@@ -120,16 +121,16 @@ pub extern "C" fn mc_mr_signer_verifier_free(
 ///
 /// * `mr_signer` - must be 32 bytes in length.
 #[no_mangle]
-pub extern "C" fn mc_mr_signer_verifier_create(
-    mr_signer: FfiRefPtr<McBuffer>,
-    expected_product_id: u16,
-    minimum_security_version: u16,
-) -> FfiOptOwnedPtr<McMrSignerVerifier> {
-    ffi_boundary(|| {
-        let mr_signer = MrSigner::try_from_ffi(&mr_signer).expect("mr_signer is invalid");
-        MrSignerVerifier::new(mr_signer, expected_product_id, minimum_security_version)
-    })
-}
+//pub extern "C" fn mc_mr_signer_verifier_create(
+    //mr_signer: FfiRefPtr<McBuffer>,
+    //expected_product_id: u16,
+    //minimum_security_version: u16,
+//) -> FfiOptOwnedPtr<McMrSignerVerifier> {
+    //ffi_boundary(|| {
+        //let mr_signer = MrSigner::try_from_ffi(&mr_signer).expect("mr_signer is invalid");
+        //MrSignerVerifier::new(mr_signer, expected_product_id, minimum_security_version)
+    //})
+//}
 
 /// Assume an enclave with the specified measurement does not need
 /// BIOS configuration changes to address the provided advisory ID.
@@ -140,17 +141,17 @@ pub extern "C" fn mc_mr_signer_verifier_create(
 ///
 /// * `advisory_id` - must be a nul-terminated C string containing valid UTF-8.
 #[no_mangle]
-pub extern "C" fn mc_mr_signer_verifier_allow_config_advisory(
-    mr_signer_verifier: FfiMutPtr<MrSignerVerifier>,
-    advisory_id: FfiStr,
-) -> bool {
-    ffi_boundary(|| {
-        let advisory_id = <&str>::try_from_ffi(advisory_id).expect("advisory_id is invalid");
-        mr_signer_verifier
-            .into_mut()
-            .allow_config_advisory(advisory_id);
-    })
-}
+//pub extern "C" fn mc_mr_signer_verifier_allow_config_advisory(
+    //mr_signer_verifier: FfiMutPtr<MrSignerVerifier>,
+    //advisory_id: FfiStr,
+//) -> bool {
+    //ffi_boundary(|| {
+        //let advisory_id = <&str>::try_from_ffi(advisory_id).expect("advisory_id is invalid");
+        //mr_signer_verifier
+            //.into_mut()
+            //.allow_config_advisory(advisory_id);
+    //})
+//}
 
 /// Assume an enclave with the specified measurement has the appropriate
 /// software/build-time hardening for the given advisory ID.
@@ -161,17 +162,17 @@ pub extern "C" fn mc_mr_signer_verifier_allow_config_advisory(
 ///
 /// * `advisory_id` - must be a nul-terminated C string containing valid UTF-8.
 #[no_mangle]
-pub extern "C" fn mc_mr_signer_verifier_allow_hardening_advisory(
-    mr_signer_verifier: FfiMutPtr<MrSignerVerifier>,
-    advisory_id: FfiStr,
-) -> bool {
-    ffi_boundary(|| {
-        let advisory_id = <&str>::try_from_ffi(advisory_id).expect("advisory_id is invalid");
-        mr_signer_verifier
-            .into_mut()
-            .allow_hardening_advisory(advisory_id);
-    })
-}
+//pub extern "C" fn mc_mr_signer_verifier_allow_hardening_advisory(
+    //mr_signer_verifier: FfiMutPtr<MrSignerVerifier>,
+    //advisory_id: FfiStr,
+//) -> bool {
+    //ffi_boundary(|| {
+        //let advisory_id = <&str>::try_from_ffi(advisory_id).expect("advisory_id is invalid");
+        //mr_signer_verifier
+            //.into_mut()
+            //.allow_hardening_advisory(advisory_id);
+    //})
+//}
 
 pub type McVerifier = Verifier;
 impl_into_ffi!(Verifier);
@@ -180,6 +181,7 @@ pub type McTrustedIdentity = TrustedIdentity;
 impl_into_ffi!(TrustedIdentity);
 
 pub struct McTrustedIdentities (Vec<McTrustedIdentity>);
+impl_into_ffi!(McTrustedIdentities);
 
 /// Construct a new builder using the baked-in IAS root certificates and debug
 /// settings.
@@ -197,7 +199,7 @@ pub extern "C" fn mc_verifier_create() -> FfiOptOwnedPtr<McVerifier> {
 #[no_mangle]
 pub extern "C" fn mc_trusted_identities_create() -> FfiOptOwnedPtr<McTrustedIdentities> {
     ffi_boundary(|| {
-        let trusted_identities = TrustedIdentities(Vec::new());
+        let trusted_identities = McTrustedIdentities(Vec::new());
         trusted_identities
     })
 }
@@ -386,7 +388,7 @@ pub extern "C" fn mc_attest_ake_get_auth_request(
 pub extern "C" fn mc_attest_ake_process_auth_response(
     attest_ake: FfiMutPtr<McAttestAke>,
     auth_response_data: FfiRefPtr<McBuffer>,
-    verifier: FfiRefPtr<McVerifier>,
+    trusted_identities: FfiRefPtr<McTrustedIdentities>,
     out_error: FfiOptMutPtr<FfiOptOwnedPtr<McError>>,
 ) -> bool {
     ffi_boundary_with_error(out_error, || {
@@ -395,8 +397,14 @@ pub extern "C" fn mc_attest_ake_process_auth_response(
             .take_auth_pending()
             .expect("attest_ake is not in the auth pending state");
 
+        let epoch_time = SystemTimeProvider::default()
+            .since_epoch()
+            .map_err(|_| LibMcError::AttestationVerificationFailed("Time went backwards".to_owned()))?;
+        let time = DateTime::from_unix_duration(epoch_time)
+            .map_err(|_| LibMcError::AttestationVerificationFailed("Time out of range".to_owned()))?;
+
         let auth_response_output = AuthResponseOutput::from(auth_response_data.to_vec());
-        let auth_response_input = AuthResponseInput::new(auth_response_output, (*verifier).clone());
+        let auth_response_input = AuthResponseInput::new(auth_response_output, trusted_identities.0.clone(), time);
         let mut rng = McRng::default(); // This is actually unused.
         let (ready, _) = auth_pending.try_next(&mut rng, auth_response_input)?;
         *attest_ake = AttestAke::Attested(ready);

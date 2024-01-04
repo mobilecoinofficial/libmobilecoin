@@ -40,38 +40,38 @@ pub extern "C" fn mc_fog_resolver_free(fog_resolver: FfiOptOwnedPtr<McFogResolve
 }
 
 #[no_mangle]
-pub extern "C" fn mc_fog_resolver_get_fog_pubkey(
-    fog_resolver: FfiRefPtr<McFogResolver>,
-    recipient: FfiRefPtr<McPublicAddress>,
-    out_error: FfiOptMutPtr<FfiOptOwnedPtr<McError>>,
-) -> FfiOptOwnedPtr<McFullyValidatedFogPubkey> {
-    ffi_boundary_with_error(out_error, || {
-        let fog_resolver = FogResolver::new(fog_resolver.0.clone(), &fog_resolver.1.clone())
-            .map_err(|err| LibMcError::InvalidInput(err.to_string()))?;
+//pub extern "C" fn mc_fog_resolver_get_fog_pubkey(
+    //fog_resolver: FfiRefPtr<McFogResolver>,
+    //recipient: FfiRefPtr<McPublicAddress>,
+    //out_error: FfiOptMutPtr<FfiOptOwnedPtr<McError>>,
+//) -> FfiOptOwnedPtr<McFullyValidatedFogPubkey> {
+    //ffi_boundary_with_error(out_error, || {
+        //let fog_resolver = FogResolver::new(fog_resolver.0.clone(), &fog_resolver.1.clone())
+            //.map_err(|err| LibMcError::InvalidInput(err.to_string()))?;
 
-        let recipient = PublicAddress::try_from_ffi(&recipient)?;
-        let fully_validated_fog_pubkey = fog_resolver.get_fog_pubkey(&recipient)?;
+        //let recipient = PublicAddress::try_from_ffi(&recipient)?;
+        //let fully_validated_fog_pubkey = fog_resolver.get_fog_pubkey(&recipient)?;
 
-        Ok(fully_validated_fog_pubkey)
-    })
-}
+        //Ok(fully_validated_fog_pubkey)
+    //})
+//}
 
 #[no_mangle]
-pub extern "C" fn mc_fog_resolver_get_fog_pubkey_from_protobuf_public_address(
-    fog_resolver: FfiRefPtr<McFogResolver>,
-    recipient_protobuf: FfiRefPtr<McBuffer>,
-    out_error: FfiOptMutPtr<FfiOptOwnedPtr<McError>>,
-) -> FfiOptOwnedPtr<McFullyValidatedFogPubkey> {
-    ffi_boundary_with_error(out_error, || {
-        let fog_resolver = FogResolver::new(fog_resolver.0.clone(), &fog_resolver.1)
-            .map_err(|err| LibMcError::InvalidInput(err.to_string()))?;
+//pub extern "C" fn mc_fog_resolver_get_fog_pubkey_from_protobuf_public_address(
+    //fog_resolver: FfiRefPtr<McFogResolver>,
+    //recipient_protobuf: FfiRefPtr<McBuffer>,
+    //out_error: FfiOptMutPtr<FfiOptOwnedPtr<McError>>,
+//) -> FfiOptOwnedPtr<McFullyValidatedFogPubkey> {
+    //ffi_boundary_with_error(out_error, || {
+        //let fog_resolver = FogResolver::new(fog_resolver.0.clone(), &fog_resolver.1)
+            //.map_err(|err| LibMcError::InvalidInput(err.to_string()))?;
 
-        let recipient = mc_util_serial::decode(recipient_protobuf.as_slice())?;
-        let fully_validated_fog_pubkey = fog_resolver.get_fog_pubkey(&recipient)?;
+        //let recipient = mc_util_serial::decode(recipient_protobuf.as_slice())?;
+        //let fully_validated_fog_pubkey = fog_resolver.get_fog_pubkey(&recipient)?;
 
-        Ok(fully_validated_fog_pubkey)
-    })
-}
+        //Ok(fully_validated_fog_pubkey)
+    //})
+//}
 
 /// # Preconditions
 ///

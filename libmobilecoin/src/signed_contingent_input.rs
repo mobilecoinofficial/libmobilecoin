@@ -42,81 +42,81 @@ impl_into_ffi!(Option<SignedContingentInputBuilder<FogResolver>>);
 ///
 /// * `LibMcError::InvalidInput`
 #[no_mangle]
-pub extern "C" fn mc_signed_contingent_input_builder_create(
-    block_version: u32,
-    tombstone_block: u64,
-    fog_resolver: FfiOptRefPtr<McFogResolver>,
-    memo_builder: FfiMutPtr<McTxOutMemoBuilder>,
-    view_private_key: FfiRefPtr<McBuffer>,
-    subaddress_spend_private_key: FfiRefPtr<McBuffer>,
-    real_index: usize,
-    ring: FfiRefPtr<McTransactionBuilderRing>,
-    out_error: FfiOptMutPtr<FfiOptOwnedPtr<McError>>,
-) -> FfiOptOwnedPtr<McSignedContingentInputBuilder> {
-    ffi_boundary_with_error(out_error, || {
-        let fog_resolver =
-            fog_resolver
-                .as_ref()
-                .map_or_else(FogResolver::default, |fog_resolver| {
-                    // It is safe to add an expect here (which should never occur) because
-                    // fogReportUrl is already checked in mc_fog_resolver_add_report_response
-                    // to be convertible to FogUri
-                    FogResolver::new(fog_resolver.0.clone(), &fog_resolver.1)
-                        .expect("FogResolver could not be constructed from the provided materials")
-                });
-        let block_version = BlockVersion::try_from(block_version)?;
+//pub extern "C" fn mc_signed_contingent_input_builder_create(
+    //block_version: u32,
+    //tombstone_block: u64,
+    //fog_resolver: FfiOptRefPtr<McFogResolver>,
+    //memo_builder: FfiMutPtr<McTxOutMemoBuilder>,
+    //view_private_key: FfiRefPtr<McBuffer>,
+    //subaddress_spend_private_key: FfiRefPtr<McBuffer>,
+    //real_index: usize,
+    //ring: FfiRefPtr<McTransactionBuilderRing>,
+    //out_error: FfiOptMutPtr<FfiOptOwnedPtr<McError>>,
+//) -> FfiOptOwnedPtr<McSignedContingentInputBuilder> {
+    //ffi_boundary_with_error(out_error, || {
+        //let fog_resolver =
+            //fog_resolver
+                //.as_ref()
+                //.map_or_else(FogResolver::default, |fog_resolver| {
+                    //// It is safe to add an expect here (which should never occur) because
+                    //// fogReportUrl is already checked in mc_fog_resolver_add_report_response
+                    //// to be convertible to FogUri
+                    //FogResolver::new(fog_resolver.0.clone(), &fog_resolver.1)
+                        //.expect("FogResolver could not be constructed from the provided materials")
+                //});
+        //let block_version = BlockVersion::try_from(block_version)?;
 
-        let memo_builder_box = memo_builder
-            .into_mut()
-            .take()
-            .expect("McTxOutMemoBuilder has already been used to build a Tx");
+        //let memo_builder_box = memo_builder
+            //.into_mut()
+            //.take()
+            //.expect("McTxOutMemoBuilder has already been used to build a Tx");
 
-        // All this to create the InputCredentials
-        let view_private_key = RistrettoPrivate::try_from_ffi(&view_private_key)
-            .expect("view_private_key is not a valid RistrettoPrivate");
-        let subaddress_spend_private_key =
-            RistrettoPrivate::try_from_ffi(&subaddress_spend_private_key)
-                .expect("subaddress_spend_private_key is not a valid RistrettoPrivate");
-        let membership_proofs = ring.iter().map(|element| element.1.clone()).collect();
-        let ring: Vec<TxOut> = ring.iter().map(|element| element.0.clone()).collect();
-        let input_tx_out = ring
-            .get(real_index)
-            .expect("real_index not in bounds of ring")
-            .clone();
-        let target_key = RistrettoPublic::try_from(&input_tx_out.target_key)
-            .expect("input_tx_out.target_key is not a valid RistrettoPublic");
-        let public_key = RistrettoPublic::try_from(&input_tx_out.public_key)
-            .expect("input_tx_out.public_key is not a valid RistrettoPublic");
+        //// All this to create the InputCredentials
+        //let view_private_key = RistrettoPrivate::try_from_ffi(&view_private_key)
+            //.expect("view_private_key is not a valid RistrettoPrivate");
+        //let subaddress_spend_private_key =
+            //RistrettoPrivate::try_from_ffi(&subaddress_spend_private_key)
+                //.expect("subaddress_spend_private_key is not a valid RistrettoPrivate");
+        //let membership_proofs = ring.iter().map(|element| element.1.clone()).collect();
+        //let ring: Vec<TxOut> = ring.iter().map(|element| element.0.clone()).collect();
+        //let input_tx_out = ring
+            //.get(real_index)
+            //.expect("real_index not in bounds of ring")
+            //.clone();
+        //let target_key = RistrettoPublic::try_from(&input_tx_out.target_key)
+            //.expect("input_tx_out.target_key is not a valid RistrettoPublic");
+        //let public_key = RistrettoPublic::try_from(&input_tx_out.public_key)
+            //.expect("input_tx_out.public_key is not a valid RistrettoPublic");
 
-        let onetime_private_key = recover_onetime_private_key(
-            &public_key,
-            &view_private_key,
-            &subaddress_spend_private_key,
-        );
-        if RistrettoPublic::from(&onetime_private_key) != target_key {
-            panic!("TxOut at real_index isn't owned by account key");
-        }
-        let input_credentials = InputCredentials::new(
-            ring,
-            membership_proofs,
-            real_index,
-            onetime_private_key,
-            view_private_key, // `a`
-        )
-        .map_err(|err| LibMcError::InvalidInput(format!("{:?}", err)))?;
+        //let onetime_private_key = recover_onetime_private_key(
+            //&public_key,
+            //&view_private_key,
+            //&subaddress_spend_private_key,
+        //);
+        //if RistrettoPublic::from(&onetime_private_key) != target_key {
+            //panic!("TxOut at real_index isn't owned by account key");
+        //}
+        //let input_credentials = InputCredentials::new(
+            //ring,
+            //membership_proofs,
+            //real_index,
+            //onetime_private_key,
+            //view_private_key, // `a`
+        //)
+        //.map_err(|err| LibMcError::InvalidInput(format!("{:?}", err)))?;
 
-        let mut signed_contingent_input_builder = SignedContingentInputBuilder::new_with_box(
-            block_version,
-            input_credentials,
-            fog_resolver,
-            memo_builder_box,
-        )
-        .expect("failure not expected");
+        //let mut signed_contingent_input_builder = SignedContingentInputBuilder::new_with_box(
+            //block_version,
+            //input_credentials,
+            //fog_resolver,
+            //memo_builder_box,
+        //)
+        //.expect("failure not expected");
 
-        signed_contingent_input_builder.set_tombstone_block(tombstone_block);
-        Ok(Some(signed_contingent_input_builder))
-    })
-}
+        //signed_contingent_input_builder.set_tombstone_block(tombstone_block);
+        //Ok(Some(signed_contingent_input_builder))
+    //})
+//}
 
 #[no_mangle]
 pub extern "C" fn mc_signed_contingent_input_builder_free(
