@@ -55,7 +55,9 @@ McTrustedMrEnclaveIdentity* MC_NULLABLE mc_trusted_identity_mr_enclave_create(
 MC_ATTRIBUTE_NONNULL(1);
 
 McTrustedMrSignerIdentity* MC_NULLABLE mc_trusted_identity_mr_signer_create(
-  const McBuffer* MC_NONNULL mr_signer
+  const McBuffer* MC_NONNULL mr_signer,
+  uint16_t expected_product_id,
+  uint16_t minimum_security_version
 )
 MC_ATTRIBUTE_NONNULL(1);
 
@@ -167,6 +169,29 @@ MC_ATTRIBUTE_NONNULL(1, 2);
 bool mc_verifier_add_mr_signer(
   McVerifier* MC_NONNULL verifier,
   const McMrSignerVerifier* MC_NONNULL mr_signer_verifier
+)
+MC_ATTRIBUTE_NONNULL(1, 2);
+
+/* ==== McTrustedIdentities ==== */
+
+/// Construct a new trusted identities vector to hold TrustedIdentity structs
+McTrustedIdentities* MC_NULLABLE mc_trusted_identities_create();
+
+void mc_trusted_identities_free(
+  McTrustedIdentities* MC_NULLABLE verifier
+);
+
+/// Verify the given MrEnclave-based status verifier succeeds
+bool mc_trusted_identities_add_mr_enclave(
+  McTrustedIdentities* MC_NONNULL trusted_identities,
+  const McTrustedMrEnclaveIdentity* MC_NONNULL mr_enclave_trusted_identity
+)
+MC_ATTRIBUTE_NONNULL(1, 2);
+
+/// Verify the given MrSigner-based status trusted_identities succeeds
+bool mc_trusted_identities_add_mr_signer(
+  McTrustedIdentities* MC_NONNULL trusted_identities,
+  const McTrustedMrSignerIdentity* MC_NONNULL mr_signer_trusted_identity
 )
 MC_ATTRIBUTE_NONNULL(1, 2);
 

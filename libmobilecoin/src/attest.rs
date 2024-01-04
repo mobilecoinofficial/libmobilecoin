@@ -268,6 +268,31 @@ pub extern "C" fn mc_trusted_identities_free(trusted_identities: FfiOptOwnedPtr<
     })
 }
 
+/// 
+#[no_mangle]
+pub extern "C" fn mc_trusted_identities_add_mr_enclave(
+    trusted_identities: FfiMutPtr<McTrustedIdentities>,
+    trusted_mr_enclave_identity: FfiRefPtr<McTrustedMrEnclaveIdentity>,
+) -> bool {
+    ffi_boundary(|| {
+        let mr_signer = TrustedMrEnclaveIdentity::try_from_ffi(&trusted_mr_enclave_identity).expect("mr_enclave is invalid");
+        let trusted_identity = TrustedIdentity::MrEnclave(mr_enclave);
+        trusted_identities.into_mut().0.push(trusted_identity);
+    })
+}
+/// 
+#[no_mangle]
+pub extern "C" fn mc_trusted_identities_add_mr_signer(
+    trusted_identities: FfiMutPtr<McTrustedIdentities>,
+    trusted_mr_signer_identity: FfiRefPtr<McTrustedMrSignerIdentity>,
+) -> bool {
+    ffi_boundary(|| {
+        let mr_signer = TrustedMrSignerIdentity::try_from_ffi(&trusted_mr_signer_identity).expect("mr_signer is invalid");
+        let trusted_identity = TrustedIdentity::MrSigner(mr_signer);
+        trusted_identities.into_mut().0.push(trusted_identity);
+    })
+}
+
 /// Verify the given MrEnclave-based status verifier succeeds
 #[no_mangle]
 pub extern "C" fn mc_verifier_add_mr_enclave(
