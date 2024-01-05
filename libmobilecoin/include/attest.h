@@ -34,6 +34,8 @@ typedef struct _McTrustedIdentity McTrustedIdentity;
 
 typedef struct _McTrustedIdentities McTrustedIdentities;
 
+typedef struct _McAdvisories McAdvisories;
+
 typedef struct _McAttestAke McAttestAke;
 
 /* ==== McMrEnclaveVerifier ==== */
@@ -45,9 +47,11 @@ typedef struct _McAttestAke McAttestAke;
 ///
 /// * `mr_enclave` - must be 32 bytes in length.
 McMrEnclaveVerifier* MC_NULLABLE mc_mr_enclave_verifier_create(
-  const McBuffer* MC_NONNULL mr_enclave
+  const McBuffer* MC_NONNULL mr_enclave,
+  McAdvisories* MC_NONNULL config_advisories,
+  McAdvisories* MC_NONNULL hardening_advisories
 )
-MC_ATTRIBUTE_NONNULL(1);
+MC_ATTRIBUTE_NONNULL(1, 2, 3);
 
 McTrustedMrEnclaveIdentity* MC_NULLABLE mc_trusted_identity_mr_enclave_create(
   const McBuffer* MC_NONNULL mr_enclave
@@ -169,6 +173,21 @@ MC_ATTRIBUTE_NONNULL(1, 2);
 bool mc_verifier_add_mr_signer(
   McVerifier* MC_NONNULL verifier,
   const McMrSignerVerifier* MC_NONNULL mr_signer_verifier
+)
+MC_ATTRIBUTE_NONNULL(1, 2);
+
+/* ==== McAdvisories ==== */
+
+/// Construct a new advisories vector to hold strings
+McAdvisories* MC_NULLABLE mc_advisories_create();
+
+bool mc_advisories_free(
+  McAdvisories* MC_NULLABLE advisories
+);
+
+bool mc_add_advisory(
+    McAdvisories* MC_NONNULL advisories,
+    const char* MC_NONNULL advisory_id
 )
 MC_ATTRIBUTE_NONNULL(1, 2);
 

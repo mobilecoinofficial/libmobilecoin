@@ -46,17 +46,19 @@ pub extern "C" fn mc_trusted_identity_mr_enclave_free(
 #[no_mangle]
 pub extern "C" fn mc_trusted_identity_mr_enclave_create(
     mr_enclave: FfiRefPtr<McBuffer>,
+    config_advisories: FfiRefPtr<McAdvisories>,
+    hardening_advisories: FfiRefPtr<McAdvisories>,
 ) -> FfiOptOwnedPtr<McTrustedMrEnclaveIdentity> {
     ffi_boundary(|| {
-        let test_config_advisories: Vec<String> = vec![];
-        let test_hardening_advisories: Vec<String> = vec![];
+        let local_config_advisories: Vec<String> = vec![];
+        let local_hardening_advisories: Vec<String> = vec![];
 
         let mr_enclave = MrEnclave::try_from_ffi(&mr_enclave).expect("mr_enclave is invalid");
 
         let trusted_mr_enclave_identity = TrustedMrEnclaveIdentity::new(
             mr_enclave,
-            &test_config_advisories,
-            &test_hardening_advisories,
+            *config_advisories.0,
+            *hardening_advisories.0,
         );
 
         trusted_mr_enclave_identity
@@ -118,18 +120,18 @@ pub extern "C" fn mc_trusted_identity_mr_signer_create(
 /// # Preconditions
 ///
 /// * `advisory_id` - must be a nul-terminated C string containing valid UTF-8.
+///
+/// TODO: update comments above
 #[no_mangle]
-//pub extern "C" fn mc_mr_enclave_verifier_allow_config_advisory(
-    //mr_enclave_verifier: FfiMutPtr<McMrEnclaveVerifier>,
-    //advisory_id: FfiStr,
-//) -> bool {
-    //ffi_boundary(|| {
-        //let advisory_id = <&str>::try_from_ffi(advisory_id).expect("advisory_id is invalid");
-        //mr_enclave_verifier
-            //.into_mut()
-            //.allow_config_advisory(advisory_id);
-    //})
-//}
+pub extern "C" fn mc_add_advisory(
+    advisories: FfiMutPtr<McAdvisories>,
+    advisory_id: FfiStr,
+) -> bool {
+    ffi_boundary(|| {
+        let advisory_id = <&str>::try_from_ffi(advisory_id).expect("advisory_id is invalid");
+        advisories.into_mut().0.push(String::from(advisory_id));
+    })
+}
 
 /// Assume the given MrEnclave value has the appropriate software/build-time
 /// hardening for the given advisory ID.
@@ -233,6 +235,26 @@ impl_into_ffi!(TrustedIdentity);
 pub struct McTrustedIdentities (Vec<McTrustedIdentity>);
 impl_into_ffi!(McTrustedIdentities);
 
+pub struct McAdvisories (Vec<String>);
+impl_into_ffi!(McAdvisories);
+
+/// Construct a new TrustedIdentities builder using the baked-in IAS root certificates and debug
+/// settings.
+#[no_mangle]
+pub extern "C" fn mc_advisories_create() -> FfiOptOwnedPtr<McAdvisories> {
+    ffi_boundary(|| {
+        let advisories = McAdvisories(Vec::new());
+        advisories
+    })
+}
+
+#[no_mangle]
+pub extern "C" fn mc_advisories_free(advisories: FfiOptOwnedPtr<McAdvisories>) {
+    ffi_boundary(|| {
+        let _ = advisories;
+    })
+}
+
 /// Construct a new Verifier builder using the baked-in IAS root certificates and debug
 /// settings.
 #[no_mangle]
@@ -275,8 +297,7 @@ pub extern "C" fn mc_trusted_identities_add_mr_enclave(
     trusted_mr_enclave_identity: FfiRefPtr<McTrustedMrEnclaveIdentity>,
 ) -> bool {
     ffi_boundary(|| {
-        let mr_signer = TrustedMrEnclaveIdentity::try_from_ffi(&trusted_mr_enclave_identity).expect("mr_enclave is invalid");
-        let trusted_identity = TrustedIdentity::MrEnclave(mr_enclave);
+        let trusted_identity = TrustedIdentity::MrEnclave((*trusted_mr_enclave_identity).clone());
         trusted_identities.into_mut().0.push(trusted_identity);
     })
 }
@@ -287,8 +308,7 @@ pub extern "C" fn mc_trusted_identities_add_mr_signer(
     trusted_mr_signer_identity: FfiRefPtr<McTrustedMrSignerIdentity>,
 ) -> bool {
     ffi_boundary(|| {
-        let mr_signer = TrustedMrSignerIdentity::try_from_ffi(&trusted_mr_signer_identity).expect("mr_signer is invalid");
-        let trusted_identity = TrustedIdentity::MrSigner(mr_signer);
+        let trusted_identity = TrustedIdentity::MrSigner((*trusted_mr_signer_identity).clone());
         trusted_identities.into_mut().0.push(trusted_identity);
     })
 }
