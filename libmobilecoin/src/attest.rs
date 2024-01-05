@@ -57,8 +57,8 @@ pub extern "C" fn mc_trusted_identity_mr_enclave_create(
 
         let trusted_mr_enclave_identity = TrustedMrEnclaveIdentity::new(
             mr_enclave,
-            *config_advisories.0,
-            *hardening_advisories.0,
+            &config_advisories.0,
+            &hardening_advisories.0,
         );
 
         trusted_mr_enclave_identity

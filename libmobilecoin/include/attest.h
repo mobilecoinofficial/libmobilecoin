@@ -47,16 +47,16 @@ typedef struct _McAttestAke McAttestAke;
 ///
 /// * `mr_enclave` - must be 32 bytes in length.
 McMrEnclaveVerifier* MC_NULLABLE mc_mr_enclave_verifier_create(
+  const McBuffer* MC_NONNULL mr_enclave
+)
+MC_ATTRIBUTE_NONNULL(1);
+
+McTrustedMrEnclaveIdentity* MC_NULLABLE mc_trusted_identity_mr_enclave_create(
   const McBuffer* MC_NONNULL mr_enclave,
   McAdvisories* MC_NONNULL config_advisories,
   McAdvisories* MC_NONNULL hardening_advisories
 )
 MC_ATTRIBUTE_NONNULL(1, 2, 3);
-
-McTrustedMrEnclaveIdentity* MC_NULLABLE mc_trusted_identity_mr_enclave_create(
-  const McBuffer* MC_NONNULL mr_enclave
-)
-MC_ATTRIBUTE_NONNULL(1);
 
 McTrustedMrSignerIdentity* MC_NULLABLE mc_trusted_identity_mr_signer_create(
   const McBuffer* MC_NONNULL mr_signer,
