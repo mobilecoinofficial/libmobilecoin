@@ -28,6 +28,9 @@ impl_into_ffi!(TrustedMrEnclaveIdentity);
 pub type McTrustedMrSignerIdentity = TrustedMrSignerIdentity;
 impl_into_ffi!(TrustedMrSignerIdentity);
 
+
+
+
 #[no_mangle]
 pub extern "C" fn mc_trusted_identity_mr_enclave_free(
     mr_enclave_trusted_identity: FfiOptOwnedPtr<McTrustedMrEnclaveIdentity>,
@@ -50,9 +53,6 @@ pub extern "C" fn mc_trusted_identity_mr_enclave_create(
     hardening_advisories: FfiRefPtr<McAdvisories>,
 ) -> FfiOptOwnedPtr<McTrustedMrEnclaveIdentity> {
     ffi_boundary(|| {
-        let local_config_advisories: Vec<String> = vec![];
-        let local_hardening_advisories: Vec<String> = vec![];
-
         let mr_enclave = MrEnclave::try_from_ffi(&mr_enclave).expect("mr_enclave is invalid");
 
         let trusted_mr_enclave_identity = TrustedMrEnclaveIdentity::new(
@@ -65,15 +65,23 @@ pub extern "C" fn mc_trusted_identity_mr_enclave_create(
     })
 }
 
+
+
+
+
+
+
+
+
 #[no_mangle]
 /// TEMPORARY COPY PASTE
 /// TEMPORARY COPY PASTE
 /// TEMPORARY COPY PASTE
 pub extern "C" fn mc_trusted_identity_mr_signer_free(
-    mr_enclave_trusted_identity: FfiOptOwnedPtr<McTrustedMrEnclaveIdentity>,
+    mr_signer_trusted_identity: FfiOptOwnedPtr<McTrustedMrSignerIdentity>,
 ) {
     ffi_boundary(|| {
-        let _ = mr_enclave_trusted_identity;
+        let _ = mr_signer_trusted_identity;
     })
 }
 
@@ -92,26 +100,60 @@ pub extern "C" fn mc_trusted_identity_mr_signer_free(
 #[no_mangle]
 pub extern "C" fn mc_trusted_identity_mr_signer_create(
     mr_signer: FfiRefPtr<McBuffer>,
+    config_advisories: FfiRefPtr<McAdvisories>,
+    hardening_advisories: FfiRefPtr<McAdvisories>,
     expected_product_id: u16,
     minimum_security_version: u16,
 ) -> FfiOptOwnedPtr<McTrustedMrSignerIdentity> {
     ffi_boundary(|| {
-        let test_config_advisories: Vec<String> = vec![];
-        let test_hardening_advisories: Vec<String> = vec![];
-
         let mr_signer = MrSigner::try_from_ffi(&mr_signer).expect("mr_signer is invalid");
 
         let trusted_mr_signer_identity = TrustedMrSignerIdentity::new(
             mr_signer,
             expected_product_id.into(),
             minimum_security_version.into(),
-            &test_config_advisories,
-            &test_hardening_advisories,
+            &config_advisories.0,
+            &hardening_advisories.0
         );
 
         trusted_mr_signer_identity
     })
 }
+
+/// # Preconditions
+///
+/// * `mr_enclave_trusted_identity` - valid MrEnclaveTrustedIdentity.
+/// * `out_advisories` - length is dynamic
+///
+/// # Errors
+///
+/// * `LibMcError::InvalidInput` // TODO
+#[no_mangle]
+pub extern "C" fn mc_trusted_mr_enclave_identity_to_string(
+    trusted_mr_enclave_identity: FfiRefPtr<McTrustedMrEnclaveIdentity>,
+    _out_advisories: FfiMutPtr<McMutableBuffer>
+) -> bool {
+    ffi_boundary(|| {
+        //let trusted_identity = TrustedIdentity::MrEnclave((*trusted_mr_enclave_identity).clone());
+        let trusted_identity = (*trusted_mr_enclave_identity).clone();
+
+        println!("{}", trusted_identity.advisories());
+
+        //let out_advisories = 
+
+        //let out_tx_out_shared_secret = out_tx_out_shared_secret
+            //.into_mut()
+            //.as_slice_mut_of_len(RistrettoPublic::size())
+            //.expect("out_tx_out_shared_secret length is insufficient");
+
+        //let tx_out_context =
+            //transaction_builder.add_output(amount, &recipient_address, &mut rng)?;
+
+        //out_tx_out_confirmation_number.copy_from_slice(tx_out_context.confirmation.as_ref());
+        //out_tx_out_shared_secret.copy_from_slice(&tx_out_context.shared_secret.to_bytes());
+    })
+}
+
 /// Assume an enclave with the specified measurement does not need
 /// BIOS configuration changes to address the provided advisory ID.
 ///
