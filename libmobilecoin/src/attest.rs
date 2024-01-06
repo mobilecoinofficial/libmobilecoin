@@ -131,26 +131,26 @@ pub extern "C" fn mc_trusted_identity_mr_signer_create(
 #[no_mangle]
 pub extern "C" fn mc_trusted_mr_enclave_identity_to_string(
     trusted_mr_enclave_identity: FfiRefPtr<McTrustedMrEnclaveIdentity>,
-    _out_advisories: FfiMutPtr<McMutableBuffer>
-) -> bool {
+    out_advisories: FfiOptMutPtr<McMutableBuffer>,
+) -> ssize_t {
     ffi_boundary(|| {
         //let trusted_identity = TrustedIdentity::MrEnclave((*trusted_mr_enclave_identity).clone());
         let trusted_identity = (*trusted_mr_enclave_identity).clone();
 
         println!("{}", trusted_identity.advisories());
 
-        //let out_advisories = 
+        let advisories_description = trusted_identity.advisories().to_string();
 
-        //let out_tx_out_shared_secret = out_tx_out_shared_secret
-            //.into_mut()
-            //.as_slice_mut_of_len(RistrettoPublic::size())
-            //.expect("out_tx_out_shared_secret length is insufficient");
+        println!("{}", core::mem::size_of_val(&advisories_description));
 
-        //let tx_out_context =
-            //transaction_builder.add_output(amount, &recipient_address, &mut rng)?;
-
-        //out_tx_out_confirmation_number.copy_from_slice(tx_out_context.confirmation.as_ref());
-        //out_tx_out_shared_secret.copy_from_slice(&tx_out_context.shared_secret.to_bytes());
+        if let Some(out_advisories) = out_advisories.into_option() {
+            out_advisories
+                .into_mut()
+                .as_slice_mut_of_len(advisories_description.len())
+                .expect("Advisories description payload length is insufficient")
+                .copy_from_slice(advisories_description.as_ref());
+        }
+        ssize_t::ffi_try_from(advisories_description.len()).expect("advisories_description.len could not be converted to ssize_t")
     })
 }
 

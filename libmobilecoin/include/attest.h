@@ -79,11 +79,11 @@ void mc_trusted_identity_mr_signer_free(
   McTrustedMrSignerIdentity* MC_NULLABLE mr_signer_trusted_identity
 );
 
-bool mc_trusted_mr_enclave_identity_to_string(
+ssize_t  mc_trusted_mr_enclave_identity_to_string(
   const McTrustedMrEnclaveIdentity* MC_NONNULL mr_enclave_trusted_identity,
-  McMutableBuffer* MC_NONNULL out_advisories
+  McMutableBuffer* MC_NULLABLE out_advisories
 )
-MC_ATTRIBUTE_NONNULL(1, 2);
+MC_ATTRIBUTE_NONNULL(1);
 
 /// Assume an enclave with the specified measurement does not need
 /// BIOS configuration changes to address the provided advisory ID.
