@@ -11,6 +11,7 @@ use core::convert::TryFrom;
 use crc::Crc;
 use generic_array::{typenum::U66, GenericArray};
 use mc_account_keys::{AccountKey, PublicAddress, ShortAddressHash};
+use mc_attestation_verifier::{TrustedIdentity, TrustedMrEnclaveIdentity, TrustedMrSignerIdentity};
 use mc_crypto_keys::{CompressedRistrettoPublic, ReprBytes, RistrettoPrivate, RistrettoPublic};
 use mc_crypto_ring_signature_signer::NoKeysRingSigner;
 use mc_fog_report_resolver::FogResolver;
@@ -476,7 +477,6 @@ pub extern "C" fn mc_transaction_builder_create(
     out_error: FfiOptMutPtr<FfiOptOwnedPtr<McError>>,
 ) -> FfiOptOwnedPtr<McTransactionBuilder> {
     ffi_boundary_with_error(out_error, || {
-        let trusted_identities: Vec<TrustedIdentity> = fog_resolver.1.clone();
         let fog_resolver =
             fog_resolver
                 .as_ref()
@@ -484,6 +484,7 @@ pub extern "C" fn mc_transaction_builder_create(
                     // It is safe to add an expect here (which should never occur) because
                     // fogReportUrl is already checked in mc_fog_resolver_add_report_response
                     // to be convertible to FogUri
+                    let trusted_identities: Vec<TrustedIdentity> = fog_resolver.1.clone();
                     FogResolver::new(fog_resolver.0.clone(), &trusted_identities)
                         .expect("FogResolver could not be constructed from the provided materials")
                 });

@@ -18,7 +18,7 @@ use std::str::FromStr;
 /* ==== McFogResolver ==== */
 
 
-pub type McFogResolver = (pub FogReportResponses, pub Vec<TrustedIdentity>);
+pub type McFogResolver = (FogReportResponses, Vec<TrustedIdentity>);
 impl_into_ffi!((FogReportResponses, Vec<TrustedIdentity>));
 
 #[no_mangle]
