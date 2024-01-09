@@ -105,34 +105,6 @@ ssize_t  mc_trusted_mr_signer_identity_to_string(
 )
 MC_ATTRIBUTE_NONNULL(1);
 
-/// Assume an enclave with the specified measurement does not need
-/// BIOS configuration changes to address the provided advisory ID.
-///
-/// This method should only be used when advised by an enclave author.
-///
-/// # Preconditions
-///
-/// * `advisory_id` - must be a nul-terminated C string containing valid UTF-8.
-//bool mc_mr_enclave_verifier_allow_config_advisory(
-  //McMrEnclaveVerifier* MC_NONNULL mr_enclave_verifier,
-  //const char* MC_NONNULL advisory_id
-//)
-//MC_ATTRIBUTE_NONNULL(1, 2);
-
-/// Assume the given MrEnclave value has the appropriate software/build-time
-/// hardening for the given advisory ID.
-///
-/// This method should only be used when advised by an enclave author.
-///
-/// # Preconditions
-///
-/// * `advisory_id` - must be a nul-terminated C string containing valid UTF-8.
-//bool mc_mr_enclave_verifier_allow_hardening_advisory(
-  //McMrEnclaveVerifier* MC_NONNULL mr_enclave_verifier,
-  //const char* MC_NONNULL advisory_id
-//)
-//MC_ATTRIBUTE_NONNULL(1, 2);
-
 /* ==== McMrSignerVerifier ==== */
 
 /// Create a new status verifier that will check for the existence of the
