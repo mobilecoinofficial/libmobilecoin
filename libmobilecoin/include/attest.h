@@ -60,12 +60,12 @@ MC_ATTRIBUTE_NONNULL(1, 2, 3);
 
 McTrustedMrSignerIdentity* MC_NULLABLE mc_trusted_identity_mr_signer_create(
   const McBuffer* MC_NONNULL mr_signer,
-  uint16_t expected_product_id,
-  uint16_t minimum_security_version,
   McAdvisories* MC_NONNULL config_advisories,
-  McAdvisories* MC_NONNULL hardening_advisories
+  McAdvisories* MC_NONNULL hardening_advisories,
+  uint16_t expected_product_id,
+  uint16_t minimum_security_version
 )
-MC_ATTRIBUTE_NONNULL(1, 4, 5);
+MC_ATTRIBUTE_NONNULL(1, 2, 3);
 
 void mc_mr_enclave_verifier_free(
   McMrEnclaveVerifier* MC_NULLABLE mr_enclave_verifier
@@ -79,9 +79,29 @@ void mc_trusted_identity_mr_signer_free(
   McTrustedMrSignerIdentity* MC_NULLABLE mr_signer_trusted_identity
 );
 
-ssize_t  mc_trusted_mr_enclave_identity_to_string(
+// MrEnclave to string
+ssize_t  mc_trusted_mr_enclave_identity_advisories_to_string(
   const McTrustedMrEnclaveIdentity* MC_NONNULL mr_enclave_trusted_identity,
   McMutableBuffer* MC_NULLABLE out_advisories
+)
+MC_ATTRIBUTE_NONNULL(1);
+
+ssize_t  mc_trusted_mr_enclave_identity_to_string(
+  const McTrustedMrEnclaveIdentity* MC_NONNULL mr_enclave_trusted_identity,
+  McMutableBuffer* MC_NULLABLE out_enclave_measurement
+)
+MC_ATTRIBUTE_NONNULL(1);
+
+// MrSigner to string
+ssize_t  mc_trusted_mr_signer_identity_advisories_to_string(
+  const McTrustedMrSignerIdentity* MC_NONNULL mr_signer_trusted_identity,
+  McMutableBuffer* MC_NULLABLE out_advisories
+)
+MC_ATTRIBUTE_NONNULL(1);
+
+ssize_t  mc_trusted_mr_signer_identity_to_string(
+  const McTrustedMrSignerIdentity* MC_NONNULL mr_signer_trusted_identity,
+  McMutableBuffer* MC_NULLABLE out_enclave_measurement
 )
 MC_ATTRIBUTE_NONNULL(1);
 

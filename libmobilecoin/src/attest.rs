@@ -129,7 +129,7 @@ pub extern "C" fn mc_trusted_identity_mr_signer_create(
 ///
 /// * `LibMcError::InvalidInput` // TODO
 #[no_mangle]
-pub extern "C" fn mc_trusted_mr_enclave_identity_to_string(
+pub extern "C" fn mc_trusted_mr_enclave_identity_advisories_to_string(
     trusted_mr_enclave_identity: FfiRefPtr<McTrustedMrEnclaveIdentity>,
     out_advisories: FfiOptMutPtr<McMutableBuffer>,
 ) -> ssize_t {
@@ -141,7 +141,8 @@ pub extern "C" fn mc_trusted_mr_enclave_identity_to_string(
 
         let advisories_description = trusted_identity.advisories().to_string();
 
-        println!("{}", core::mem::size_of_val(&advisories_description));
+        println!("core::mem::size_of_val(&advisories_description) == {}", core::mem::size_of_val(&advisories_description));
+        println!("advisories_description.len() == {}", advisories_description.len());
 
         if let Some(out_advisories) = out_advisories.into_option() {
             out_advisories
@@ -150,7 +151,110 @@ pub extern "C" fn mc_trusted_mr_enclave_identity_to_string(
                 .expect("Advisories description payload length is insufficient")
                 .copy_from_slice(advisories_description.as_ref());
         }
-        ssize_t::ffi_try_from(advisories_description.len()).expect("advisories_description.len could not be converted to ssize_t")
+        return ssize_t::ffi_try_from(advisories_description.len()).expect("advisories_description.len could not be converted to ssize_t");
+    })
+}
+
+/// # Preconditions
+///
+/// * `mr_enclave_trusted_identity` - valid MrEnclaveTrustedIdentity.
+/// * `out_enclave_measurement` - length is unknown
+///
+/// # Errors
+///
+/// * `LibMcError::InvalidInput` // TODO
+#[no_mangle]
+pub extern "C" fn mc_trusted_mr_enclave_identity_to_string(
+    trusted_mr_enclave_identity: FfiRefPtr<McTrustedMrEnclaveIdentity>,
+    out_enclave_measurement: FfiOptMutPtr<McMutableBuffer>,
+) -> ssize_t {
+    ffi_boundary(|| {
+        let trusted_identity = (*trusted_mr_enclave_identity).clone();
+
+        println!("{}", trusted_identity.advisories());
+
+        let enclave_description = trusted_identity.mr_enclave().to_string();
+
+        println!("core::mem::size_of_val(&enclave_description) == {}", core::mem::size_of_val(&enclave_description));
+        println!("enclave_description.len() == {}", enclave_description.len());
+
+        if let Some(out_enclave_measurement) = out_enclave_measurement.into_option() {
+            out_enclave_measurement
+                .into_mut()
+                .as_slice_mut_of_len(enclave_description.len())
+                .expect("Advisories description payload length is insufficient")
+                .copy_from_slice(enclave_description.as_ref());
+        }
+        return ssize_t::ffi_try_from(enclave_description.len()).expect("enclave_description.len could not be converted to ssize_t");
+    })
+}
+
+/// # Preconditions
+///
+/// * `mr_signer_trusted_identity` - valid MrSignerTrustedIdentity.
+/// * `out_advisories` - length is dynamic
+///
+/// # Errors
+///
+/// * `LibMcError::InvalidInput` // TODO
+#[no_mangle]
+pub extern "C" fn mc_trusted_mr_signer_identity_advisories_to_string(
+    trusted_mr_signer_identity: FfiRefPtr<McTrustedMrSignerIdentity>,
+    out_advisories: FfiOptMutPtr<McMutableBuffer>,
+) -> ssize_t {
+    ffi_boundary(|| {
+        //let trusted_identity = TrustedIdentity::MrSigner((*trusted_mr_signer_identity).clone());
+        let trusted_identity = (*trusted_mr_signer_identity).clone();
+
+        println!("{}", trusted_identity.advisories());
+
+        let advisories_description = trusted_identity.advisories().to_string();
+
+        println!("core::mem::size_of_val(&advisories_description) == {}", core::mem::size_of_val(&advisories_description));
+        println!("advisories_description.len() == {}", advisories_description.len());
+
+        if let Some(out_advisories) = out_advisories.into_option() {
+            out_advisories
+                .into_mut()
+                .as_slice_mut_of_len(advisories_description.len())
+                .expect("Advisories description payload length is insufficient")
+                .copy_from_slice(advisories_description.as_ref());
+        }
+        return ssize_t::ffi_try_from(advisories_description.len()).expect("advisories_description.len could not be converted to ssize_t");
+    })
+}
+
+/// # Preconditions
+///
+/// * `mr_signer_trusted_identity` - valid MrSignerTrustedIdentity.
+/// * `out_signer_measurement` - length is unknown
+///
+/// # Errors
+///
+/// * `LibMcError::InvalidInput` // TODO
+#[no_mangle]
+pub extern "C" fn mc_trusted_mr_signer_identity_to_string(
+    trusted_mr_signer_identity: FfiRefPtr<McTrustedMrSignerIdentity>,
+    out_signer_measurement: FfiOptMutPtr<McMutableBuffer>,
+) -> ssize_t {
+    ffi_boundary(|| {
+        let trusted_identity = (*trusted_mr_signer_identity).clone();
+
+        println!("{}", trusted_identity.advisories());
+
+        let signer_description = trusted_identity.mr_signer().to_string();
+
+        println!("core::mem::size_of_val(&signer_description) == {}", core::mem::size_of_val(&signer_description));
+        println!("signer_description.len() == {}", signer_description.len());
+
+        if let Some(out_signer_measurement) = out_signer_measurement.into_option() {
+            out_signer_measurement
+                .into_mut()
+                .as_slice_mut_of_len(signer_description.len())
+                .expect("Advisories description payload length is insufficient")
+                .copy_from_slice(signer_description.as_ref());
+        }
+        return ssize_t::ffi_try_from(signer_description.len()).expect("signer_description.len could not be converted to ssize_t");
     })
 }
 
