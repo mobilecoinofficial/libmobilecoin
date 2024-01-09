@@ -244,81 +244,6 @@ pub extern "C" fn mc_add_advisory(
     })
 }
 
-pub type McMrSignerVerifier = MrSignerVerifier;
-impl_into_ffi!(MrSignerVerifier);
-
-#[no_mangle]
-pub extern "C" fn mc_mr_signer_verifier_free(
-    mr_signer_verifier: FfiOptOwnedPtr<McMrSignerVerifier>,
-) {
-    ffi_boundary(|| {
-        let _ = mr_signer_verifier;
-    })
-}
-
-/// Create a new status verifier that will check for the existence of the
-/// given MrSigner.
-///
-/// # Preconditions
-///
-/// * `mr_signer` - must be 32 bytes in length.
-#[no_mangle]
-//pub extern "C" fn mc_mr_signer_verifier_create(
-    //mr_signer: FfiRefPtr<McBuffer>,
-    //expected_product_id: u16,
-    //minimum_security_version: u16,
-//) -> FfiOptOwnedPtr<McMrSignerVerifier> {
-    //ffi_boundary(|| {
-        //let mr_signer = MrSigner::try_from_ffi(&mr_signer).expect("mr_signer is invalid");
-        //MrSignerVerifier::new(mr_signer, expected_product_id, minimum_security_version)
-    //})
-//}
-
-/// Assume an enclave with the specified measurement does not need
-/// BIOS configuration changes to address the provided advisory ID.
-///
-/// This method should only be used when advised by an enclave author.
-///
-/// # Preconditions
-///
-/// * `advisory_id` - must be a nul-terminated C string containing valid UTF-8.
-#[no_mangle]
-//pub extern "C" fn mc_mr_signer_verifier_allow_config_advisory(
-    //mr_signer_verifier: FfiMutPtr<MrSignerVerifier>,
-    //advisory_id: FfiStr,
-//) -> bool {
-    //ffi_boundary(|| {
-        //let advisory_id = <&str>::try_from_ffi(advisory_id).expect("advisory_id is invalid");
-        //mr_signer_verifier
-            //.into_mut()
-            //.allow_config_advisory(advisory_id);
-    //})
-//}
-
-/// Assume an enclave with the specified measurement has the appropriate
-/// software/build-time hardening for the given advisory ID.
-///
-/// This method should only be used when advised by an enclave author.
-///
-/// # Preconditions
-///
-/// * `advisory_id` - must be a nul-terminated C string containing valid UTF-8.
-#[no_mangle]
-//pub extern "C" fn mc_mr_signer_verifier_allow_hardening_advisory(
-    //mr_signer_verifier: FfiMutPtr<MrSignerVerifier>,
-    //advisory_id: FfiStr,
-//) -> bool {
-    //ffi_boundary(|| {
-        //let advisory_id = <&str>::try_from_ffi(advisory_id).expect("advisory_id is invalid");
-        //mr_signer_verifier
-            //.into_mut()
-            //.allow_hardening_advisory(advisory_id);
-    //})
-//}
-
-pub type McVerifier = Verifier;
-impl_into_ffi!(Verifier);
-
 pub type McTrustedIdentity = TrustedIdentity;
 impl_into_ffi!(TrustedIdentity);
 
@@ -328,31 +253,13 @@ impl_into_ffi!(McTrustedIdentities);
 pub struct McAdvisories (Vec<String>);
 impl_into_ffi!(McAdvisories);
 
-/// Construct a new Verifier builder using the baked-in IAS root certificates and debug
-/// settings.
-#[no_mangle]
-pub extern "C" fn mc_verifier_create() -> FfiOptOwnedPtr<McVerifier> {
-    ffi_boundary(|| {
-        let mut verifier = Verifier::default();
-        verifier.debug(DEBUG_ENCLAVE);
-        verifier
-    })
-}
-
-/// Construct a new TrustedIdentities builder using the baked-in IAS root certificates and debug
-/// settings.
+/// Construct a new TrustedIdentities vector that holds TrustedIdentity's (enclave or signer)
+///
 #[no_mangle]
 pub extern "C" fn mc_trusted_identities_create() -> FfiOptOwnedPtr<McTrustedIdentities> {
     ffi_boundary(|| {
         let trusted_identities = McTrustedIdentities(Vec::new());
         trusted_identities
-    })
-}
-
-#[no_mangle]
-pub extern "C" fn mc_verifier_free(verifier: FfiOptOwnedPtr<McVerifier>) {
-    ffi_boundary(|| {
-        let _ = verifier;
     })
 }
 
@@ -383,30 +290,6 @@ pub extern "C" fn mc_trusted_identities_add_mr_signer(
     ffi_boundary(|| {
         let trusted_identity = TrustedIdentity::MrSigner((*trusted_mr_signer_identity).clone());
         trusted_identities.into_mut().0.push(trusted_identity);
-    })
-}
-
-/// Verify the given MrEnclave-based status verifier succeeds
-#[no_mangle]
-pub extern "C" fn mc_verifier_add_mr_enclave(
-    verifier: FfiMutPtr<McVerifier>,
-    mr_enclave_verifier: FfiRefPtr<McMrEnclaveVerifier>,
-) -> bool {
-    ffi_boundary(|| {
-        verifier
-            .into_mut()
-            .mr_enclave((*mr_enclave_verifier).clone());
-    })
-}
-
-/// Verify the given MrSigner-based status verifier succeeds
-#[no_mangle]
-pub extern "C" fn mc_verifier_add_mr_signer(
-    verifier: FfiMutPtr<McVerifier>,
-    mr_signer_verifier: FfiRefPtr<McMrSignerVerifier>,
-) -> bool {
-    ffi_boundary(|| {
-        verifier.into_mut().mr_signer((*mr_signer_verifier).clone());
     })
 }
 
