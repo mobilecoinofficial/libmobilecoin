@@ -247,7 +247,7 @@ pub extern "C" fn mc_add_advisory(
 pub type McTrustedIdentity = TrustedIdentity;
 impl_into_ffi!(TrustedIdentity);
 
-pub struct McTrustedIdentities (Vec<McTrustedIdentity>);
+pub struct McTrustedIdentities (pub Vec<McTrustedIdentity>);
 impl_into_ffi!(McTrustedIdentities);
 
 pub struct McAdvisories (Vec<String>);
