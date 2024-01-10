@@ -264,8 +264,7 @@ pub extern "C" fn mc_trusted_identities_create() -> FfiOptOwnedPtr<McTrustedIden
 }
 
 #[no_mangle]
-pub extern "C" fn mc_trusted_identities_free(trusted_identities: FfiOptOwnedPtr<McTrustedIdentities>) {
-    ffi_boundary(|| {
+pub extern "C" fn mc_trusted_identities_free(trusted_identities: FfiOptOwnedPtr<McTrustedIdentities>) { ffi_boundary(|| {
         let _ = trusted_identities;
     })
 }
@@ -454,11 +453,47 @@ pub extern "C" fn mc_attest_ake_process_auth_response(
         let time = DateTime::from_unix_duration(epoch_time)
             .map_err(|_| LibMcError::AttestationVerificationFailed("Time out of range".to_owned()))?;
 
+        let trusted_identities_clone: Vec<TrustedIdentity> = trusted_identities.0.clone();
+        trusted_identities_clone.iter().for_each(|identity| {
+            match identity {
+                TrustedIdentity::MrEnclave(enclave) => {
+                    println!("enclave identity {}", enclave.mr_enclave());
+                    println!("advisories {}", enclave.advisories().to_string());
+                },
+                TrustedIdentity::MrSigner(signer) => {
+                    println!("signer identity {}", signer.mr_signer());
+                    println!("advisories {}", signer.advisories().to_string());
+                }
+            }
+        });
+
         let auth_response_output = AuthResponseOutput::from(auth_response_data.to_vec());
         let auth_response_input = AuthResponseInput::new(auth_response_output, trusted_identities.0.clone(), time);
+
+        println!("");
+        let auth_response_input_identities = auth_response_input.identities.clone();
+        auth_response_input_identities.iter().for_each(|identity| {
+            println!("start auth_response_input_identities");
+            match identity {
+                TrustedIdentity::MrEnclave(enclave) => {
+                    println!("enclave identity {}", enclave.mr_enclave());
+                    println!("advisories {}", enclave.advisories().to_string());
+                },
+                TrustedIdentity::MrSigner(signer) => {
+                    println!("signer identity {}", signer.mr_signer());
+                    println!("advisories {}", signer.advisories().to_string());
+                }
+            }
+            println!("end auth_response_input_identities");
+        });
+
         let mut rng = McRng::default(); // This is actually unused.
+
+        println!("here 1");
         let (ready, _) = auth_pending.try_next(&mut rng, auth_response_input)?;
+        println!("here 2");
         *attest_ake = AttestAke::Attested(ready);
+        println!("here 3");
 
         Ok(())
     })

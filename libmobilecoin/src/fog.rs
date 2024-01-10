@@ -97,12 +97,23 @@ pub extern "C" fn mc_fog_resolver_add_report_response(
         let report_url = FogUri::from_str(report_url)
             .map_err(|err| LibMcError::InvalidInput(err.to_string()))?;
         let report_url = report_url.to_string();
-        let report_response = mc_util_serial::decode(report_response.as_slice())?;
+        let report_response: ReportResponse = mc_util_serial::decode(report_response.as_slice())?;
+
+        report_response.clone().reports.iter().for_each(|report| {
+            println!("fog report id {}", report.fog_report_id);
+            println!("pubkey expiry {}", report.pubkey_expiry);
+            let evidence = &report.attestation_evidence;
+            match evidence.as_ref().unwrap() {
+                AttestationEvidence::VerificationReport(report) => println!("verification report sig {}", report.sig),
+                AttestationEvidence::DcapEvidence(evidence) => println!("dcap evidence report data ..."),
+            }
+        });
 
         fog_resolver
             .into_mut()
             .0
-            .insert(report_url, report_response);
+            .insert(report_url, report_response.clone());
+
         Ok(())
     })
 }
