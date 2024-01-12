@@ -11,7 +11,7 @@ use core::convert::TryFrom;
 use crc::Crc;
 use generic_array::{typenum::U66, GenericArray};
 use mc_account_keys::{AccountKey, PublicAddress, ShortAddressHash};
-use mc_attestation_verifier::{TrustedIdentity, TrustedMrEnclaveIdentity, TrustedMrSignerIdentity};
+use mc_attestation_verifier::{TrustedIdentity};
 use mc_crypto_keys::{CompressedRistrettoPublic, ReprBytes, RistrettoPrivate, RistrettoPublic};
 use mc_crypto_ring_signature_signer::NoKeysRingSigner;
 use mc_fog_report_resolver::FogResolver;

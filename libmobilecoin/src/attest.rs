@@ -9,8 +9,6 @@ use mc_attest_ake::{
     AuthPending, AuthResponseInput, AuthResponseOutput, ClientInitiate, Ready, Start, Transition,
 };
 use mc_attest_core::{MrEnclave, MrSigner};
-use mc_attest_verifier_types::prost;
-use mc_attest_verifier::{MrEnclaveVerifier, MrSignerVerifier, Verifier, DEBUG_ENCLAVE};
 use mc_attestation_verifier::{TrustedIdentity, TrustedMrEnclaveIdentity, TrustedMrSignerIdentity};
 use mc_common::{ResponderId, time::{SystemTimeProvider, TimeProvider}};
 use mc_crypto_keys::X25519;
@@ -18,9 +16,6 @@ use mc_crypto_noise::NoiseCipher;
 use mc_rand::McRng;
 use mc_util_ffi::*;
 use sha2::Sha512;
-
-pub type McMrEnclaveVerifier = MrEnclaveVerifier;
-impl_into_ffi!(MrEnclaveVerifier);
 
 pub type McTrustedMrEnclaveIdentity = TrustedMrEnclaveIdentity;
 impl_into_ffi!(TrustedMrEnclaveIdentity);

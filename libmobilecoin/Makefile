@@ -35,7 +35,7 @@ DASH:= -
 
 CARGO_PACKAGE = libmobilecoin
 
-ALL_ARCHS_IOS = aarch64-apple-ios-sim aarch64-apple-ios #x86_64-apple-ios x86_64-apple-darwin aarch64-apple-darwin
+ALL_ARCHS_IOS = aarch64-apple-ios-sim aarch64-apple-ios x86_64-apple-ios x86_64-apple-darwin aarch64-apple-darwin
 
 IOS_LIB = libmobilecoin.a
 IOS_LIB_STRIPPED = libmobilecoin_stripped.a
