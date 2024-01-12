@@ -485,18 +485,6 @@ pub extern "C" fn mc_transaction_builder_create(
                     // fogReportUrl is already checked in mc_fog_resolver_add_report_response
                     // to be convertible to FogUri
                     let trusted_identities: Vec<TrustedIdentity> = fog_resolver.1.clone();
-                    trusted_identities.iter().for_each(|identity| {
-                        match identity {
-                            TrustedIdentity::MrEnclave(enclave) => {
-                                println!("enclave identity {}", enclave.mr_enclave());
-                                println!("advisories {}", enclave.advisories().to_string());
-                            },
-                            TrustedIdentity::MrSigner(signer) => {
-                                println!("signer identity {}", signer.mr_signer());
-                                println!("advisories {}", signer.advisories().to_string());
-                            }
-                        }
-                    });
                     FogResolver::new(fog_resolver.0.clone(), &trusted_identities)
                         .expect("FogResolver could not be constructed from the provided materials")
                 });
