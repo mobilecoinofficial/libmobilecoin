@@ -82,36 +82,13 @@ ios: out/ios/target
 .PHONY: $(ALL_ARCHS_IOS)
 x86_64-apple-ios aarch64-apple-ios: CARGO_ENV_FLAGS += CFLAGS="-DPB_NO_PACKED_STRUCTS=1"
 x86_64-apple-ios aarch64-apple-ios: CARGO_ENV_FLAGS += CXXFLAGS="-DPB_NO_PACKED_STRUCTS=1"
+aarch64-apple-ios-sim aarch64-apple-ios x86_64-apple-ios: CARGO_ENV_FLAGS += IPHONEOS_DEPLOYMENT_TARGET="13.0"
+x86_64-apple-darwin aarch64-apple-darwin: CARGO_ENV_FLAGS += MACOSX_DEPLOYMENT_TARGET="11.0"
 x86_64-apple-ios x86_64-apple-darwin: LD_ARCH = x86_64
 aarch64-apple-ios aarch64-apple-ios-sim aarch64-apple-darwin: LD_ARCH = arm64
 x86_64-apple-ios-macabi aarch64-apple-ios-sim aarch64-apple-ios-macabi: LEGACY_CARGO_BUILD_FLAGS += -Zbuild-std
 $(ALL_ARCHS_IOS):
 	$(CARGO_ENV_FLAGS) $(CARGO) build --package $(CARGO_PACKAGE) --target $@ $(LEGACY_CARGO_BUILD_FLAGS)
-
-	@# Extract object files from static archive.
-	@cd $(CARGO_TARGET_DIR)/$@/$(BUILD_CONFIG_FOLDER) && \
-		rm -rf extracted 2>/dev/null; \
-		mkdir -p extracted
-	cd $(CARGO_TARGET_DIR)/$@/$(BUILD_CONFIG_FOLDER)/extracted && \
-		ar -t ../$(IOS_LIB) \
-			| grep '\.o$$' \
-			| xargs ar -x ../$(IOS_LIB)
-
-	@# Create list of libmobilecoin symbols.
-	cd $(CARGO_TARGET_DIR)/$@/$(BUILD_CONFIG_FOLDER) && \
-		rust-nm -jgU extracted/mobilecoin*.mobilecoin.*.o -s __TEXT __text \
-			| grep '\<_mc_' \
-			> exported-symbols.def
-
-	@# Link extracted object files back into static arch. Removes all symbols not needed
-	@# by exported libmobilecoin symbols.
-	@cd $(CARGO_TARGET_DIR)/$@/$(BUILD_CONFIG_FOLDER) && \
-		rm -f $(IOS_LIB_STRIPPED) || true
-	cd $(CARGO_TARGET_DIR)/$@/$(BUILD_CONFIG_FOLDER) && \
-		ld -r -arch $(LD_ARCH) -x -keep_private_externs \
-			-exported_symbols_list exported-symbols.def \
-			-o $(IOS_LIB_STRIPPED) \
-			extracted/*.o
 
 	mkdir -p out/ios/target
 	$(call BINARY_copy,$@,target)
