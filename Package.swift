@@ -26,9 +26,9 @@ let package = Package(
         // and from where they can be fetched:
         .package(
             url: "https://github.com/apple/swift-protobuf.git",
-            from: "1.5.0"
+            from: "1.28.2"
         ),
-        .package(url: "https://github.com/grpc/grpc-swift.git", from: "1.15.0")
+        .package(url: "https://github.com/grpc/grpc-swift.git", from: "1.24.1")
     ],
     targets: [
         .target(
