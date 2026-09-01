@@ -105,13 +105,14 @@ jobs:
       - name: Package and stamp release.env
         run: make stamp
 
-      - name: Verify the archive matches its checksum and opens
+      # No checksum comparison here. The only value available at this point
+      # comes from `make stamp`, which derived it from this very zip, so it
+      # could only ever agree with itself. The build is compared against the
+      # committed manifest further down, in "Refuse to release a tree the
+      # build restamped".
+      - name: Verify the archive opens
         run: |
           set -euo pipefail
-          . ./release.env
-          echo "${XCFRAMEWORK_SHA256}  .build/LibMobileCoinLibrary.xcframework.zip" \
-            | shasum -a 256 -c -
-          # A checksum proves the bytes, not that the archive opens.
           unzip -qt .build/LibMobileCoinLibrary.xcframework.zip
 
       # Two runs of the packager over one xcframework must agree, otherwise a
