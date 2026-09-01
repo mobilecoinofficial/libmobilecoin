@@ -1,5 +1,10 @@
 # Cut a release: build the xcframework, publish it as a checksummed asset, stamp
-# release.env, tag, and push the pod.
+# release.env, and tag.
+#
+# The pod is not pushed from here. SENTZ-5561 deprecates the LibMobileCoin pod
+# and SENTZ-5551 moves the remaining consumer to SwiftPM, so a trunk token is
+# not recreated on this repository. `make publish-podspec` still pushes one by
+# hand for anyone who needs it.
 #
 # Runs on workflow_dispatch, not on a tag push, because the tagged commit has to
 # already carry the asset checksum and that is only known after the Rust build.
@@ -62,11 +67,6 @@ jobs:
             echo "error: ${TAG} already exists. Bump VERSION in release.env." >&2
             exit 1
           fi
-
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.1'
-          bundler-cache: true
 
       # setup and build both depend on this target, so fetching here only
       # moves a bad rev's failure ahead of the dependency install.
@@ -220,9 +220,3 @@ jobs:
           )
           EOF
           swift build --package-path "${CONSUMER}"
-
-      - name: Publish the pod
-        if: ${{ !inputs.dry_run }}
-        env:
-          COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
-        run: bundle exec pod trunk push LibMobileCoin.podspec --allow-warnings

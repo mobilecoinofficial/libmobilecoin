@@ -89,12 +89,14 @@ release changes one file.
 
 To cut a release, bump `VERSION` in `release.env` on main, then run the
 **Release** workflow from the Actions tab. It builds the xcframework, writes the
-new checksum into `release.env`, commits that, creates the `v<VERSION>` tag,
-attaches the archive to the GitHub release, and pushes the pod.
+new checksum into `release.env`, commits that, creates the `v<VERSION>` tag, and
+attaches the archive to the GitHub release.
+
+The workflow does not push the pod. `make publish-podspec` pushes one by hand.
 
 The workflow does not trigger on a tag push. The tagged commit has to already
 carry the asset checksum, and that is only known once the Rust build finishes.
-`make publish` does the same sequence locally.
+`make publish` runs the same sequence locally and does push the pod.
 
 The **PR** workflow resolves and builds the SwiftPM package and lints every
 podspec subspec. Resolving verifies the binary target against
