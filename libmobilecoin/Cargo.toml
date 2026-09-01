@@ -1,0 +1,95 @@
+[package]
+name = "libmobilecoin"
+version = "6.0.0"
+authors = ["MobileCoin"]
+edition = "2021"
+
+[lib]
+name = "mobilecoin"
+crate-type = ["lib", "staticlib", "cdylib"]
+
+[profile.mobile]
+inherits = "release"
+debug = false
+lto = true
+
+[profile.mobile-release]
+inherits = "mobile"
+codegen-units = 1
+
+[dependencies]
+# External dependencies
+aes-gcm = "0.10.1"
+crc = "3.0.0"
+der = "0.7.8"
+displaydoc = "0.2"
+generic-array = { version = "0.14", features = ["serde", "more_lengths"] }
+libc = "0.2"
+protobuf = "2.27.1"
+rand = { version = "0.8", default-features = false }
+rand_chacha = { version = "0.3.1" }
+rand_core = { version = "0.6", features = ["std"] }
+serde_json = "1.0"
+sha2 = { version = "0.10", default-features = false }
+slip10_ed25519 = "0.1.3"
+tiny-bip39 = "1.0"
+zeroize = "1.5"
+
+cmake = "= 0.1.49"
+
+# MobileCoin dependencies
+mc-account-keys = { path = "../Vendor/mobilecoin/account-keys" }
+mc-api = { path = "../Vendor/mobilecoin/api" }
+mc-attest-ake = { path = "../Vendor/mobilecoin/attest/ake" }
+mc-attest-core = { path = "../Vendor/mobilecoin/attest/core" }
+mc-attest-verifier = { path = "../Vendor/mobilecoin/attest/verifier" }
+mc-attest-verifier-types = { path = "../Vendor/mobilecoin/attest/verifier/types", default-features = false }
+mc-attestation-verifier = "0.4.1"
+mc-blockchain-types = { path = "../Vendor/mobilecoin/blockchain/types" }
+mc-common = { path = "../Vendor/mobilecoin/common", features = ["std"] }
+mc-core = { path = "../Vendor/mobilecoin/core" }
+mc-crypto-box = { path = "../Vendor/mobilecoin/crypto/box" }
+mc-crypto-keys = { path = "../Vendor/mobilecoin/crypto/keys" }
+mc-crypto-noise = { path = "../Vendor/mobilecoin/crypto/noise" }
+#mc-crypto-rand = { path = "../Vendor/mobilecoin/crypto/rand", features = ["std"] }
+mc-rand = "1.0"
+mc-crypto-ring-signature = { path = "../Vendor/mobilecoin/crypto/ring-signature", default-features = false }
+mc-crypto-ring-signature-signer = { path = "../Vendor/mobilecoin/crypto/ring-signature/signer", default-features = false }
+mc-crypto-sig = { path = "../Vendor/mobilecoin/crypto/sig" }
+mc-fog-ingest-report = { path = "../Vendor/mobilecoin/fog/ingest/report" }
+mc-fog-kex-rng = { path = "../Vendor/mobilecoin/fog/kex_rng" }
+mc-fog-report-resolver = { path = "../Vendor/mobilecoin/fog/report/resolver" }
+mc-fog-report-types = { path = "../Vendor/mobilecoin/fog/report/types" }
+mc-fog-report-validation = { path = "../Vendor/mobilecoin/fog/report/validation" }
+mc-light-client-verifier = { path = "../Vendor/mobilecoin/light-client/verifier" }
+mc-sgx-dcap-types = "0.9.0"
+mc-transaction-builder = { path = "../Vendor/mobilecoin/transaction/builder" }
+mc-transaction-core = { path = "../Vendor/mobilecoin/transaction/core" }
+mc-transaction-extra = { path = "../Vendor/mobilecoin/transaction/extra" }
+mc-util-ffi = { path = "../Vendor/mobilecoin/util/ffi" }
+mc-util-serial = { path = "../Vendor/mobilecoin/util/serial", features = ["std"] }
+mc-util-uri = { path = "../Vendor/mobilecoin/util/uri" }
+
+[dev-dependencies]
+cbindgen = { version = "0.24" }
+curve25519-dalek = { version = "=4.1.1", default-features = false }
+
+[patch.crates-io]
+# Fork and rename to use "OG" dalek-cryptography with latest dependencies.
+bulletproofs-og = { git = "https://github.com/mobilecoinfoundation/bulletproofs.git", rev = "9abfdc054d9ba65f1e185ea1e6eff3947ce879dc" }
+
+# mbedtls patched to allow certificate verification with a profile
+mbedtls = { git = "https://github.com/mobilecoinfoundation/rust-mbedtls.git", rev = "f82523478a1dd813ca381c190175355d249a8123" }
+mbedtls-sys-auto = { git = "https://github.com/mobilecoinfoundation/rust-mbedtls.git", rev = "f82523478a1dd813ca381c190175355d249a8123" }
+
+# Fork and rename to use "OG" dalek-cryptography.
+schnorrkel-og = { git = "https://github.com/mobilecoinfoundation/schnorrkel.git", rev = "049bf9d30f3bbe072e2ad1b5eefdf0f3c851215e" }
+
+# Fixes the following:
+# * Allow enabling `serde/std` without also requiring `serde_cbor/std` to be enabled.
+#   See: https://github.com/pyfisch/cbor/pull/198
+serde_cbor = { git = "https://github.com/mobilecoinofficial/cbor", rev = "4c886a7c1d523aae1ec4aa7386f402cb2f4341b5" }
+
+# latest mbedtls needs spin `^0.9.4`, but `mc-util-vec-map` resolves spin to `^0.9.2` through `heapless` `^0.7`,
+# This specifies we use the latest version of heapless ~`0.9.4` to solve the dependency constraints. 
+heapless = { git = "https://github.com/mobilecoinofficial/heapless", rev = "2726f63bdc767d025f370d88341b1eb785178f2b" }
