@@ -88,15 +88,21 @@ as a resource of `LibMobileCoinCommon` and CocoaPods ships it in the
 release changes one file.
 
 To cut a release, bump `VERSION` in `release.env` on main, then run the
-**Release** workflow from the Actions tab. It builds the xcframework, writes the
-new checksum into `release.env`, commits that, creates the `v<VERSION>` tag, and
+**Release** workflow from the Actions tab. It builds the xcframework, checks it
+against the checksum the tree already carries, creates the `v<VERSION>` tag, and
 attaches the archive to the GitHub release.
+
+The workflow writes nothing to main. A build whose checksum differs from the
+tree stops and prints the diff, so the restamped values come off that failed
+run. Open a pull request with them, then dispatch again once it merges.
 
 The workflow does not push the pod. `make publish-podspec` pushes one by hand.
 
 The workflow does not trigger on a tag push. The tagged commit has to already
 carry the asset checksum, and that is only known once the Rust build finishes.
-`make publish` runs the same sequence locally and does push the pod.
+`make publish` runs a different sequence locally: it commits the stamp, pushes
+the pod, and never pushes the branch, so its tag can name a commit no one else
+has.
 
 The **PR** workflow resolves and builds the SwiftPM package and lints every
 podspec subspec. Resolving verifies the binary target against

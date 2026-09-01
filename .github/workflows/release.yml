@@ -1,14 +1,18 @@
-# Cut a release: build the xcframework, publish it as a checksummed asset, stamp
-# release.env, and tag.
+# Cut a release: build the xcframework, check it against the checksum the tree
+# already carries, publish it as a checksummed asset, and tag.
+#
+# Nothing is written to main. The tree must already carry the checksum this
+# build produces, so a release is a two-step affair whenever the checksum moves:
+# a pull request that restamps release.env and Package.swift, then a dispatch.
 #
 # The pod is not pushed from here. SENTZ-5561 deprecates the LibMobileCoin pod
 # and SENTZ-5551 moves the remaining consumer to SwiftPM, so a trunk token is
 # not recreated on this repository. `make publish-podspec` still pushes one by
 # hand for anyone who needs it.
 #
-# Runs on workflow_dispatch, not on a tag push, because the tagged commit has to
-# already carry the asset checksum and that is only known after the Rust build.
-# The workflow therefore builds first and creates the tag itself.
+# Runs on workflow_dispatch, not on a tag push, because the tag has to point at
+# a commit whose manifest already matches the built asset, and that is only
+# known after the Rust build. The workflow therefore builds first, then tags.
 name: Release
 
 on:
@@ -35,7 +39,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          # The workflow commits the stamped release.env.
+          # Not a tidy-up target. The default checkout fetches no tags, which
+          # leaves "Refuse to reuse an existing tag" blind and turns an early
+          # clean failure into a push rejection after the whole Rust build.
           fetch-depth: 0
           persist-credentials: true
 
@@ -169,18 +175,38 @@ jobs:
             exit 1
           fi
 
-      - name: Commit the stamp and tag
+      # This workflow never writes to main. The default-branch ruleset requires
+      # a pull request and GitHub Actions cannot be a bypass actor, so a push
+      # that moved main would be rejected and, being atomic with the tag, take
+      # the tag down with it.
+      #
+      # Not writing means the tree has to already carry the checksum this build
+      # produced. The repack check above proves the packager is deterministic
+      # over one xcframework; nothing here proves two Rust builds produce the
+      # same xcframework. So a mismatch is either a real defect or a build input
+      # that moved, and both need the same restamping pull request.
+      #
+      # `git diff HEAD`, not `git diff`: the plain form compares to the index,
+      # so it is blind to a change something staged but did not commit.
+      - name: Refuse to release a tree the build restamped
+        run: |
+          set -euo pipefail
+          git diff HEAD --quiet -- release.env Package.swift || {
+            git --no-pager diff HEAD -- release.env Package.swift >&2
+            echo "error: this build produced a different checksum than the tree carries." >&2
+            echo "Open a pull request with the restamped release.env and Package.swift," >&2
+            echo "then dispatch this workflow again from main." >&2
+            exit 1
+          }
+
+      - name: Tag
         if: ${{ !inputs.dry_run }}
         env:
           TAG: ${{ steps.settings.outputs.tag }}
         run: |
           set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add release.env Package.swift
-          git diff --cached --quiet || git commit -m "chore: stamp release.env for ${TAG}"
           git tag "${TAG}"
-          git push --atomic origin HEAD:main "refs/tags/${TAG}"
+          git push origin "refs/tags/${TAG}"
 
       - name: Create the release and upload the asset
         if: ${{ !inputs.dry_run }}
