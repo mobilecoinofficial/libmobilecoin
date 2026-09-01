@@ -80,7 +80,7 @@ as a resource of `LibMobileCoinCommon` and CocoaPods ships it in the
 `Package.swift`, `LibMobileCoin.podspec` and the `Makefile` all read it, so a
 release changes one file.
 
-To cut a release, bump `VERSION` in `release.env` on master, then run the
+To cut a release, bump `VERSION` in `release.env` on main, then run the
 **Release** workflow from the Actions tab. It builds the xcframework, writes the
 new checksum into `release.env`, commits that, creates the `v<VERSION>` tag,
 attaches the archive to the GitHub release, and pushes the pod.

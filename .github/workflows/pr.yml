@@ -3,7 +3,7 @@ name: PR
 on:
   pull_request:
   push:
-    branches: [master]
+    branches: [main]
 
 concurrency:
   group: pr-${{ github.ref }}
@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 jobs:
-  # The version in release.env is bumped on master BEFORE the release exists, so
+  # The version in release.env is bumped on main BEFORE the release exists, so
   # for one commit there is no asset to download. Every job that would fetch it
   # keys off this.
   release-asset:

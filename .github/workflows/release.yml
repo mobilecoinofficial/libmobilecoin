@@ -36,12 +36,12 @@ jobs:
 
       # The checkout follows the dispatched ref, so a dry run exercises the
       # branch it was dispatched on.
-      - name: Refuse to release from anything but master
+      - name: Refuse to release from anything but main
         if: ${{ !inputs.dry_run }}
         run: |
           set -euo pipefail
-          if [ "${GITHUB_REF}" != "refs/heads/master" ]; then
-            echo "error: a release must be dispatched from master, got ${GITHUB_REF}" >&2
+          if [ "${GITHUB_REF}" != "refs/heads/main" ]; then
+            echo "error: a release must be dispatched from main, got ${GITHUB_REF}" >&2
             exit 1
           fi
 
@@ -180,7 +180,7 @@ jobs:
           git add release.env Package.swift
           git diff --cached --quiet || git commit -m "chore: stamp release.env for ${TAG}"
           git tag "${TAG}"
-          git push --atomic origin HEAD:master "refs/tags/${TAG}"
+          git push --atomic origin HEAD:main "refs/tags/${TAG}"
 
       - name: Create the release and upload the asset
         if: ${{ !inputs.dry_run }}

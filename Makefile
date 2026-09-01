@@ -198,8 +198,8 @@ upload-release:
 
 .PHONY: tag-release
 tag-release:
-	@[[ "$$(git rev-parse --abbrev-ref HEAD)" == "master" ]] || \
-		{ echo 'Error: Must be on branch "master" when tagging a release.'; exit 1; }
+	@[[ "$$(git rev-parse --abbrev-ref HEAD)" == "main" ]] || \
+		{ echo 'Error: Must be on branch "main" when tagging a release.'; exit 1; }
 	$(MAKE) tag-hotfix
 
 .PHONY: tag-hotfix
