@@ -221,6 +221,40 @@ jobs:
             --generate-notes \
             .build/LibMobileCoinLibrary.xcframework.zip
 
+      # `gh release create` returns before the asset is servable, so the resolve
+      # below 404s on a release that is fine. The v6.1.0 run failed that way.
+      #
+      # Poll the URL rather than retry the resolve. The resolve spends about
+      # thirty seconds on the dependency graph before it reaches the asset, so
+      # every retry pays that again. The 404 itself took 137 ms.
+      #
+      # --max-time is what bounds the wait. curl's own status is tolerated here,
+      # so without a transfer limit a connection that accepts and never answers
+      # makes every round unbounded.
+      - name: Wait for the release asset to be servable
+        if: ${{ !inputs.dry_run }}
+        env:
+          TAG: ${{ steps.settings.outputs.tag }}
+        run: |
+          set -euo pipefail
+          URL="https://github.com/${{ github.repository }}/releases/download/${TAG}/LibMobileCoinLibrary.xcframework.zip"
+          ATTEMPTS=30
+          DELAY=10
+          CODE=""
+          for i in $(seq "${ATTEMPTS}"); do
+            CODE="$(curl --silent --location --head --output /dev/null \
+              --connect-timeout 10 --max-time 15 \
+              --write-out '%{http_code}' "$URL")" || CODE="curl exited $?"
+            if [ "${CODE}" = "200" ]; then
+              echo "asset servable on try ${i} of ${ATTEMPTS}"
+              exit 0
+            fi
+            echo "try ${i}: ${URL} returned ${CODE}"
+            sleep "${DELAY}"
+          done
+          echo "error: ${URL} returned ${CODE} on all ${ATTEMPTS} tries, ${DELAY}s apart" >&2
+          exit 1
+
       # Resolving from the published tag is the only check that proves a
       # consumer can install this release.
       - name: Resolve the published release as a consumer would
