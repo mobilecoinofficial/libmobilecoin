@@ -1,8 +1,15 @@
 ![MobileCoin logo](https://raw.githubusercontent.com/mobilecoinofficial/mobilecoin/master/img/mobilecoin_logo.png)
 
-# libmobilecoin-ios-artifacts
+# libmobilecoin
 
 MobileCoin is a privacy-preserving payments network designed for use on mobile devices.
+
+This repository starts at 6.1.0 and carries no prebuilt binary. Every release
+before 6.1.0, and the full history behind them, stays in
+[libmobilecoin-archive](https://github.com/mobilecoinofficial/libmobilecoin-archive).
+A pin on 6.0.x names this repository's URL and no longer resolves, because no
+tag below 6.1.0 exists here. Move it to 6.1.0 or later, or point it at the
+archive.
 
 # Sending your First Payment
 
