@@ -65,6 +65,64 @@ jobs:
             exit 1
           fi
 
+      # The binary lives in the release asset, so nothing here routes through
+      # git-lfs and no build output is tracked. Three separate failures, so
+      # three checks: a committed pointer, a rule that lets the next one in,
+      # and a binary committed as a plain blob with no pointer at all.
+      #
+      # Every check reads a status explicitly. `if git grep ...` cannot be used
+      # here, because `set -e` is suspended in an `if` condition and git's
+      # 128 is then indistinguishable from grep's "no match", so a bad ref or a
+      # broken git would read as clean.
+      - name: Assert the checkout carries no git-lfs rule and no binary
+        run: |
+          set -euo pipefail
+
+          # The acceptance criterion names this instrument, so its absence has
+          # to fail rather than silently skip the only check that proves it.
+          # The GitHub macOS image ships it and nothing here installs it, so a
+          # slimmer or self-hosted runner has to carry it in the image.
+          command -v git-lfs >/dev/null || {
+            echo "error: git-lfs is missing, so the ls-files check cannot run" >&2
+            exit 1
+          }
+          pointers="$(git lfs ls-files)"
+          [ -z "$pointers" ] || {
+            echo "$pointers"
+            echo "error: a git-lfs pointer is tracked; the binary belongs in the release asset" >&2
+            exit 1
+          }
+
+          # git grep exits 0 on a match and 1 on none. Anything above that is a
+          # failure to answer, not an answer.
+          rc=0
+          rules="$(git grep -n 'filter=lfs' HEAD -- '*.gitattributes')" || rc=$?
+          [ "$rc" -le 1 ] || {
+            echo "error: git grep failed with status $rc" >&2
+            exit 1
+          }
+          [ -z "$rules" ] || {
+            echo "$rules"
+            echo "error: a git-lfs rule is back; it re-arms LFS for the next matching file" >&2
+            exit 1
+          }
+
+          # A plain blob needs no pointer and no rule, so neither check above
+          # sees it. Note git tracks the files inside a bundle, never the
+          # bundle directory, so the pattern has to match a path component.
+          files="$(git ls-tree -r --name-only HEAD)"
+          rc=0
+          binaries="$(printf '%s\n' "$files" | grep -Ei '\.(a|o|zip|dylib|so|tgz)$|\.tar\.gz$|\.(xc)?framework/|(^|/)Artifacts/')" || rc=$?
+          [ "$rc" -le 1 ] || {
+            echo "error: grep failed with status $rc" >&2
+            exit 1
+          }
+          [ -z "$binaries" ] || {
+            echo "$binaries"
+            echo "error: a binary or an Artifacts path is back in the tree" >&2
+            exit 1
+          }
+
       # release.env is the source of truth, Package.swift carries the literals.
       # This is what catches a bump that forgot `make stamp-manifest`.
       - name: Assert Package.swift agrees with release.env
