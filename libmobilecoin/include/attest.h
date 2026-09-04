@@ -78,7 +78,7 @@ MC_ATTRIBUTE_NONNULL(1);
 /* ==== McAdvisories ==== */
 
 /// Construct a new advisories vector to hold strings
-McAdvisories* MC_NULLABLE mc_advisories_create();
+McAdvisories* MC_NULLABLE mc_advisories_create(void);
 
 void mc_advisories_free(
   McAdvisories* MC_NULLABLE advisories
@@ -93,7 +93,7 @@ MC_ATTRIBUTE_NONNULL(1, 2);
 /* ==== McTrustedIdentities ==== */
 
 /// Construct a new trusted identities vector to hold TrustedIdentity structs
-McTrustedIdentities* MC_NULLABLE mc_trusted_identities_create();
+McTrustedIdentities* MC_NULLABLE mc_trusted_identities_create(void);
 
 void mc_trusted_identities_free(
   McTrustedIdentities* MC_NULLABLE verifier
@@ -115,7 +115,7 @@ MC_ATTRIBUTE_NONNULL(1, 2);
 
 /* ==== McAttestAke ==== */
 
-McAttestAke* MC_NULLABLE mc_attest_ake_create();
+McAttestAke* MC_NULLABLE mc_attest_ake_create(void);
 
 void mc_attest_ake_free(
   McAttestAke* MC_NULLABLE attest_ake
