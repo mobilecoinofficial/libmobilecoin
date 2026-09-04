@@ -574,10 +574,11 @@ bool mc_memo_destination_with_payment_intent_memo_create(
   uint8_t number_of_recipients,
   uint64_t fee,
   uint64_t total_outlay,
+  uint64_t payment_intent_id,
   McMutableBuffer* MC_NONNULL out_memo_data,
   McError* MC_NULLABLE * MC_NULLABLE out_error
 )
-MC_ATTRIBUTE_NONNULL(1, 5);
+MC_ATTRIBUTE_NONNULL(1, 6);
 
 /// # Preconditions
 ///
@@ -668,10 +669,11 @@ bool mc_memo_destination_with_payment_request_memo_create(
   uint8_t number_of_recipients,
   uint64_t fee,
   uint64_t total_outlay,
+  uint64_t payment_request_id,
   McMutableBuffer* MC_NONNULL out_memo_data,
   McError* MC_NULLABLE * MC_NULLABLE out_error
 )
-MC_ATTRIBUTE_NONNULL(1, 5);
+MC_ATTRIBUTE_NONNULL(1, 6);
 
 /// # Preconditions
 ///
