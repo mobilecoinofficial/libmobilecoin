@@ -12,13 +12,14 @@ echo -e "\n### Patching iOS-Initialize.cmake file in $CMAKE_DIR ###"
 IOS_INITIALIZE_CMAKE_FILE="$CMAKE_DIR/share/cmake/Modules/Platform/iOS-Initialize.cmake"
 
 [ -f "$IOS_INITIALIZE_CMAKE_FILE" ] || { echo "error: no $IOS_INITIALIZE_CMAKE_FILE" >&2; exit 1; }
-# The guard tests the expression the sed addresses, so a module the sed
-# cannot reach fails here rather than reporting a no-op as success.
-grep -qiE '^[[:space:]]*message[[:space:]]*\(FATAL_ERROR' "$IOS_INITIALIZE_CMAKE_FILE" \
-  || { echo "error: no message(FATAL_ERROR call in $IOS_INITIALIZE_CMAKE_FILE" >&2; exit 1; }
-# The address needs the call before anything but space, so a second run
-# finds nothing to comment out.
-sed -i '' '/^[[:space:]]*message[[:space:]]*(FATAL_ERROR/I s/^/#/' "$IOS_INITIALIZE_CMAKE_FILE"
+# The first branch tests the expression the sed addresses. A module carrying
+# neither form is one the sed cannot reach, and a commented one is patched.
+if grep -qiE '^[[:space:]]*message[[:space:]]*\(FATAL_ERROR' "$IOS_INITIALIZE_CMAKE_FILE"; then
+  sed -i '' '/^[[:space:]]*message[[:space:]]*(FATAL_ERROR/I s/^/#/' "$IOS_INITIALIZE_CMAKE_FILE"
+elif ! grep -qiE '^#[[:space:]]*message[[:space:]]*\(FATAL_ERROR' "$IOS_INITIALIZE_CMAKE_FILE"; then
+  echo "error: no message(FATAL_ERROR call in $IOS_INITIALIZE_CMAKE_FILE" >&2
+  exit 1
+fi
 
 echo -e "### $IOS_INITIALIZE_CMAKE_FILE Patched ###"
 
