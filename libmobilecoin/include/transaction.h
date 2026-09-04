@@ -185,7 +185,7 @@ MC_ATTRIBUTE_NONNULL(1, 2, 3, 4);
 
 /* ==== McTransactionBuilderRing ==== */
 
-McTransactionBuilderRing* MC_NULLABLE mc_transaction_builder_ring_create();
+McTransactionBuilderRing* MC_NULLABLE mc_transaction_builder_ring_create(void);
 
 void mc_transaction_builder_ring_free(
   McTransactionBuilderRing* MC_NULLABLE transaction_builder_ring
@@ -411,7 +411,7 @@ McTxOutMemoBuilder* MC_NULLABLE mc_memo_builder_sender_payment_intent_and_destin
 )
 MC_ATTRIBUTE_NONNULL(2);
 
-McTxOutMemoBuilder* MC_NULLABLE mc_memo_builder_default_create();
+McTxOutMemoBuilder* MC_NULLABLE mc_memo_builder_default_create(void);
 
 
 void mc_memo_builder_free(
