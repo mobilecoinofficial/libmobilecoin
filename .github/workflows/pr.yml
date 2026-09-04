@@ -46,7 +46,7 @@ jobs:
           echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
 
   shell:
-    name: Lint tools/*.sh
+    name: Lint shell scripts and workflows
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -63,6 +63,31 @@ jobs:
           for f in tools/*.sh; do
             bash -n "$f"
           done
+
+      # The runner image ships shellcheck but no actionlint. actionlint parses
+      # the workflow schema and pipes each `run:` block through shellcheck.
+      - name: Lint workflows
+        env:
+          ACTIONLINT_VERSION: 1.7.12
+          ACTIONLINT_SHA256: 8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8
+        run: |
+          set -euo pipefail
+          TAR="actionlint_${ACTIONLINT_VERSION}_linux_amd64.tar.gz"
+          URL="https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/${TAR}"
+          curl --silent --show-error --location --fail \
+            --retry 3 --retry-all-errors \
+            --output "${RUNNER_TEMP}/${TAR}" "$URL"
+          # The checksum is what makes the version pin mean anything.
+          echo "${ACTIONLINT_SHA256}  ${RUNNER_TEMP}/${TAR}" | sha256sum --check --strict
+          tar -xzf "${RUNNER_TEMP}/${TAR}" -C "${RUNNER_TEMP}" actionlint
+          # Half the check is the shellcheck pass, and actionlint stays silent
+          # when the binary is absent rather than failing.
+          command -v shellcheck >/dev/null || {
+            echo "error: shellcheck is missing, so the run: blocks go unread" >&2
+            exit 1
+          }
+          "${RUNNER_TEMP}/actionlint" \
+            .github/workflows/pr.yml .github/workflows/release.yml
 
   manifest:
     name: Manifest and checkout shape
