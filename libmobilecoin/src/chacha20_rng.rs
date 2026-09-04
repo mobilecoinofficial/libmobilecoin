@@ -66,6 +66,7 @@ pub extern "C" fn mc_chacha20_rng_create_with_bytes(
 ///
 /// # Errors
 ///
+/// * `LibMcError::InvalidInput`
 /// * `LibMcError::Poison`
 #[no_mangle]
 pub extern "C" fn mc_chacha20_rng_get_word_pos(
@@ -83,14 +84,14 @@ pub extern "C" fn mc_chacha20_rng_get_word_pos(
 
 /// Sets the current word_pos of the ChaCha20Rng instance
 ///
-/// /// # Arguments
+/// # Arguments
 ///
 /// * `chacha20_rng` - must be a valid ChaCha20Rng
-/// * `out_word_pos` - pointer to buffer of 128 bytes where the current
-///   chacha20_rng wordpos will be returned
+/// * `bytes` - pointer to buffer of 16 bytes holding the word_pos to set
 ///
 /// # Errors
 ///
+/// * `LibMcError::InvalidInput`
 /// * `LibMcError::Poison`
 #[no_mangle]
 pub extern "C" fn mc_chacha20_rng_set_word_pos(
@@ -113,7 +114,7 @@ pub extern "C" fn mc_chacha20_rng_set_word_pos(
 
 /// Returns the next random u64 value from the ChaCha20Rng
 ///
-/// /// # Arguments
+/// # Arguments
 ///
 /// * `chacha20_rng` - must be a valid ChaCha20Rng
 ///

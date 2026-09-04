@@ -55,24 +55,25 @@ MC_ATTRIBUTE_NONNULL(1);
 ///
 /// # Errors
 ///
+/// * `LibMcError::InvalidInput`
 /// * `LibMcError::Poison`
 bool mc_chacha20_rng_get_word_pos(
     ChaCha20Rng* MC_NONNULL chacha20_rng,
-    const McBuffer* MC_NONNULL out_word_pos,
+    McMutableBuffer* MC_NONNULL out_word_pos,
     McError* MC_NULLABLE * MC_NULLABLE out_error
 )
 MC_ATTRIBUTE_NONNULL(1,2);
 
 /// Sets the current word_pos of the ChaCha20Rng instance
 ///
-/// /// # Arguments
+/// # Arguments
 ///
 /// * `chacha20_rng` - must be a valid ChaCha20Rng
-/// * `out_word_pos` - pointer to buffer of 128 bytes where the current
-///   chacha20_rng wordpos will be returned
+/// * `bytes` - pointer to buffer of 16 bytes holding the word_pos to set
 ///
 /// # Errors
 ///
+/// * `LibMcError::InvalidInput`
 /// * `LibMcError::Poison`
 bool mc_chacha20_rng_set_word_pos(
     ChaCha20Rng* MC_NONNULL chacha20_rng,
@@ -83,7 +84,7 @@ MC_ATTRIBUTE_NONNULL(1,2);
 
 /// Returns the next random u64 value from the ChaCha20Rng
 ///
-/// /// # Arguments
+/// # Arguments
 ///
 /// * `chacha20_rng` - must be a valid ChaCha20Rng
 ///

@@ -475,6 +475,7 @@ FfiOptOwnedPtr<Mutex<McChaCha20Rng>> mc_chacha20_rng_create_with_bytes(FfiRefPtr
  *
  * # Errors
  *
+ * * `LibMcError::InvalidInput`
  * * `LibMcError::Poison`
  */
 bool mc_chacha20_rng_get_word_pos(FfiMutPtr<Mutex<McChaCha20Rng>> chacha20_rng,
@@ -484,14 +485,14 @@ bool mc_chacha20_rng_get_word_pos(FfiMutPtr<Mutex<McChaCha20Rng>> chacha20_rng,
 /**
  * Sets the current word_pos of the ChaCha20Rng instance
  *
- * /// # Arguments
+ * # Arguments
  *
  * * `chacha20_rng` - must be a valid ChaCha20Rng
- * * `out_word_pos` - pointer to buffer of 128 bytes where the current
- *   chacha20_rng wordpos will be returned
+ * * `bytes` - pointer to buffer of 16 bytes holding the word_pos to set
  *
  * # Errors
  *
+ * * `LibMcError::InvalidInput`
  * * `LibMcError::Poison`
  */
 bool mc_chacha20_rng_set_word_pos(FfiMutPtr<Mutex<McChaCha20Rng>> chacha20_rng,
@@ -501,7 +502,7 @@ bool mc_chacha20_rng_set_word_pos(FfiMutPtr<Mutex<McChaCha20Rng>> chacha20_rng,
 /**
  * Returns the next random u64 value from the ChaCha20Rng
  *
- * /// # Arguments
+ * # Arguments
  *
  * * `chacha20_rng` - must be a valid ChaCha20Rng
  *
