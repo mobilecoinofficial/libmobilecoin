@@ -1,17 +1,18 @@
 #!/bin/bash
 
-CMAKE_DIR="$(readlink -f $(which cmake) | rev | cut -d'/' -f3- | rev)"
+CMAKE_DIR="$(readlink -f "$(which cmake)" | rev | cut -d'/' -f3- | rev)"
 
 echo -e "\n### Un-Patching iOS-Initialize.cmake file in $CMAKE_DIR ###"
 
 IOS_INITIALIZE_CMAKE_FILE="$CMAKE_DIR/share/cmake/Modules/Platform/iOS-Initialize.cmake"
 
-sed -i '' 's/^#*//' $IOS_INITIALIZE_CMAKE_FILE
+sed -i '' 's/^#*//' "$IOS_INITIALIZE_CMAKE_FILE"
 
 echo -e "### $IOS_INITIALIZE_CMAKE_FILE Un-Patched ###"
 
 echo -e '```'
-cat $IOS_INITIALIZE_CMAKE_FILE
+cat "$IOS_INITIALIZE_CMAKE_FILE"
 echo -e '```'
 
+# shellcheck disable=SC2016  # backticks are markdown, not a subshell
 echo -e '### Re-Patch file w/ `make patch-cmake` ###'
