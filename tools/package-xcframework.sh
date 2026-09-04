@@ -28,6 +28,17 @@ STAGING="$(mktemp -d)"
 trap 'rm -rf "$STAGING"' EXIT
 cp -R "$XCFRAMEWORK" "$STAGING/$FRAMEWORK_NAME"
 
+# xcodebuild -create-xcframework writes AvailableLibraries in an order that
+# varies between runs. Sort it so one input tree packages to one checksum.
+PLIST="$STAGING/$FRAMEWORK_NAME/Info.plist"
+SORTED_PLIST="$(plutil -convert json -o - "$PLIST" | python3 -c '
+import json, sys
+plist = json.load(sys.stdin)
+plist["AvailableLibraries"].sort(key=lambda library: library["LibraryIdentifier"])
+json.dump(plist, sys.stdout)
+')"
+printf %s "$SORTED_PLIST" | plutil -convert xml1 -o "$PLIST" -
+
 # Normalize every attribute the zip records. Mode, mtime and entry order are the
 # three inputs that otherwise make two zips of one tree differ.
 find "$STAGING" -type d -exec chmod 755 {} +
