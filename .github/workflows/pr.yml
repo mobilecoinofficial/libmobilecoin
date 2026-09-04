@@ -199,6 +199,19 @@ jobs:
       - name: Build
         run: swift build
 
+  test-spm:
+    name: Example package tests
+    runs-on: macos-26
+    needs: release-asset
+    if: needs.release-asset.outputs.exists == 'true'
+    steps:
+      - uses: actions/checkout@v4
+
+      # The example test bundle links the published xcframework, so a symbol
+      # the released library does not export fails here at the link step.
+      - name: Test
+        run: make test-spm
+
   podspec:
     name: pod lib lint
     runs-on: macos-26
