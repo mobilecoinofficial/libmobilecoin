@@ -29,7 +29,7 @@ trap 'rm -rf "$STAGING"' EXIT
 cp -R "$XCFRAMEWORK" "$STAGING/$FRAMEWORK_NAME"
 
 # xcodebuild -create-xcframework writes AvailableLibraries in an order that
-# varies between runs. Sort it so one input tree packages to one checksum.
+# varies between runs. Sort it so the checksum does not depend on that order.
 PLIST="$STAGING/$FRAMEWORK_NAME/Info.plist"
 SORTED_PLIST="$(plutil -convert json -o - "$PLIST" | python3 -c '
 import json, sys
