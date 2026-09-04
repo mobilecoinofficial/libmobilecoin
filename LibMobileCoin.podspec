@@ -62,12 +62,10 @@ Pod::Spec.new do |s|
 
   # ――― Privacy manifest ―――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  # resource_bundles is NOT inherited, so each subspec declares it from this
-  # constant. Setting it on the root spec too makes `pod lib lint` build the
-  # bundle twice under one name and fail with "Multiple commands produce".
-  privacy_bundle = {
-    "LibMobileCoin_Privacy" => ["Sources/Common/PrivacyInfo.xcprivacy"]
-  }
+  # resource_bundles is NOT inherited. A name shared across two subspecs, or
+  # across a subspec and the root spec, makes CocoaPods write duplicate UUIDs
+  # into Pods.xcodeproj. Each subspec names its own bundle.
+  privacy_manifest = ["Sources/Common/PrivacyInfo.xcprivacy"]
 
   # ――― Subspecs ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
@@ -78,7 +76,9 @@ Pod::Spec.new do |s|
   s.default_subspecs = "CoreHTTP"
 
    s.subspec "TestVectors" do |subspec|
-     subspec.resource_bundles = privacy_bundle
+     subspec.resource_bundles = {
+       "LibMobileCoin_TestVectors_Privacy" => privacy_manifest
+     }
 
      subspec.source_files = [
        "Sources/TestVector/Util/Bundle+TestVector.swift",
@@ -94,7 +94,9 @@ Pod::Spec.new do |s|
    end
 
    s.subspec "CoreHTTP" do |subspec|
-     subspec.resource_bundles = privacy_bundle
+     subspec.resource_bundles = {
+       "LibMobileCoin_CoreHTTP_Privacy" => privacy_manifest
+     }
 
      subspec.preserve_paths = [
        'Artifacts/LibMobileCoinLibrary.xcframework/**/*.a',

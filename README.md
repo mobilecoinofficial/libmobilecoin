@@ -87,8 +87,10 @@ products carry no test fixtures, so a shipping app does not embed the vectors
 bundle. Test targets add the product explicitly.
 
 `Sources/Common/PrivacyInfo.xcprivacy` is the privacy manifest. SwiftPM ships it
-as a resource of `LibMobileCoinCommon` and CocoaPods ships it in the
-`LibMobileCoin_Privacy` resource bundle, so both consumers get one copy.
+as a resource of `LibMobileCoinCommon`. CocoaPods ships it in a resource bundle
+per subspec, `LibMobileCoin_CoreHTTP_Privacy` and
+`LibMobileCoin_TestVectors_Privacy`. The names differ so that one target can
+pull both subspecs.
 
 ## Releasing
 
