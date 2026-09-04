@@ -73,13 +73,43 @@ if [ -e "$VENDOR_DIR/.git" ]; then
     CURRENT="$(git -C "$VENDOR_DIR" rev-parse HEAD 2>/dev/null || echo none)"
     # --cached as well: plain `git diff` compares the worktree against the
     # index, so a staged edit to a tracked file reads as clean.
-    if [ "$CURRENT" = "$REV" ] &&
-       git -C "$VENDOR_DIR" diff --quiet &&
+    if git -C "$VENDOR_DIR" diff --quiet &&
        git -C "$VENDOR_DIR" diff --cached --quiet; then
+        is_tracked_dirty=0
+    else
+        is_tracked_dirty=1
+    fi
+    # Untracked files bear on the checkout below and not on this fast path,
+    # which touches nothing. Counting them here would refuse every build for
+    # a scratch file, and the refusal would never lift.
+    if [ "$CURRENT" = "$REV" ] && [ "$is_tracked_dirty" = 0 ]; then
         echo "Vendor/mobilecoin already at $REV"
         exit 0
     fi
+    UNTRACKED="$(git -C "$VENDOR_DIR" ls-files --others --exclude-standard)"
+    # The checkout at the end of this script is --force, so it drops every
+    # tracked edit in here, and every untracked file whose path exists at the
+    # revision it checks out. A developer building against a locally patched
+    # foundation keeps the patch and decides what to do with it.
+    if { [ "$is_tracked_dirty" = 1 ] || [ -n "$UNTRACKED" ]; } &&
+       [ "${VENDOR_FORCE:-0}" != 1 ]; then
+        echo "error: $VENDOR_DIR holds local changes:" >&2
+        git -C "$VENDOR_DIR" status --short >&2
+        echo "       Commit, discard, or move them out to check out $REV." >&2
+        echo "       VENDOR_FORCE=1 checks out $REV over what it collides with." >&2
+        exit 1
+    fi
 else
+    # rm -rf below, so a directory of hand-written work that never became a
+    # git checkout gets the same refusal a dirty checkout gets.
+    if [ -d "$VENDOR_DIR" ] && [ -n "$(ls -A "$VENDOR_DIR")" ] &&
+       [ "${VENDOR_FORCE:-0}" != 1 ]; then
+        echo "error: $VENDOR_DIR holds files and is not a git checkout:" >&2
+        ls -A "$VENDOR_DIR" >&2
+        echo "       Empty or remove $VENDOR_DIR to check out $REV." >&2
+        echo "       VENDOR_FORCE=1 removes $VENDOR_DIR and checks out $REV." >&2
+        exit 1
+    fi
     rm -rf "$VENDOR_DIR"
     mkdir -p "$VENDOR_DIR"
     git -C "$VENDOR_DIR" init -q

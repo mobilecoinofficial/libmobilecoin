@@ -73,6 +73,15 @@ rm -rf .git/modules/Vendor/mobilecoin Vendor/mobilecoin
 To fetch from a mirror instead, set `MOBILECOIN_REMOTE`. The mirror needs
 `uploadpack.allowAnySHA1InWant`, because the fetch asks for a bare SHA.
 
+`make vendor` refuses the checkout when `Vendor/mobilecoin` holds a tracked
+edit. It refuses over an untracked file too, unless the tree already sits at
+the pinned revision, where it checks nothing out. It ends in a force checkout,
+so it overwrites what the pinned revision also carries. It refuses the same
+way when the path is a non-empty directory that is not a git checkout, because
+it removes that path. This keeps a foundation patch you build against. Commit,
+discard, or move the files out, or set `VENDOR_FORCE=1` to check out the
+pinned revision.
+
 `LibMobileCoinTestVectors` is a separate product. The four `LibMobileCoinCore*`
 products carry no test fixtures, so a shipping app does not embed the vectors
 bundle. Test targets add the product explicitly.
