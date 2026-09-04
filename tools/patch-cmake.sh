@@ -12,21 +12,32 @@ echo -e "\n### Patching iOS-Initialize.cmake file in $CMAKE_DIR ###"
 IOS_INITIALIZE_CMAKE_FILE="$CMAKE_DIR/share/cmake/Modules/Platform/iOS-Initialize.cmake"
 
 [ -f "$IOS_INITIALIZE_CMAKE_FILE" ] || { echo "error: no $IOS_INITIALIZE_CMAKE_FILE" >&2; exit 1; }
+
+# The sed writes a copy, because an in place edit that a later check refuses
+# would leave the install half commented and every rerun red.
+PATCHED="$(mktemp)"
+trap 'rm -f "$PATCHED"' EXIT
+cp "$IOS_INITIALIZE_CMAKE_FILE" "$PATCHED"
+
 # The first branch tests the expression the sed addresses. A module carrying
 # neither form is one the sed cannot reach, and a commented one is patched.
-if grep -qiE '^[[:space:]]*message[[:space:]]*\(FATAL_ERROR' "$IOS_INITIALIZE_CMAKE_FILE"; then
-  sed -i '' '/^[[:space:]]*message[[:space:]]*(FATAL_ERROR/I s/^/#/' "$IOS_INITIALIZE_CMAKE_FILE"
-elif ! grep -qiE '^#[[:space:]]*message[[:space:]]*\(FATAL_ERROR' "$IOS_INITIALIZE_CMAKE_FILE"; then
+if grep -qiE '^[[:space:]]*message[[:space:]]*\(FATAL_ERROR' "$PATCHED"; then
+  sed -i '' '/^[[:space:]]*message[[:space:]]*(FATAL_ERROR/I s/^/#/' "$PATCHED"
+elif ! grep -qiE '^#[[:space:]]*message[[:space:]]*\(FATAL_ERROR' "$PATCHED"; then
   echo "error: no message(FATAL_ERROR call in $IOS_INITIALIZE_CMAKE_FILE" >&2
   exit 1
 fi
 
 # A line naming the symbol outside a comment is one the sed did not reach, so
 # a module holding one is neither patched nor recognised.
-if grep -qiE '^[[:space:]]*([^#[:space:]].*)?FATAL_ERROR' "$IOS_INITIALIZE_CMAKE_FILE"; then
+if grep -qiE '^[[:space:]]*([^#[:space:]].*)?FATAL_ERROR' "$PATCHED"; then
   echo "error: an unpatched FATAL_ERROR line remains in $IOS_INITIALIZE_CMAKE_FILE" >&2
   exit 1
 fi
+
+# cat, not mv: the destination keeps its own owner and mode, which a move out
+# of mktemp would replace with a private temporary's.
+cat "$PATCHED" > "$IOS_INITIALIZE_CMAKE_FILE"
 
 echo -e "### $IOS_INITIALIZE_CMAKE_FILE Patched ###"
 
