@@ -185,6 +185,11 @@ jobs:
       - name: Assert the public headers compile
         run: make check-headers
 
+      # A stale header line in the module map only surfaces when clang builds
+      # the module.
+      - name: Assert the module map compiles
+        run: make check-module
+
       # A dependency's manifest is compiled through a VFS overlay with no rest
       # of the checkout, so any file read in it fails for every consumer while
       # still working at the repo root. Resolve it as a real git dependency.
