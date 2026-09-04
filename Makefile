@@ -369,6 +369,12 @@ check-module:
 		-Xclang -emit-module -Xclang -fmodule-name=LibMobileCoin \
 		.build/module-check/module.modulemap
 
+# Fail if the cmake patch and un-patch pair does not round trip the fixture
+# set. It drives a fake install, so the cmake on PATH is left alone.
+.PHONY: check-cmake-patch
+check-cmake-patch:
+	tools/check-cmake-patch.sh
+
 # Attach the packaged zip to the release for the tag this run just pushed.
 # Package.swift and the podspec both point a consumer at this exact URL, so
 # until this runs neither of them resolves.

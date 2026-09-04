@@ -1,0 +1,3 @@
+# The fixture carries CRLF on purpose. Without this the checkout normalises it
+# to LF and the shape it covers stops being tested.
+tools/fixtures/cmake/crlf.cmake -text
