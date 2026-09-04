@@ -29,28 +29,33 @@ LOG="$SANDBOX/run.log"
 
 # Echoes "<patch> <repatch> <round trip>" verdicts for the fixture named in $1.
 run_fixture() {
-  local fixture="$1" rc=0 patch repatch roundtrip after
+  local fixture="$1" rc=0 first_rc=0 patch repatch roundtrip after
   cp "$fixture" "$MODULE"
 
   rc=0
   "$ROOT/tools/patch-cmake.sh" > "$LOG" 2>&1 || rc=$?
-  if [ "$rc" -eq 0 ] && ! cmp -s "$fixture" "$MODULE"; then
-    patch=CHANGED
-  elif [ "$rc" -ne 0 ] && cmp -s "$fixture" "$MODULE"; then
-    patch=REFUSED
+  first_rc="$rc"
+  if [ "$rc" -ne 0 ]; then
+    if cmp -s "$fixture" "$MODULE"; then
+      patch=REFUSED
+    else
+      # A refusal that already moved the file leaves the module half written.
+      echo "exit=$rc" >&2
+      cat "$LOG" >&2
+      patch=REFUSED_DIRTY
+    fi
+  elif cmp -s "$fixture" "$MODULE"; then
+    # Legitimate only for a module that is already patched, so the row for
+    # every other fixture names CHANGED and a silent no-op fails against it.
+    patch=NOOP
   else
-    # A zero exit over an unchanged file is the failure this check exists for,
-    # so it gets a verdict of its own rather than folding into REFUSED.
-    echo "exit=$rc" >&2
-    cat "$LOG" >&2
-    printf 'UNEXPECTED NA NA\n'
-    return 0
+    patch=CHANGED
   fi
 
   # A patched module is the input to the next run, so a second patch has to be
   # a no-op rather than a refusal.
   repatch=NA
-  if [ "$patch" = CHANGED ]; then
+  if [ "$first_rc" -eq 0 ]; then
     after="$SANDBOX/after-first.cmake"
     cp "$MODULE" "$after"
     rc=0
@@ -65,7 +70,7 @@ run_fixture() {
   fi
 
   roundtrip=NA
-  if [ "$patch" = CHANGED ]; then
+  if [ "$first_rc" -eq 0 ]; then
     rc=0
     "$ROOT/tools/unpatch-cmake.sh" > "$LOG" 2>&1 || rc=$?
     if [ "$rc" -ne 0 ]; then
