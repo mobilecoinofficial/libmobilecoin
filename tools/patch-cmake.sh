@@ -21,6 +21,13 @@ elif ! grep -qiE '^#[[:space:]]*message[[:space:]]*\(FATAL_ERROR' "$IOS_INITIALI
   exit 1
 fi
 
+# A line naming the symbol outside a comment is one the sed did not reach, so
+# a module holding one is neither patched nor recognised.
+if grep -qiE '^[[:space:]]*([^#[:space:]].*)?FATAL_ERROR' "$IOS_INITIALIZE_CMAKE_FILE"; then
+  echo "error: an unpatched FATAL_ERROR line remains in $IOS_INITIALIZE_CMAKE_FILE" >&2
+  exit 1
+fi
+
 echo -e "### $IOS_INITIALIZE_CMAKE_FILE Patched ###"
 
 echo -e '```'
