@@ -1033,7 +1033,7 @@ MC_ATTRIBUTE_NONNULL(1);
 /// # Errors
 ///
 /// * `LibMcError::InvalidInput`
-bool mc_memo_get_gift_code_sender_memo_get_fee(
+bool mc_memo_gift_code_sender_memo_get_fee(
         const McBuffer* MC_NONNULL gift_code_sender_memo_data,
         uint64_t* MC_NONNULL out_fee,
         McError* MC_NULLABLE * MC_NULLABLE out_error

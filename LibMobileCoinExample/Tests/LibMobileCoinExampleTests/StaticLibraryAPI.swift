@@ -14,10 +14,8 @@ import LibMobileCoin
 ///
 final class StaticLibraryAPI: XCTestCase {
     func testAttestHeader() throws {
-        let data = Data()
-        let _ = data.asMcBuffer({ ptr in
-            mc_mr_enclave_verifier_create(ptr)
-        })
+        let advisories = mc_advisories_create()
+        mc_advisories_free(advisories)
         XCTAssertTrue(true)
     }
     
