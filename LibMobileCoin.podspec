@@ -1,5 +1,5 @@
-# release.env is the single source of truth for the version and the checksum of
-# the released xcframework. Package.swift and the Makefile read the same file.
+# release.env holds the version and the checksum of the released xcframework.
+# The Makefile reads the same file, and Package.swift carries both as literals.
 release_settings = File.readlines(File.join(__dir__, "release.env"))
   .reject { |line| line.strip.empty? || line.strip.start_with?("#") }
   .map { |line| line.strip.split("=", 2) }
@@ -40,8 +40,13 @@ Pod::Spec.new do |s|
     if [ ! -f "$stamp" ]; then
       rm -rf Artifacts/LibMobileCoinLibrary.xcframework
       rm -f Artifacts/.xcframework-*
+      # Each bound catches what the one before it misses. 30s covers a
+      # handshake, not a host that then sends nothing. 1024 B/s over 60s
+      # catches a stall, not a crawl, and 1800s covers 116 MB at 517 kbit/s.
       curl --fail --location --silent --show-error \
-        --retry 3 --retry-connrefused \
+        --retry 3 --retry-connrefused --retry-max-time 1800 \
+        --connect-timeout 30 --speed-limit 1024 --speed-time 60 \
+        --max-time 1800 \
         --output Artifacts/xcframework.zip "#{xcframework_url}"
       echo "#{xcframework_checksum}  Artifacts/xcframework.zip" | shasum -a 256 -c -
       unzip -q -o Artifacts/xcframework.zip -d Artifacts
