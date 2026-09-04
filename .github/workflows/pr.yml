@@ -45,6 +45,25 @@ jobs:
           esac
           echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
 
+  shell:
+    name: Lint tools/*.sh
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # The ubuntu runner image ships shellcheck, so this job installs nothing.
+      - name: Lint
+        run: shellcheck tools/*.sh
+
+      # One file per call. `bash -n a.sh b.sh` parses only the first file and
+      # passes the remaining names to it as positional parameters.
+      - name: Parse
+        run: |
+          set -euo pipefail
+          for f in tools/*.sh; do
+            bash -n "$f"
+          done
+
   manifest:
     name: Manifest and checkout shape
     runs-on: macos-26
