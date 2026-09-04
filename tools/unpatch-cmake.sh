@@ -12,6 +12,8 @@ echo -e "\n### Un-Patching iOS-Initialize.cmake file in $CMAKE_DIR ###"
 IOS_INITIALIZE_CMAKE_FILE="$CMAKE_DIR/share/cmake/Modules/Platform/iOS-Initialize.cmake"
 
 [ -f "$IOS_INITIALIZE_CMAKE_FILE" ] || { echo "error: no $IOS_INITIALIZE_CMAKE_FILE" >&2; exit 1; }
+grep -q FATAL_ERROR "$IOS_INITIALIZE_CMAKE_FILE" \
+  || { echo "error: no FATAL_ERROR line in $IOS_INITIALIZE_CMAKE_FILE" >&2; exit 1; }
 # The address holds the removal to the lines the patch comments out.
 sed -i '' '/FATAL_ERROR/ s/^#//' "$IOS_INITIALIZE_CMAKE_FILE"
 
