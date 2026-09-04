@@ -71,6 +71,9 @@ copy: copy-libs generate-xcframework
 .PHONY: copy-libs
 copy-libs:
 	$(call BINARY_copy,target)
+	# cp -R merges into a directory that is already there, so the destination
+	# is cleared to make this copy a replacement.
+	rm -rf "$(ARTIFACTS_DIR)/include"
 	cp -R "$(LIBMOBILECOIN_ARTIFACTS_HEADERS)" "$(ARTIFACTS_DIR)"
 
 .PHONY: generate
@@ -102,6 +105,9 @@ generate-xcframework:
 	rm -rf $(ARTIFACTS_DIR)/LibMobileCoinLibrary.xcframework || true
 	rm libmobilecoin/out/ios/target/libmobilecoin_macos.a || true
 	rm libmobilecoin/out/ios/target/libmobilecoin_iossimulator.a || true
+	# The removal at the end of this recipe does not run when a step below
+	# fails, so the directory starts empty rather than carrying leftovers.
+	rm -rf .build/headers
 	mkdir -p .build/headers
 	cp $(ARTIFACTS_DIR)/include/* .build/headers
 	cp modulemap/module.modulemap .build/headers
