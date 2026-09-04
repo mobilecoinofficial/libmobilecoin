@@ -10,6 +10,7 @@
 # IDENTITY means the un-patch restores the fixture byte for byte. Ten rows
 # write, so no row earns its verdict by doing nothing.
 crlf        CHANGED IDEMPOTENT IDENTITY
+halfwrite   REFUSED NA         NA
 hiddenlive  REFUSED NA         NA
 indenthash  CHANGED IDEMPOTENT IDENTITY
 lowerarg    CHANGED IDEMPOTENT IDENTITY
