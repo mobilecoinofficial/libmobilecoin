@@ -13,8 +13,10 @@ echo -e "\n### Un-Patching iOS-Initialize.cmake file in $CMAKE_DIR ###"
 IOS_INITIALIZE_CMAKE_FILE="$CMAKE_DIR/share/cmake/Modules/Platform/iOS-Initialize.cmake"
 
 [ -f "$IOS_INITIALIZE_CMAKE_FILE" ] || { echo "error: no $IOS_INITIALIZE_CMAKE_FILE" >&2; exit 1; }
-grep -q FATAL_ERROR "$IOS_INITIALIZE_CMAKE_FILE" \
-  || { echo "error: no FATAL_ERROR line in $IOS_INITIALIZE_CMAKE_FILE" >&2; exit 1; }
+# The guard tests the expression the sed addresses, so an un-patch of an
+# unpatched module fails here rather than reporting success.
+grep -qiE '^#[[:space:]]*message[[:space:]]*\(FATAL_ERROR' "$IOS_INITIALIZE_CMAKE_FILE" \
+  || { echo "error: no commented message(FATAL_ERROR call in $IOS_INITIALIZE_CMAKE_FILE" >&2; exit 1; }
 # The address needs a single hash and then the call, so prose that names the
 # symbol keeps its marker and a run of hashes is left alone.
 sed -i '' '/^#[[:space:]]*message[[:space:]]*(FATAL_ERROR/I s/^#//' "$IOS_INITIALIZE_CMAKE_FILE"
