@@ -69,7 +69,7 @@ clean-artifacts:
 copy: copy-libs generate-xcframework
 
 .PHONY: copy-libs
-copy-libs:
+copy-libs: check-headers
 	$(call BINARY_copy,target)
 	# cp -R merges into a directory that is already there, so the destination
 	# is cleared to make this copy a replacement.
