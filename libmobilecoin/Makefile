@@ -36,6 +36,11 @@ CARGO_PACKAGE = libmobilecoin
 
 ALL_ARCHS_IOS = aarch64-apple-ios-sim aarch64-apple-ios x86_64-apple-ios x86_64-apple-darwin aarch64-apple-darwin
 
+# Every arch target stages into the same header directory, so -j lets two
+# copy into it at once. make 3.81 has no target-scoped form, so this
+# covers every target in the file.
+.NOTPARALLEL:
+
 # Matches the .iOS(.v13) floor in Package.swift and the podspec.
 IOS_DEPLOYMENT_TARGET = 13.0
 
