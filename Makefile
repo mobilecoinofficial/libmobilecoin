@@ -355,6 +355,20 @@ check-manifest:
 check-headers:
 	clang -fsyntax-only -x c -std=c11 -I$(LIBMOBILECOIN_LIB_DIR)/include $(LIBMOBILECOIN_LIB_DIR)/include/libmobilecoin.h
 
+# Fail if the module map does not compile. It names its header relative to
+# itself, so the headers and the map stage into one directory first.
+.PHONY: check-module
+check-module:
+# A stale copy of a header deleted from include/ still satisfies the module,
+# so the stage cannot carry anything over between runs.
+	rm -rf .build/module-check
+	mkdir -p .build/module-check/cache
+	cp $(LIBMOBILECOIN_LIB_DIR)/include/* modulemap/module.modulemap .build/module-check
+	clang -fsyntax-only -fmodules -fimplicit-module-maps -x c -std=c11 \
+		-I.build/module-check -fmodules-cache-path=.build/module-check/cache \
+		-Xclang -emit-module -Xclang -fmodule-name=LibMobileCoin \
+		.build/module-check/module.modulemap
+
 # Attach the packaged zip to the release for the tag this run just pushed.
 # Package.swift and the podspec both point a consumer at this exact URL, so
 # until this runs neither of them resolves.
