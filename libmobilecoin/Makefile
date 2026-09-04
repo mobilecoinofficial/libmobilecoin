@@ -107,6 +107,9 @@ $(ALL_ARCHS_IOS):
 	mkdir -p out/ios/target
 	$(call BINARY_copy,$@,target)
 
+	# The staged copy is a replacement, not an addition, so a header dropped
+	# from include/ does not linger here.
+	rm -rf out/ios/include
 	mkdir -p out/ios/include
 	cp $(IOS_C_HEADERS) out/ios/include
 
@@ -116,6 +119,9 @@ out/ios/target: $(ALL_ARCHS_IOS)
 	mkdir -p out/ios/target
 	$(foreach arch,$^,$(call BINARY_copy,$(arch),target))
 
+	# The staged copy is a replacement, not an addition, so a header dropped
+	# from include/ does not linger here.
+	rm -rf out/ios/include
 	mkdir -p out/ios/include
 	cp $(IOS_C_HEADERS) out/ios/include
 
