@@ -154,4 +154,4 @@ cbindgen:
 	  exit 1; \
 	fi; \
 	cbindgen --crate libmobilecoin -o libmobilecoin_cbindgen.h && \
-	echo "wrote libmobilecoin_cbindgen.h"
+	echo "cbindgen $(CBINDGEN_VERSION) ok"
