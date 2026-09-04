@@ -27,9 +27,9 @@ RESOLVED="$(command -v cmake)"
 
 LOG="$SANDBOX/run.log"
 
-# Echoes "<patch verdict> <round trip verdict>" for the fixture named in $1.
+# Echoes "<patch> <repatch> <round trip>" verdicts for the fixture named in $1.
 run_fixture() {
-  local fixture="$1" rc=0 patch roundtrip
+  local fixture="$1" rc=0 patch repatch roundtrip after
   cp "$fixture" "$MODULE"
 
   rc=0
@@ -43,8 +43,25 @@ run_fixture() {
     # so it gets a verdict of its own rather than folding into REFUSED.
     echo "exit=$rc" >&2
     cat "$LOG" >&2
-    printf 'UNEXPECTED NA\n'
+    printf 'UNEXPECTED NA NA\n'
     return 0
+  fi
+
+  # A patched module is the input to the next run, so a second patch has to be
+  # a no-op rather than a refusal.
+  repatch=NA
+  if [ "$patch" = CHANGED ]; then
+    after="$SANDBOX/after-first.cmake"
+    cp "$MODULE" "$after"
+    rc=0
+    "$ROOT/tools/patch-cmake.sh" > "$LOG" 2>&1 || rc=$?
+    if [ "$rc" -ne 0 ]; then
+      repatch=FAILED
+    elif cmp -s "$after" "$MODULE"; then
+      repatch=IDEMPOTENT
+    else
+      repatch=CHANGED
+    fi
   fi
 
   roundtrip=NA
@@ -60,7 +77,7 @@ run_fixture() {
     fi
   fi
 
-  printf '%s %s\n' "$patch" "$roundtrip"
+  printf '%s %s %s\n' "$patch" "$repatch" "$roundtrip"
 }
 
 broken=0
@@ -87,18 +104,14 @@ for fixture in "${FILES[@]}"; do
     broken=1
     continue
   fi
-  want_patch="$(echo "$want" | awk '{print $2}')"
-  want_roundtrip="$(echo "$want" | awk '{print $3}')"
+  want="$(echo "$want" | awk '{print $2, $3, $4}')"
 
   got="$(run_fixture "$fixture")"
-  got_patch="${got% *}"
-  got_roundtrip="${got#* }"
 
-  if [ "$got_patch" = "$want_patch" ] && [ "$got_roundtrip" = "$want_roundtrip" ]; then
-    printf 'ok   %-12s %s %s\n' "$name" "$got_patch" "$got_roundtrip"
+  if [ "$got" = "$want" ]; then
+    printf 'ok   %-12s %s\n' "$name" "$got"
   else
-    printf 'FAIL %-12s want %s %s, got %s %s\n' \
-      "$name" "$want_patch" "$want_roundtrip" "$got_patch" "$got_roundtrip" >&2
+    printf 'FAIL %-12s want %s, got %s\n' "$name" "$want" "$got" >&2
     broken=1
   fi
 done
