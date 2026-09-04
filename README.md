@@ -125,19 +125,20 @@ carry the asset checksum, and that is only known once the Rust build finishes.
 ### make publish
 
 `make publish` runs a different sequence locally. It checks it is on `main` and
-reads the publish credentials. It repackages the local build, then rewrites
-`release.env` and `Package.swift` from it. It commits those two files and sends
-that commit to main. It then tags, uploads the asset, waits for the asset to be
-servable, and pushes the pod.
+reads the publish credentials. It rebuilds the xcframework and packages it,
+then rewrites `release.env` and `Package.swift` from it. It commits those two
+files and sends that commit to main. It then tags, uploads the asset, waits for
+the asset to be servable, and pushes the pod.
 
 `-i` and `-k` run a step after a check refused it. Every step that writes
 reads the make flags and refuses under either option. `-i` still reports
 success, because it ignores the refusals it prints.
 
 The run makes the only commit main receives, so leave the `VERSION` bump
-uncommitted. A local build has to exist first. The upload runs only when the
-archive hashes to the checksum the run just stamped. The push to main needs a
-ruleset bypass, and the run reads it before it packages anything.
+uncommitted. The run rebuilds before it packages, so no earlier build is
+needed. The upload runs only when the archive hashes to the checksum the run
+just stamped. The push to main needs a ruleset bypass, and the run reads it
+before it packages anything.
 
 `make publish-hotfix` cuts a tag off a branch main does not carry. It refuses to
 run on `main`. It skips the push to main and it skips the ancestry check. Its

@@ -134,8 +134,11 @@ lint-locally: lint-locally-podspec
 
 # stamp must land in a commit before the tag is created, because Package.swift
 # and the podspec read the checksum out of release.env at the tagged revision.
+#
+# publish-build sits after the checks, so a refusal costs no build, and before
+# stamp, because stamp packages whatever the artifacts directory holds.
 .PHONY: publish
-publish: check-branch publish-preflight check-main-push-rights stamp commit-stamp push-stamp tag-release upload-release wait-for-asset publish-podspec
+publish: check-branch publish-preflight check-main-push-rights publish-build stamp commit-stamp push-stamp tag-release upload-release wait-for-asset publish-podspec
 
 # `make -i` and `make -k` run a step after a check refused it, so every step
 # that writes reads the flags itself. A word holding `=` is a command-line
@@ -146,6 +149,15 @@ ASSERT_STRICT_MAKE = for W in $(MAKEFLAGS); do \
 			*i*|*k*) echo 'Error: this step does not run under `make -i` or `make -k`, which run a step after a check refused it.' >&2; exit 1 ;; \
 		esac; \
 	done
+
+# The same three targets `default` runs, in the same order. They sit behind a
+# guarded target because a release build writes, and `default` keeps them
+# unguarded for local use.
+.PHONY: publish-build
+publish-build:
+	@set -eu; \
+	$(ASSERT_STRICT_MAKE); \
+	$(MAKE) --no-print-directory build clean-artifacts copy
 
 # The version, the `gh` login, the push permission and the ssh channel are read
 # here, before the run packages anything. A refusal then costs nothing.
@@ -273,7 +285,7 @@ commit-stamp:
 # A hotfix is tagged off a branch main does not carry, so nothing is pushed to
 # a branch. A tag puts no asset anywhere.
 .PHONY: publish-hotfix
-publish-hotfix: check-not-main publish-preflight stamp commit-stamp tag-hotfix upload-release wait-for-asset publish-podspec
+publish-hotfix: check-not-main publish-preflight publish-build stamp commit-stamp tag-hotfix upload-release wait-for-asset publish-podspec
 
 # On main this target commits the stamp and pushes only the tag, so main would
 # not record the release the tag names.
