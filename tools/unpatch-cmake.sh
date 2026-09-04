@@ -5,7 +5,8 @@ set -euo pipefail
 
 command -v cmake >/dev/null || { echo "error: cmake not on PATH" >&2; exit 1; }
 
-CMAKE_DIR="$(readlink -f "$(which cmake)" | rev | cut -d'/' -f3- | rev)"
+CMAKE_DIR="$(perl -MCwd -e 'print Cwd::abs_path shift' "$(which cmake)" | rev | cut -d'/' -f3- | rev)"
+[ -n "$CMAKE_DIR" ] || { echo "error: $0 cannot resolve the cmake install" >&2; exit 1; }
 
 echo -e "\n### Un-Patching iOS-Initialize.cmake file in $CMAKE_DIR ###"
 
