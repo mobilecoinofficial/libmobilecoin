@@ -84,13 +84,23 @@ as a resource of `LibMobileCoinCommon` and CocoaPods ships it in the
 ## Releasing
 
 `release.env` holds the version and the checksum of the released xcframework.
-`Package.swift`, `LibMobileCoin.podspec` and the `Makefile` all read it, so a
-release changes one file.
+`LibMobileCoin.podspec` and the `Makefile` read it directly. `Package.swift`
+cannot, because a dependency manifest reads no file at resolve time. It carries
+both values as literals instead, so a release changes both files.
 
-To cut a release, bump `VERSION` in `release.env` on main, then run the
-**Release** workflow from the Actions tab. It builds the xcframework, checks it
-against the checksum the tree already carries, creates the `v<VERSION>` tag, and
-attaches the archive to the GitHub release.
+There are two routes. The **Release** workflow is the normal one. `make publish`
+is the local one, and the two differ in what they expect to be committed.
+
+### The Release workflow
+
+To cut a release, bump `VERSION` in `release.env`. Run `make stamp-manifest` to
+copy both values into `Package.swift`. Merge both files to main.
+`make check-manifest` rejects a bump that changed only `release.env`, so the two
+files move together or the pull request fails.
+
+Then run the **Release** workflow from the Actions tab. It builds the
+xcframework, checks it against the checksum the tree already carries, creates
+the `v<VERSION>` tag, and attaches the archive to the GitHub release.
 
 The workflow writes nothing to main. A build whose checksum differs from the
 tree stops and prints the diff, so the restamped values come off that failed
@@ -100,9 +110,30 @@ The workflow does not push the pod. `make publish-podspec` pushes one by hand.
 
 The workflow does not trigger on a tag push. The tagged commit has to already
 carry the asset checksum, and that is only known once the Rust build finishes.
-`make publish` runs a different sequence locally: it commits the stamp, pushes
-the pod, and never pushes the branch, so its tag can name a commit no one else
-has.
+
+### make publish
+
+`make publish` runs a different sequence locally. It checks it is on `main` and
+reads the publish credentials. It repackages the local build, then rewrites
+`release.env` and `Package.swift` from it. It commits those two files and sends
+that commit to main. It then tags, uploads the asset, waits for the asset to be
+servable, and pushes the pod.
+
+`-i` and `-k` run a step after a check refused it. Every step that writes
+reads the make flags and refuses under either option. `-i` still reports
+success, because it ignores the refusals it prints.
+
+The run makes the only commit main receives, so leave the `VERSION` bump
+uncommitted. A local build has to exist first. The upload runs only when the
+archive hashes to the checksum the run just stamped. The push to main needs a
+ruleset bypass, and the run reads it before it packages anything.
+
+`make publish-hotfix` cuts a tag off a branch main does not carry. It refuses to
+run on `main`. It skips the push to main and it skips the ancestry check. Its
+stamp commit stays on that branch, so main's `release.env` and `Package.swift`
+do not record the hotfix. The next version bumped on main has to name a version
+no tag uses. The Release workflow reads main's own `release.env` and refuses a
+tag that already exists.
 
 The **PR** workflow resolves and builds the SwiftPM package and lints every
 podspec subspec. Resolving verifies the binary target against
