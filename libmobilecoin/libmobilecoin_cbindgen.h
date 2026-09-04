@@ -626,7 +626,7 @@ bool mc_fog_resolver_add_report_response(FfiMutPtr<McFogResolver> fog_resolver,
 
 void mc_fully_validated_fog_pubkey_free(FfiOptOwnedPtr<McFullyValidatedFogPubkey> fully_validated_fog_pubkey);
 
-void mc_fully_validated_fog_pubkey_get_pubkey(FfiRefPtr<McFullyValidatedFogPubkey> fully_validated_fog_pubkey,
+bool mc_fully_validated_fog_pubkey_get_pubkey(FfiRefPtr<McFullyValidatedFogPubkey> fully_validated_fog_pubkey,
                                               FfiMutPtr<McMutableBuffer> out_pubkey);
 
 uint64_t mc_fully_validated_fog_pubkey_get_pubkey_expiry(FfiRefPtr<McFullyValidatedFogPubkey> fully_validated_fog_pubkey);
