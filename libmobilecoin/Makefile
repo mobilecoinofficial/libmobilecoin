@@ -134,10 +134,24 @@ clean:
 ############# Commands #############
 ####################################
 
+# Matches the cbindgen dev-dependency in Cargo.toml. The CLI and the
+# dev-dependency are separate installs, so nothing else holds them equal.
+CBINDGEN_VERSION = 0.24.5
+
+# The crate's pinned nightly cannot build cbindgen, so stable installs it.
 .PHONY: setup-dev
 setup-dev:
-	cargo install cbindgen
+	rustup run --install stable cargo install cbindgen --version $(CBINDGEN_VERSION) --locked
 
+# The check and generator are one shell command, so the generator cannot run
+# after a refusal. Discard the Cargo.lock churn while the lock trails Vendor.
 .PHONY: cbindgen
 cbindgen:
-	cbindgen --crate libmobilecoin -o libmobilecoin_cbindgen.h
+	@FOUND="$$(cbindgen --version 2>/dev/null || echo none)"; \
+	if [ "$$FOUND" != "cbindgen $(CBINDGEN_VERSION)" ]; then \
+	  echo "error: cbindgen $(CBINDGEN_VERSION) is required, found $$FOUND" >&2; \
+	  echo "run: make setup-dev" >&2; \
+	  exit 1; \
+	fi; \
+	cbindgen --crate libmobilecoin -o libmobilecoin_cbindgen.h && \
+	echo "wrote libmobilecoin_cbindgen.h"
