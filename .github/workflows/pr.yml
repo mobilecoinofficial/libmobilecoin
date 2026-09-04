@@ -172,6 +172,11 @@ jobs:
       - name: Assert Package.swift agrees with release.env
         run: make check-manifest
 
+      # The release zip carries its own copy of these headers, which is why
+      # this copy needs its own check.
+      - name: Assert the public headers compile
+        run: make check-headers
+
       # A dependency's manifest is compiled through a VFS overlay with no rest
       # of the checkout, so any file read in it fails for every consumer while
       # still working at the repo root. Resolve it as a real git dependency.
