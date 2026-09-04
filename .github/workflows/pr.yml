@@ -86,8 +86,16 @@ jobs:
             echo "error: shellcheck is missing, so the run: blocks go unread" >&2
             exit 1
           }
-          "${RUNNER_TEMP}/actionlint" \
-            .github/workflows/pr.yml .github/workflows/release.yml
+          # An unmatched glob arrives as a literal path, so nullglob drops the
+          # suffix that is absent. The count check then fails an empty
+          # directory here rather than inside actionlint.
+          shopt -s nullglob
+          FILES=(.github/workflows/*.yml .github/workflows/*.yaml)
+          [ ${#FILES[@]} -gt 0 ] || {
+            echo "error: no workflow files in .github/workflows" >&2
+            exit 1
+          }
+          "${RUNNER_TEMP}/actionlint" "${FILES[@]}"
 
   manifest:
     name: Manifest and checkout shape
