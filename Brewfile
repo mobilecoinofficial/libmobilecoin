@@ -1,4 +1,3 @@
-brew "cbindgen"
 brew "cmake"
 brew "go"
 brew "llvm"
