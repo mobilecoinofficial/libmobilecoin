@@ -1,0 +1,20 @@
+# One row per fixture: <name> <patch verdict> <round trip verdict>.
+#
+# CHANGED means the patch exits 0 and the file differs. REFUSED means it exits
+# non-zero and the file is untouched. A zero exit over an unchanged file is
+# the failure this set exists to catch and has no row.
+#
+# IDENTITY means the un-patch restores the fixture byte for byte. Ten rows
+# write, so no row earns its verdict by doing nothing.
+crlf        CHANGED IDENTITY
+indenthash  CHANGED IDENTITY
+lowerarg    CHANGED IDENTITY
+onehash     CHANGED CHANGED
+prose       REFUSED NA
+shipped     CHANGED IDENTITY
+spaced      CHANGED IDENTITY
+split       REFUSED NA
+tab         CHANGED IDENTITY
+twohash     CHANGED IDENTITY
+twomention  CHANGED IDENTITY
+upper       CHANGED IDENTITY

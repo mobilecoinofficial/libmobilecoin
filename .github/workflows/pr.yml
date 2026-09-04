@@ -190,6 +190,11 @@ jobs:
       - name: Assert the module map compiles
         run: make check-module
 
+      # A guard that disagrees with its own sed reports a no-op as success, so
+      # the check drives the real scripts over a fake cmake install.
+      - name: Assert the cmake patch pair round trips
+        run: make check-cmake-patch
+
       # A dependency's manifest is compiled through a VFS overlay with no rest
       # of the checkout, so any file read in it fails for every consumer while
       # still working at the repo root. Resolve it as a real git dependency.
