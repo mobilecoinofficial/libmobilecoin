@@ -125,7 +125,7 @@ pub extern "C" fn mc_fully_validated_fog_pubkey_free(
 pub extern "C" fn mc_fully_validated_fog_pubkey_get_pubkey(
     fully_validated_fog_pubkey: FfiRefPtr<McFullyValidatedFogPubkey>,
     out_pubkey: FfiMutPtr<McMutableBuffer>,
-) {
+) -> bool {
     ffi_boundary(|| {
         let out_pubkey = out_pubkey
             .into_mut()
