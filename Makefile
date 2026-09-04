@@ -343,6 +343,12 @@ stamp-manifest:
 check-manifest:
 	tools/stamp-package-swift.sh --check
 
+# Fail if a public header does not compile. The release zip carries its own
+# copy of these headers, which is why this copy needs its own check.
+.PHONY: check-headers
+check-headers:
+	clang -fsyntax-only -x c -std=c11 -I$(LIBMOBILECOIN_LIB_DIR)/include $(LIBMOBILECOIN_LIB_DIR)/include/libmobilecoin.h
+
 # Attach the packaged zip to the release for the tag this run just pushed.
 # Package.swift and the podspec both point a consumer at this exact URL, so
 # until this runs neither of them resolves.
