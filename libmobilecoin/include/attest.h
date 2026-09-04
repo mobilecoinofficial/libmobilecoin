@@ -80,7 +80,7 @@ MC_ATTRIBUTE_NONNULL(1);
 /// Construct a new advisories vector to hold strings
 McAdvisories* MC_NULLABLE mc_advisories_create();
 
-bool mc_advisories_free(
+void mc_advisories_free(
   McAdvisories* MC_NULLABLE advisories
 );
 

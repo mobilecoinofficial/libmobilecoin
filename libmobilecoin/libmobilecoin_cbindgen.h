@@ -35,9 +35,13 @@ typedef enum McMaskedAmountVersion {
 
 typedef struct AttestAke AttestAke;
 
+typedef struct McAdvisories McAdvisories;
+
 typedef struct McFogResolver McFogResolver;
 
 typedef struct McTransactionBuilderRing McTransactionBuilderRing;
+
+typedef struct McTrustedIdentities McTrustedIdentities;
 
 typedef struct McTxOutMemoBuilder McTxOutMemoBuilder;
 
@@ -61,7 +65,7 @@ typedef struct McError {
   FfiOwnedStr error_description;
 } McError;
 
-typedef MrEnclaveVerifier McMrEnclaveVerifier;
+typedef TrustedMrEnclaveIdentity McTrustedMrEnclaveIdentity;
 
 /**
  * This type is meant to be used as a parameter (or field of an another
@@ -85,9 +89,7 @@ typedef struct McBuffer {
   size_t len;
 } McBuffer;
 
-typedef MrSignerVerifier McMrSignerVerifier;
-
-typedef Verifier McVerifier;
+typedef TrustedMrSignerIdentity McTrustedMrSignerIdentity;
 
 typedef struct AttestAke McAttestAke;
 
@@ -209,57 +211,84 @@ void mc_error_free(FfiOptOwnedPtr<McError> error);
  */
 void mc_string_free(FfiOptOwnedStr string);
 
-void mc_mr_enclave_verifier_free(FfiOptOwnedPtr<McMrEnclaveVerifier> mr_enclave_verifier);
+void mc_trusted_identity_mr_enclave_free(FfiOptOwnedPtr<McTrustedMrEnclaveIdentity> mr_enclave_trusted_identity);
 
 /**
- * Create a new status verifier that will check for the existence of the
- * given MrEnclave.
+ * Create a new mr enclave trusted identity
  *
  * # Preconditions
  *
  * * `mr_enclave` - must be 32 bytes in length.
  */
-FfiOptOwnedPtr<McMrEnclaveVerifier> mc_mr_enclave_verifier_create(FfiRefPtr<McBuffer> mr_enclave);
+FfiOptOwnedPtr<McTrustedMrEnclaveIdentity> mc_trusted_identity_mr_enclave_create(FfiRefPtr<McBuffer> mr_enclave,
+                                                                                 FfiRefPtr<McAdvisories> config_advisories,
+                                                                                 FfiRefPtr<McAdvisories> hardening_advisories);
+
+void mc_trusted_identity_mr_signer_free(FfiOptOwnedPtr<McTrustedMrSignerIdentity> mr_signer_trusted_identity);
 
 /**
- * Assume an enclave with the specified measurement does not need
- * BIOS configuration changes to address the provided advisory ID.
- *
- * This method should only be used when advised by an enclave author.
- *
- * # Preconditions
- *
- * * `advisory_id` - must be a nul-terminated C string containing valid UTF-8.
- */
-bool mc_mr_enclave_verifier_allow_config_advisory(FfiMutPtr<McMrEnclaveVerifier> mr_enclave_verifier,
-                                                  FfiStr advisory_id);
-
-/**
- * Assume the given MrEnclave value has the appropriate software/build-time
- * hardening for the given advisory ID.
- *
- * This method should only be used when advised by an enclave author.
- *
- * # Preconditions
- *
- * * `advisory_id` - must be a nul-terminated C string containing valid UTF-8.
- */
-bool mc_mr_enclave_verifier_allow_hardening_advisory(FfiMutPtr<McMrEnclaveVerifier> mr_enclave_verifier,
-                                                     FfiStr advisory_id);
-
-void mc_mr_signer_verifier_free(FfiOptOwnedPtr<McMrSignerVerifier> mr_signer_verifier);
-
-/**
- * Create a new status verifier that will check for the existence of the
- * given MrSigner.
+ * Create a new mr signer trusted identity
  *
  * # Preconditions
  *
  * * `mr_signer` - must be 32 bytes in length.
  */
-FfiOptOwnedPtr<McMrSignerVerifier> mc_mr_signer_verifier_create(FfiRefPtr<McBuffer> mr_signer,
-                                                                uint16_t expected_product_id,
-                                                                uint16_t minimum_security_version);
+FfiOptOwnedPtr<McTrustedMrSignerIdentity> mc_trusted_identity_mr_signer_create(FfiRefPtr<McBuffer> mr_signer,
+                                                                               FfiRefPtr<McAdvisories> config_advisories,
+                                                                               FfiRefPtr<McAdvisories> hardening_advisories,
+                                                                               uint16_t expected_product_id,
+                                                                               uint16_t minimum_security_version);
+
+/**
+ * # Preconditions
+ *
+ * * `mr_enclave_trusted_identity` - valid MrEnclaveTrustedIdentity.
+ * * `out_advisories` - length is dynamic
+ *
+ */
+ssize_t mc_trusted_mr_enclave_identity_advisories_to_string(FfiRefPtr<McTrustedMrEnclaveIdentity> trusted_mr_enclave_identity,
+                                                            FfiOptMutPtr<McMutableBuffer> out_advisories);
+
+/**
+ * # Preconditions
+ *
+ * * `mr_enclave_trusted_identity` - valid MrEnclaveTrustedIdentity.
+ * * `out_enclave_measurement` - length is unknown
+ *
+ */
+ssize_t mc_trusted_mr_enclave_identity_to_string(FfiRefPtr<McTrustedMrEnclaveIdentity> trusted_mr_enclave_identity,
+                                                 FfiOptMutPtr<McMutableBuffer> out_enclave_measurement);
+
+/**
+ * # Preconditions
+ *
+ * * `mr_signer_trusted_identity` - valid MrSignerTrustedIdentity.
+ * * `out_advisories` - length is dynamic
+ *
+ */
+ssize_t mc_trusted_mr_signer_identity_advisories_to_string(FfiRefPtr<McTrustedMrSignerIdentity> trusted_mr_signer_identity,
+                                                           FfiOptMutPtr<McMutableBuffer> out_advisories);
+
+/**
+ * # Preconditions
+ *
+ * * `mr_signer_trusted_identity` - valid MrSignerTrustedIdentity.
+ * * `out_signer_measurement` - length is unknown
+ *
+ */
+ssize_t mc_trusted_mr_signer_identity_to_string(FfiRefPtr<McTrustedMrSignerIdentity> trusted_mr_signer_identity,
+                                                FfiOptMutPtr<McMutableBuffer> out_signer_measurement);
+
+/**
+ * Construct a new McAdvisories vector for holding config & hardening advisories
+ *
+ * Advisories are used when an enclave with the specified measurement does not need
+ * BIOS configuration changes to address the provided advisory ID.
+ *
+ */
+FfiOptOwnedPtr<McAdvisories> mc_advisories_create(void);
+
+void mc_advisories_free(FfiOptOwnedPtr<McAdvisories> advisories);
 
 /**
  * Assume an enclave with the specified measurement does not need
@@ -269,43 +298,32 @@ FfiOptOwnedPtr<McMrSignerVerifier> mc_mr_signer_verifier_create(FfiRefPtr<McBuff
  *
  * # Preconditions
  *
+ * * `advisories` - a valid McAdvisories vector
  * * `advisory_id` - must be a nul-terminated C string containing valid UTF-8.
- */
-bool mc_mr_signer_verifier_allow_config_advisory(FfiMutPtr<MrSignerVerifier> mr_signer_verifier,
-                                                 FfiStr advisory_id);
-
-/**
- * Assume an enclave with the specified measurement has the appropriate
- * software/build-time hardening for the given advisory ID.
  *
- * This method should only be used when advised by an enclave author.
+ * TODO: update comments above
+ */
+bool mc_add_advisory(FfiMutPtr<McAdvisories> advisories, FfiStr advisory_id);
+
+/**
+ * Construct a new TrustedIdentities vector that holds TrustedIdentity's (enclave or signer)
  *
- * # Preconditions
+ */
+FfiOptOwnedPtr<McTrustedIdentities> mc_trusted_identities_create(void);
+
+void mc_trusted_identities_free(FfiOptOwnedPtr<McTrustedIdentities> trusted_identities);
+
+/**
  *
- * * `advisory_id` - must be a nul-terminated C string containing valid UTF-8.
  */
-bool mc_mr_signer_verifier_allow_hardening_advisory(FfiMutPtr<MrSignerVerifier> mr_signer_verifier,
-                                                    FfiStr advisory_id);
+bool mc_trusted_identities_add_mr_enclave(FfiMutPtr<McTrustedIdentities> trusted_identities,
+                                          FfiRefPtr<McTrustedMrEnclaveIdentity> trusted_mr_enclave_identity);
 
 /**
- * Construct a new builder using the baked-in IAS root certificates and debug
- * settings.
+ *
  */
-FfiOptOwnedPtr<McVerifier> mc_verifier_create(void);
-
-void mc_verifier_free(FfiOptOwnedPtr<McVerifier> verifier);
-
-/**
- * Verify the given MrEnclave-based status verifier succeeds
- */
-bool mc_verifier_add_mr_enclave(FfiMutPtr<McVerifier> verifier,
-                                FfiRefPtr<McMrEnclaveVerifier> mr_enclave_verifier);
-
-/**
- * Verify the given MrSigner-based status verifier succeeds
- */
-bool mc_verifier_add_mr_signer(FfiMutPtr<McVerifier> verifier,
-                               FfiRefPtr<McMrSignerVerifier> mr_signer_verifier);
+bool mc_trusted_identities_add_mr_signer(FfiMutPtr<McTrustedIdentities> trusted_identities,
+                                         FfiRefPtr<McTrustedMrSignerIdentity> trusted_mr_signer_identity);
 
 FfiOptOwnedPtr<McAttestAke> mc_attest_ake_create(void);
 
@@ -347,7 +365,7 @@ ssize_t mc_attest_ake_get_auth_request(FfiMutPtr<McAttestAke> attest_ake,
  */
 bool mc_attest_ake_process_auth_response(FfiMutPtr<McAttestAke> attest_ake,
                                          FfiRefPtr<McBuffer> auth_response_data,
-                                         FfiRefPtr<McVerifier> verifier,
+                                         FfiRefPtr<McTrustedIdentities> trusted_identities,
                                          FfiOptMutPtr<FfiOptOwnedPtr<McError>> out_error);
 
 /**
@@ -579,7 +597,7 @@ ssize_t mc_printable_wrapper_b58_decode(FfiStr b58_encoded_string,
                                         FfiOptMutPtr<McMutableBuffer> out_printable_wrapper_proto_bytes,
                                         FfiOptMutPtr<FfiOptOwnedPtr<McError>> out_error);
 
-FfiOptOwnedPtr<McFogResolver> mc_fog_resolver_create(FfiRefPtr<McVerifier> fog_report_verifier);
+FfiOptOwnedPtr<McFogResolver> mc_fog_resolver_create(FfiRefPtr<McTrustedIdentities> fog_report_trusted_identities);
 
 void mc_fog_resolver_free(FfiOptOwnedPtr<McFogResolver> fog_resolver);
 
@@ -1804,7 +1822,7 @@ bool mc_memo_gift_code_cancellation_memo_get_fee(FfiRefPtr<McBuffer> gift_code_c
  *
  * * `encrypted_memo` - must be 66 bytes
  * * `tx_out_public_key` - must be a valid 32-byte Ristretto-format scalar.
- * * `account_key` - must be a valid account key
+ * * `view_private_key` - must be a valid 32-byte RistrettoPrivate.
  * * `out_memo_payload` - length must be >= 16 bytes
  *
  * # Errors
@@ -1813,7 +1831,7 @@ bool mc_memo_gift_code_cancellation_memo_get_fee(FfiRefPtr<McBuffer> gift_code_c
  */
 bool mc_memo_decrypt_e_memo_payload(FfiRefPtr<McBuffer> encrypted_memo,
                                     FfiRefPtr<McBuffer> tx_out_public_key,
-                                    FfiRefPtr<McAccountKey> account_key,
+                                    FfiRefPtr<McBuffer> view_private_key,
                                     FfiMutPtr<McMutableBuffer> out_memo_payload,
                                     FfiOptMutPtr<FfiOptOwnedPtr<McError>> out_error);
 
