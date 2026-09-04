@@ -14,7 +14,9 @@ IOS_INITIALIZE_CMAKE_FILE="$CMAKE_DIR/share/cmake/Modules/Platform/iOS-Initializ
 [ -f "$IOS_INITIALIZE_CMAKE_FILE" ] || { echo "error: no $IOS_INITIALIZE_CMAKE_FILE" >&2; exit 1; }
 grep -q FATAL_ERROR "$IOS_INITIALIZE_CMAKE_FILE" \
   || { echo "error: no FATAL_ERROR line in $IOS_INITIALIZE_CMAKE_FILE" >&2; exit 1; }
-sed -i '' '/FATAL_ERROR/ s/^#*/#/' "$IOS_INITIALIZE_CMAKE_FILE"
+# The address needs the call before anything but space, so a second run
+# finds nothing to comment out.
+sed -i '' '/^[[:space:]]*message[[:space:]]*(FATAL_ERROR/I s/^/#/' "$IOS_INITIALIZE_CMAKE_FILE"
 
 echo -e "### $IOS_INITIALIZE_CMAKE_FILE Patched ###"
 

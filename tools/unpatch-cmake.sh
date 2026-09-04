@@ -14,8 +14,9 @@ IOS_INITIALIZE_CMAKE_FILE="$CMAKE_DIR/share/cmake/Modules/Platform/iOS-Initializ
 [ -f "$IOS_INITIALIZE_CMAKE_FILE" ] || { echo "error: no $IOS_INITIALIZE_CMAKE_FILE" >&2; exit 1; }
 grep -q FATAL_ERROR "$IOS_INITIALIZE_CMAKE_FILE" \
   || { echo "error: no FATAL_ERROR line in $IOS_INITIALIZE_CMAKE_FILE" >&2; exit 1; }
-# The address holds the removal to the lines the patch comments out.
-sed -i '' '/FATAL_ERROR/ s/^#//' "$IOS_INITIALIZE_CMAKE_FILE"
+# The address needs a single hash and then the call, so prose that names the
+# symbol keeps its marker and a run of hashes is left alone.
+sed -i '' '/^#[[:space:]]*message[[:space:]]*(FATAL_ERROR/I s/^#//' "$IOS_INITIALIZE_CMAKE_FILE"
 
 echo -e "### $IOS_INITIALIZE_CMAKE_FILE Un-Patched ###"
 
