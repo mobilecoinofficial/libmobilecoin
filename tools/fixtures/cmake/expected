@@ -11,7 +11,8 @@
 #
 # IDENTITY means the un-patch restores the fixture byte for byte. Every
 # fixture but the refusals and patched moves the file, so no row earns its
-# verdict by doing nothing.
+# verdict by doing nothing. UNPATCH_FAILED is an un-patch that refused, which
+# is what a module carrying a hand commented call reports.
 bracketarg     REFUSED NA NA
 bracketcomment REFUSED NA NA
 crlf           CHANGED IDEMPOTENT IDENTITY
@@ -23,7 +24,7 @@ innerbracket   REFUSED NA NA
 lowerarg       REFUSED NA NA
 lowermode      CHANGED IDEMPOTENT IDENTITY
 mixedmode      CHANGED IDEMPOTENT IDENTITY
-onehash        CHANGED IDEMPOTENT CHANGED
+onehash        CHANGED IDEMPOTENT UNPATCH_FAILED
 parenspace     CHANGED IDEMPOTENT IDENTITY
 patched        NOOP IDEMPOTENT CHANGED
 policy         CHANGED IDEMPOTENT IDENTITY
