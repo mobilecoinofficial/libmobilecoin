@@ -36,9 +36,8 @@ CARGO_PACKAGE = libmobilecoin
 
 ALL_ARCHS_IOS = aarch64-apple-ios-sim aarch64-apple-ios x86_64-apple-ios x86_64-apple-darwin aarch64-apple-darwin
 
-# Every arch target stages into the same header directory, so -j lets two
-# copy into it at once. make 3.81 has no target-scoped form, so this
-# covers every target in the file.
+# all names setup and ios with no order between them, so -j starts the build
+# before rustup and the cmake patch finish.
 .NOTPARALLEL:
 
 # Matches the .iOS(.v13) floor in Package.swift and the podspec.
@@ -106,12 +105,6 @@ $(ALL_ARCHS_IOS):
 
 	mkdir -p out/ios/target
 	$(call BINARY_copy,$@,target)
-
-	# The staged copy is a replacement, not an addition, so a header dropped
-	# from include/ does not linger here.
-	rm -rf out/ios/include
-	mkdir -p out/ios/include
-	cp $(IOS_C_HEADERS) out/ios/include
 
 
 .PHONY: out/ios/target
