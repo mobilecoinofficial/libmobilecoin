@@ -2,20 +2,22 @@
 #
 # CHANGED means the patch exits 0 and the file differs. REFUSED means it exits
 # non-zero and the file is untouched. NOOP is a zero exit over an unchanged
-# file, which only an already patched module may report.
+# file, which only an already patched module may report. LIVE is a zero exit
+# that left a message(FATAL_ERROR call in the module, which no row may name.
 #
 # IDEMPOTENT means a second patch over the same file exits 0 and moves nothing.
 # FAILED is a refusal, which is what breaks a repeated patch.
 #
-# IDENTITY means the un-patch restores the fixture byte for byte. Eleven rows
-# write, so no row earns its verdict by doing nothing.
+# IDENTITY means the un-patch restores the fixture byte for byte. Every
+# fixture but the refusals and patched moves the file, so no row earns its
+# verdict by doing nothing.
 crlf        CHANGED IDEMPOTENT IDENTITY
 halfwrite   REFUSED NA         NA
 hiddenlive  REFUSED NA         NA
 indenthash  CHANGED IDEMPOTENT IDENTITY
-inlinecmd   REFUSED NA         NA
 lowerarg    CHANGED IDEMPOTENT IDENTITY
 onehash     CHANGED IDEMPOTENT CHANGED
+parenspace  CHANGED IDEMPOTENT IDENTITY
 patched     NOOP    IDEMPOTENT CHANGED
 policy      CHANGED IDEMPOTENT IDENTITY
 prefixarg   CHANGED IDEMPOTENT IDENTITY

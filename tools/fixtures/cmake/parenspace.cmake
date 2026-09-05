@@ -1,0 +1,6 @@
+if(NOT DEFINED CMAKE_OSX_SYSROOT)
+  message(FATAL_ERROR "Could not detect iOS SDK")
+endif()
+if(NOT DEFINED CMAKE_OSX_ARCHITECTURES)
+  message( FATAL_ERROR "Could not detect the SDK architectures")
+endif()
