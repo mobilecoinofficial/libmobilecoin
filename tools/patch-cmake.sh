@@ -35,8 +35,10 @@ elif ! grep -qE "^#[[:space:]]*${MSG}[[:space:]]*\([[:space:]]*FATAL_ERROR" "$PA
 fi
 
 # The live call the sed cannot reach leads its continuation line with the mode,
-# quoted, bracketed or bare, behind any bracket comments.
-if grep -qE '^[[:space:]]*(#\[=*\[.*\]=*\][[:space:]]*)*("FATAL_ERROR"|\[=*\[FATAL_ERROR\]=*\]|FATAL_ERROR([^A-Za-z0-9_]|$))' "$PATCHED"; then
+# quoted, bracketed or bare, behind any bracket comments. A mode is followed by
+# the message text, so a token that ends its line or runs straight into a
+# bracket closer is a value rather than a mode.
+if grep -qE '^[[:space:]]*(#\[=*\[.*\]=*\][[:space:]]*)*("FATAL_ERROR"|\[=*\[FATAL_ERROR\]=*\]|FATAL_ERROR)[[:space:]]+[^[:space:]]' "$PATCHED"; then
   echo "error: an unpatched FATAL_ERROR line remains in $IOS_INITIALIZE_CMAKE_FILE" >&2
   exit 1
 fi

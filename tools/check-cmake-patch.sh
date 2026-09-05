@@ -61,7 +61,7 @@ run_fixture() {
   # call the sed address skips, and the second a mode that leads its own line.
   if [ "$first_rc" -eq 0 ] && {
        grep -qE '^[^#]*[Mm][Ee][Ss][Ss][Aa][Gg][Ee][[:space:]]*\([[:space:]]*(FATAL_ERROR|"FATAL_ERROR"|\[=*\[FATAL_ERROR\]=*\])' "$MODULE" \
-    || grep -qE '^[[:space:]]*(#\[=*\[.*\]=*\][[:space:]]*)*("FATAL_ERROR"|\[=*\[FATAL_ERROR\]=*\]|FATAL_ERROR([^A-Za-z0-9_]|$))' "$MODULE"; }
+    || grep -qE '^[[:space:]]*(#\[=*\[.*\]=*\][[:space:]]*)*("FATAL_ERROR"|\[=*\[FATAL_ERROR\]=*\]|FATAL_ERROR)[[:space:]]+[^[:space:]]' "$MODULE"; }
   then
     patch=LIVE
   fi
