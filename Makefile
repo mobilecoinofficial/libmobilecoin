@@ -79,16 +79,12 @@ copy-libs: check-headers
 .PHONY: generate
 generate: generate-test-vectors generate-protoc 
 
-# The generator versions. protoc-gen-grpc-swift is pinned at 1.0.0 because its
-# output is byte-identical to what is committed.
-GRPC_SWIFT_GENERATOR := 1.0.0
 SWIFT_PROTOBUF_GENERATOR := 1.36.1
 HTTP_SWIFT_GENERATOR := f19b2756c423ef066568459b5b45e3f3cbbce16f
 
 .PHONY: generate-protoc
 generate-protoc: vendor
 	DOCKER_BUILDKIT=1 docker build . \
-		--build-arg grpc_swift_version=$(GRPC_SWIFT_GENERATOR) \
 		--build-arg swift_protobuf_version=$(SWIFT_PROTOBUF_GENERATOR) \
 		--build-arg http_swift_revision=$(HTTP_SWIFT_GENERATOR) \
 		--output .
@@ -304,7 +300,6 @@ check-not-main:
 
 .PHONY: push-generated
 push-generated:
-	git add Sources/GRPC
 	git add Sources/HTTP
 	git add Sources/Common
 	if ! git diff-index --quiet HEAD; then \

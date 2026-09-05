@@ -17,14 +17,8 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "LibMobileCoinCore",
-            targets: ["LibMobileCoinHTTP", "LibMobileCoinGRPC", "LibMobileCoinCommon", "LibMobileCoinLibrary"]),
-        .library(
             name: "LibMobileCoinCoreCommon",
             targets: ["LibMobileCoinCommon", "LibMobileCoinLibrary"]),
-        .library(
-            name: "LibMobileCoinCoreGRPC",
-            targets: ["LibMobileCoinGRPC", "LibMobileCoinCommon", "LibMobileCoinLibrary"]),
         .library(
             name: "LibMobileCoinCoreHTTP",
             targets: ["LibMobileCoinHTTP", "LibMobileCoinCommon", "LibMobileCoinLibrary"]),
@@ -41,8 +35,7 @@ let package = Package(
         .package(
             url: "https://github.com/apple/swift-protobuf.git",
             "1.36.1"..<"1.38.0"
-        ),
-        .package(url: "https://github.com/grpc/grpc-swift.git", from: "1.24.1")
+        )
     ],
     targets: [
         .target(
@@ -68,11 +61,6 @@ let package = Package(
             name: "LibMobileCoinHTTP",
             dependencies: [.target(name: "LibMobileCoinCommon")],
             path: "Sources/HTTP"
-        ),
-        .target(
-            name: "LibMobileCoinGRPC",
-            dependencies: [.target(name: "LibMobileCoinCommon"), .product(name: "GRPC", package: "grpc-swift")],
-            path: "Sources/GRPC"
         ),
         // The binary ships as a checksummed release asset.
         // tools/package-xcframework.sh builds the zip reproducibly, so this
