@@ -20,7 +20,7 @@ trap 'rm -f "$PATCHED"' EXIT
 cp "$IOS_INITIALIZE_CMAKE_FILE" "$PATCHED"
 
 # CMake matches a command name in any case and reads a mode argument exactly,
-# so every expression below spells the name out and takes the mode as written.
+# so a command name below is spelled out as a list and a mode is taken as written.
 MSG='[Mm][Ee][Ss][Ss][Aa][Gg][Ee]'
 
 # The first branch tests the expression the sed addresses. A module carrying
