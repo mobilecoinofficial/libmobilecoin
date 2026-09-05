@@ -35,8 +35,8 @@ if grep -qiE '^[[:space:]]*(FATAL_ERROR([^A-Za-z0-9_]|$)|[^#]*message[[:space:]]
   exit 1
 fi
 
-# cat, not mv: the destination keeps its own owner and mode, which a move out
-# of mktemp would replace with a private temporary's.
+# cat keeps the destination's own owner and mode, which a move out of mktemp
+# would replace with a private temporary's.
 cat "$PATCHED" > "$IOS_INITIALIZE_CMAKE_FILE"
 
 echo -e "### $IOS_INITIALIZE_CMAKE_FILE Patched ###"

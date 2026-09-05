@@ -21,7 +21,7 @@ MODULE="$SANDBOX/share/cmake/Modules/Platform/iOS-Initialize.cmake"
 export PATH="$SANDBOX/bin:$PATH"
 RESOLVED="$(command -v cmake)"
 [ "$RESOLVED" = "$SANDBOX/bin/cmake" ] || {
-  echo "error: cmake resolves to $RESOLVED, not the sandbox; refusing to touch a real install" >&2
+  echo "error: cmake resolves to $RESOLVED outside the sandbox, refusing to touch a real install" >&2
   exit 1
 }
 
@@ -52,8 +52,8 @@ run_fixture() {
     patch=CHANGED
   fi
 
-  # A patched module is the input to the next run, so a second patch has to be
-  # a no-op rather than a refusal.
+  # A patched module is the input to the next run, so a second patch has to
+  # exit 0 and move nothing.
   repatch=NA
   if [ "$first_rc" -eq 0 ]; then
     after="$SANDBOX/after-first.cmake"
@@ -88,7 +88,7 @@ run_fixture() {
 broken=0
 
 # An unmatched glob arrives as a literal path, so nullglob drops it and the
-# count check below fails an empty directory here rather than inside the loop.
+# count check below catches an empty directory before the loop runs.
 shopt -s nullglob
 FILES=("$FIXTURES"/*.cmake)
 [ ${#FILES[@]} -gt 0 ] || { echo "error: no fixtures in $FIXTURES" >&2; exit 1; }
