@@ -97,6 +97,25 @@ jobs:
           }
           "${RUNNER_TEMP}/actionlint" "${FILES[@]}"
 
+  cargo-lock:
+    name: Cargo.lock against the pinned vendor revision
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # The path dependencies live in the vendored monorepo, so the lock cannot
+      # resolve without it.
+      - name: Fetch the pinned vendor revision
+        run: ./tools/fetch-vendor.sh
+
+      # cargo metadata resolves the graph and runs no build script, so this
+      # needs neither libclang nor an SGX setup. libmobilecoin/rust-toolchain
+      # selects the toolchain, and a newer cargo writes a lock format that one
+      # cannot read.
+      - name: Assert the lock matches the vendor manifests
+        working-directory: libmobilecoin
+        run: cargo metadata --locked --format-version 1 > /dev/null
+
   manifest:
     name: Manifest and checkout shape
     runs-on: macos-26
