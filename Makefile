@@ -353,7 +353,7 @@ check-manifest:
 # copy of these headers, which is why this copy needs its own check.
 .PHONY: check-headers
 check-headers:
-	clang -fsyntax-only -x c -std=c11 -Werror=strict-prototypes \
+	clang -fsyntax-only -x c -std=c11 -Werror=strict-prototypes -Werror=ignored-attributes \
 		-I$(LIBMOBILECOIN_LIB_DIR)/include $(LIBMOBILECOIN_LIB_DIR)/include/libmobilecoin.h
 
 # Fail if the module map does not compile. It names its header relative to
