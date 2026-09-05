@@ -52,12 +52,11 @@ run_fixture() {
     patch=CHANGED
   fi
 
-  # A zero exit has to leave no live call behind. These expressions are wider
-  # than the sed's address on purpose, so a shape the sed misses surfaces here.
-  # The second one reads a mode that leads its own continuation line.
+  # A zero exit has to leave no live call behind. The first expression reads a
+  # call the sed address skips, and the second a mode that leads its own line.
   if [ "$first_rc" -eq 0 ] && {
        grep -qE '^[^#]*[Mm][Ee][Ss][Ss][Aa][Gg][Ee][[:space:]]*\([[:space:]]*(FATAL_ERROR|"FATAL_ERROR"|\[=*\[FATAL_ERROR\]=*\])' "$MODULE" \
-    || grep -qE '^[[:space:]]*("FATAL_ERROR"|\[=*\[FATAL_ERROR\]=*\]|FATAL_ERROR([^A-Za-z0-9_]|$))' "$MODULE"; }
+    || grep -qE '^[[:space:]]*(#\[=*\[.*\]=*\][[:space:]]*)*("FATAL_ERROR"|\[=*\[FATAL_ERROR\]=*\]|FATAL_ERROR([^A-Za-z0-9_]|$))' "$MODULE"; }
   then
     patch=LIVE
   fi

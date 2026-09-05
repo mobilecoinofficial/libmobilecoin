@@ -34,6 +34,8 @@ quotedmode     REFUSED NA NA
 shipped        CHANGED IDEMPOTENT IDENTITY
 spaced         CHANGED IDEMPOTENT IDENTITY
 split          REFUSED NA NA
+splitbracket   REFUSED NA NA
+splitmixed     CHANGED IDEMPOTENT IDENTITY
 splitquote     REFUSED NA NA
 tab            CHANGED IDEMPOTENT IDENTITY
 twohash        CHANGED IDEMPOTENT IDENTITY
