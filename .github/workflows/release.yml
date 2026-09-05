@@ -74,10 +74,15 @@ jobs:
             exit 1
           fi
 
-      # The check reads the checkout alone, so it runs ahead of the vendor
+      # Both checks read the checkout alone, so they run ahead of the vendor
       # fetch, the dependency install and the five-target Rust build.
       - name: Assert the public headers compile
         run: make check-headers
+
+      # make setup patches the runner's cmake module, so a release proves the
+      # pair round trips before it patches anything.
+      - name: Assert the cmake patch pair round trips
+        run: make check-cmake-patch
 
       # setup and build both depend on this target, so fetching here only
       # moves a bad rev's failure ahead of the dependency install.
