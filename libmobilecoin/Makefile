@@ -34,9 +34,9 @@ DASH:= -
 
 CARGO_PACKAGE = libmobilecoin
 
-# This file runs with libmobilecoin/ as the working directory, from the root
-# Makefile and standalone alike.
-include ../tools/strict-make.mk
+# The path resolves from this file, so `make -f libmobilecoin/Makefile` reaches
+# the same include the root Makefile does.
+include $(dir $(lastword $(MAKEFILE_LIST)))../tools/strict-make.mk
 
 ALL_ARCHS_IOS = aarch64-apple-ios-sim aarch64-apple-ios x86_64-apple-ios x86_64-apple-darwin aarch64-apple-darwin
 
@@ -80,10 +80,12 @@ LEGACY_CARGO_BUILD_FLAGS = $(CARGO_BUILD_FLAGS)
 
 .PHONY: setup
 setup:
-	rustup target add x86_64-apple-ios aarch64-apple-ios aarch64-apple-darwin x86_64-apple-darwin
-	rustup component add llvm-tools-preview rust-src
-	rustup run --install stable cargo install cargo-binutils
-	 ../tools/patch-cmake.sh
+	@set -eu; \
+	$(ASSERT_STRICT_MAKE); \
+	rustup target add x86_64-apple-ios aarch64-apple-ios aarch64-apple-darwin x86_64-apple-darwin; \
+	rustup component add llvm-tools-preview rust-src; \
+	rustup run --install stable cargo install cargo-binutils; \
+	../tools/patch-cmake.sh
 
 
 .PHONY: ios
@@ -155,4 +157,4 @@ cbindgen:
 	  exit 1; \
 	fi; \
 	cbindgen --crate libmobilecoin -o libmobilecoin_cbindgen.h && \
-	echo "cbindgen $(CBINDGEN_VERSION) ok"
+	echo "wrote libmobilecoin_cbindgen.h with cbindgen $(CBINDGEN_VERSION)"

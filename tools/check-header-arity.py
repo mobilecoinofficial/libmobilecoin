@@ -63,16 +63,21 @@ def main():
 
     shared = sorted(set(generated) & set(hand))
     mismatches = [n for n in shared if generated[n] != hand[n]]
+    # An unmatched name is a header declaring a symbol the generated output does
+    # not, which is what a rename or a removal on the Rust side looks like.
+    unmatched = sorted(set(hand) - set(generated))
     for name in mismatches:
         print(
             f"{source[name]}: {name} header={hand[name]} rust/generated={generated[name]}",
             file=sys.stderr,
         )
+    for name in unmatched:
+        print(f"{source[name]}: {name} is absent from the generated header", file=sys.stderr)
     print(
         f"generated={len(generated)} hand={len(hand)} matched={len(shared)} "
-        f"unmatched={len(set(hand) - set(generated))} mismatches={len(mismatches)}"
+        f"unmatched={len(unmatched)} mismatches={len(mismatches)}"
     )
-    return 1 if mismatches else 0
+    return 1 if mismatches or unmatched else 0
 
 
 if __name__ == "__main__":

@@ -74,16 +74,10 @@ jobs:
             exit 1
           fi
 
-      # check-headers reads the checkout alone and check-cmake-patch adds the
-      # cmake the runner image ships, so both run ahead of the vendor fetch, the
-      # dependency install and the five-target Rust build.
+      # The check reads the checkout alone, so it runs ahead of the vendor fetch,
+      # the dependency install and the five-target Rust build.
       - name: Assert the public headers compile
         run: make check-headers
-
-      # make setup patches the runner's cmake module, so a release proves the
-      # pair round trips before it patches anything.
-      - name: Assert the cmake patch pair round trips
-        run: make check-cmake-patch
 
       # setup and build both depend on this target, so fetching here only
       # moves a bad rev's failure ahead of the dependency install.
@@ -95,6 +89,11 @@ jobs:
           set -euo pipefail
           brew update-reset
           brew bundle --no-upgrade
+
+      # make setup patches the cmake this step installs, so the pair round trips
+      # against that cmake before anything patches it.
+      - name: Assert the cmake patch pair round trips
+        run: make check-cmake-patch
 
       - name: Install Rust
         run: |
@@ -155,6 +154,9 @@ jobs:
           plutil -convert json -o - "${RUNNER_TEMP}/Info.plist" | python3 -c '
           import json, sys
           ids = [lib["LibraryIdentifier"] for lib in json.load(sys.stdin)["AvailableLibraries"]]
+          if len(ids) != 3:
+              print(f"error: AvailableLibraries holds {len(ids)} entries, want 3", file=sys.stderr)
+              sys.exit(1)
           if ids != sorted(ids):
               print("error: AvailableLibraries is not sorted by LibraryIdentifier", file=sys.stderr)
               print("  packaged: " + ", ".join(ids), file=sys.stderr)

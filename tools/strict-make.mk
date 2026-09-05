@@ -1,13 +1,12 @@
 # `make -i` and `make -k` run a step after a check refused it, so a step that
-# writes a shipped artifact reads the flags itself. A word holding `=` is a command-line
-# variable and a word opening `--` is a long option.
+# writes a shipped artifact, edits the machine or publishes reads the flags.
 #
-# Under `-i` the refusal is ignored like any other error and the run still
-# exits 0, so the guard stops the work rather than the run. It does that as
-# the first clause of one backslash-joined shell, where its exit 1 kills
-# every later clause.
+# A word holding `=` is a command-line variable and a word opening `--` is a
+# long option.
 #
-# Both Makefiles read this file so the two copies of the guard cannot drift.
+# Under `-i` the refusal is ignored like any other error and the run exits 0,
+# so this stops the work rather than the run. It does that only as the first
+# clause of one backslash-joined shell, where its exit 1 kills every later one.
 ASSERT_STRICT_MAKE = for W in $(MAKEFLAGS); do \
 		case "$$W" in \
 			--|--*|*=*) ;; \

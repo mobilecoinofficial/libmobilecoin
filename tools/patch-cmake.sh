@@ -39,9 +39,8 @@ elif ! grep -qE "^#(libmobilecoin#)?[[:space:]]*${MSG}[[:space:]]*\([[:space:]]*
 fi
 
 # The live call the sed cannot reach leads its continuation line with the mode,
-# quoted, bracketed or bare, behind any bracket comments. A mode is followed by
-# the message text, so a token that ends its line or runs straight into a
-# bracket closer is a value rather than a mode.
+# quoted, bracketed or bare, behind any bracket comments. The message text has
+# to follow on that line, so the cmake load below is what reads the rest.
 if grep -qE '^[[:space:]]*(#\[=*\[.*\]=*\][[:space:]]*)*("FATAL_ERROR"|\[=*\[FATAL_ERROR\]=*\]|FATAL_ERROR)[[:space:]]+[^[:space:]]' "$PATCHED"; then
   echo "error: an unpatched FATAL_ERROR line remains in $IOS_INITIALIZE_CMAKE_FILE" >&2
   exit 1

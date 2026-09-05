@@ -103,8 +103,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # The script reads the two committed headers and nothing else, so it needs
-      # no vendor fetch and no Rust toolchain.
+      # The script reads the committed headers and nothing else, so it needs no
+      # vendor fetch and no Rust toolchain.
       - name: Compare the parameter counts
         run: ./tools/check-header-arity.py
 
@@ -221,7 +221,7 @@ jobs:
         run: make check-module
 
       # A guard that disagrees with its own sed reports a no-op as success, so
-      # the check drives the real scripts over a fake cmake install.
+      # the check drives the real scripts over a fake cmake install directory.
       - name: Assert the cmake patch pair round trips
         run: make check-cmake-patch
 

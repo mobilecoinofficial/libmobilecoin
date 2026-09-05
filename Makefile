@@ -42,8 +42,10 @@ vendor:
 
 .PHONY: setup
 setup: vendor
-	cd "$(LIBMOBILECOIN_LIB_DIR)" && $(MAKE) setup
-	bundle install
+	@set -eu; \
+	$(ASSERT_STRICT_MAKE); \
+	cd "$(LIBMOBILECOIN_LIB_DIR)" && $(MAKE) setup; \
+	cd "$(CURDIR)" && bundle install
 
 # Unexport conditional environment variables so the build is more predictable
 unexport SGX_MODE
@@ -306,9 +308,11 @@ check-not-main:
 
 .PHONY: push-generated
 push-generated:
-	git add Sources/GRPC
-	git add Sources/HTTP
-	git add Sources/Common
+	@set -eu; \
+	$(ASSERT_STRICT_MAKE); \
+	git add Sources/GRPC; \
+	git add Sources/HTTP; \
+	git add Sources/Common; \
 	if ! git diff-index --quiet HEAD; then \
 		git commit -m '[skip ci] commit generated protos from build machine'; \
 		git push origin HEAD; \
@@ -357,25 +361,26 @@ check-manifest:
 # Each file compiles on its own rather than through libmobilecoin.h. The
 # umbrella is written by hand, so a header it omits reaches no compiler.
 #
-# copy-libs stages out/ios/include and ships that copy, so both directories
-# compile whenever a build has produced the staged one. Reading the staged copy
-# alone passes an edited source header that no build has restaged yet.
+# A build stages a copy of these headers, so both directories compile when both
+# exist. The staged copy alone passes a source header no build has restaged.
 .PHONY: check-headers
 check-headers:
 	@set -eu; \
 	N=0; \
 	for DIR in "$(LIBMOBILECOIN_LIB_DIR)/include" "$(LIBMOBILECOIN_ARTIFACTS_HEADERS)"; do \
 		[ -d "$$DIR" ] || continue; \
+		D=0; \
 		for H in "$$DIR"/*.h; do \
 			[ -f "$$H" ] || continue; \
 			echo "clang $$H"; \
 			clang -fsyntax-only -x c -std=c11 \
 				-Werror=strict-prototypes -Werror=ignored-attributes \
 				-I"$$DIR" "$$H"; \
-			N=$$((N + 1)); \
+			D=$$((D + 1)); \
 		done; \
+		echo "check-headers: compiled $$D headers in $$DIR"; \
+		N=$$((N + D)); \
 	done; \
-	echo "check-headers: compiled $$N headers"; \
 	test "$$N" -gt 0
 
 # Fail if the module map does not compile. It names its header relative to
@@ -393,7 +398,7 @@ check-module:
 		.build/module-check/module.modulemap
 
 # Fail if the cmake patch and un-patch pair does not round trip the fixture
-# set. It drives a fake install, so the cmake on PATH is left alone.
+# set. It drives a fake install directory, so the cmake on PATH is left alone.
 .PHONY: check-cmake-patch
 check-cmake-patch:
 	tools/check-cmake-patch.sh
