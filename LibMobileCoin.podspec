@@ -74,10 +74,6 @@ Pod::Spec.new do |s|
 
   # ――― Subspecs ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  # CocoaPods carries the HTTP transport only. gRPC-Swift tops out at 1.8.0 on
-  # trunk, whose Logging dependency tops out at 1.4.0. That version targets
-  # iOS 8.0, so clang links libarclite, which current Xcode does not ship.
-  # Package.swift carries the gRPC product.
   s.default_subspecs = "CoreHTTP"
 
    s.subspec "TestVectors" do |subspec|
