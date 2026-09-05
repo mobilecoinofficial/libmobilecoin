@@ -9,8 +9,8 @@ EXPECTED="$FIXTURES/expected"
 
 [ -f "$EXPECTED" ] || { echo "error: no $EXPECTED" >&2; exit 1; }
 
-# A fake install keeps the run off the cmake the developer builds with. The
-# scripts resolve their target from `which cmake`, so the fake has to be found.
+# A fake install keeps the run off the cmake the developer builds with. It sits
+# on PATH ahead of every other one, and the assert below proves it won.
 SANDBOX="$(mktemp -d)"
 trap 'rm -rf "$SANDBOX"' EXIT
 mkdir -p "$SANDBOX/bin" "$SANDBOX/share/cmake/Modules/Platform"
@@ -112,27 +112,41 @@ grep -q $'\r' "$FIXTURES/crlf.cmake" || {
 for fixture in "${FILES[@]}"; do
   name="$(basename "$fixture" .cmake)"
   rc=0
-  want="$(grep -E "^${name}[[:space:]]" "$EXPECTED")" || rc=$?
+  row="$(grep -E "^${name}[[:space:]]" "$EXPECTED")" || rc=$?
   if [ "$rc" -ne 0 ]; then
     echo "FAIL $name: no row in $EXPECTED" >&2
     broken=1
     continue
   fi
-  want="$(echo "$want" | awk '{print $2, $3, $4}')"
+  # The awk below drops a malformed sibling of a well formed row, and a two line
+  # want splits the FAIL message, so the row count is settled first.
+  if [ "$(echo "$row" | wc -l | tr -d ' ')" -ne 1 ]; then
+    echo "FAIL $name: more than one row in $EXPECTED" >&2
+    broken=1
+    continue
+  fi
+  # $2 $3 $4 alone matches a five field row on its first three verdicts, so NF
+  # gates the print.
+  want="$(echo "$row" | awk 'NF == 4 { print $2, $3, $4 }')"
+  if [ -z "$want" ]; then
+    echo "FAIL $name: its row in $EXPECTED carries other than three verdicts" >&2
+    broken=1
+    continue
+  fi
 
   got="$(run_fixture "$fixture")"
 
   if [ "$got" = "$want" ]; then
-    printf 'ok   %-12s %s\n' "$name" "$got"
+    printf 'ok   %-14s %s\n' "$name" "$got"
   else
-    printf 'FAIL %-12s want %s, got %s\n' "$name" "$want" "$got" >&2
+    printf 'FAIL %-14s want %s, got %s\n' "$name" "$want" "$got" >&2
     broken=1
   fi
 done
 
 # A row naming a fixture that is gone would otherwise pass unnoticed, and the
 # shape it covered would stop being tested.
-while read -r name _; do
+while read -r name _ || [ -n "$name" ]; do
   case "$name" in ''|'#'*) continue ;; esac
   [ -f "$FIXTURES/$name.cmake" ] || {
     echo "FAIL $name: a row in $EXPECTED names no fixture" >&2
