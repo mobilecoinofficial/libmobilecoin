@@ -275,7 +275,7 @@ jobs:
               ],
               targets: [
                   .target(name: "Consumer", dependencies: [
-                      .product(name: "LibMobileCoinCore", package: "libmobilecoin")
+                      .product(name: "LibMobileCoinCoreHTTP", package: "libmobilecoin")
                   ])
               ]
           )
