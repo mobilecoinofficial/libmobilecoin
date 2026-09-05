@@ -64,7 +64,10 @@ jobs:
           echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
           echo "tag=v${VERSION}" >> "$GITHUB_OUTPUT"
 
+      # A dry run creates no tag, so the released version the tree still
+      # carries is not a collision here.
       - name: Refuse to reuse an existing tag
+        if: ${{ !inputs.dry_run }}
         env:
           TAG: ${{ steps.settings.outputs.tag }}
         run: |
