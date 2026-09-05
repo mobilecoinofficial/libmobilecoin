@@ -143,6 +143,23 @@ jobs:
             exit 1
           }
 
+      # The packager sorts in a staging copy, so the built xcframework keeps
+      # whatever order xcodebuild wrote. Read the archive, which is the copy a
+      # consumer resolves.
+      - name: Verify the packaged AvailableLibraries is sorted
+        run: |
+          set -euo pipefail
+          unzip -p .build/LibMobileCoinLibrary.xcframework.zip \
+            LibMobileCoinLibrary.xcframework/Info.plist > "${RUNNER_TEMP}/Info.plist"
+          plutil -convert json -o - "${RUNNER_TEMP}/Info.plist" | python3 -c '
+          import json, sys
+          ids = [lib["LibraryIdentifier"] for lib in json.load(sys.stdin)["AvailableLibraries"]]
+          if ids != sorted(ids):
+              print("error: AvailableLibraries is not sorted by LibraryIdentifier", file=sys.stderr)
+              print("  packaged: " + ", ".join(ids), file=sys.stderr)
+              sys.exit(1)
+          '
+
       - name: Upload the archive as a workflow artifact
         uses: actions/upload-artifact@v4
         with:
