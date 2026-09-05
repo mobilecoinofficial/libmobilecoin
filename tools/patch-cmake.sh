@@ -21,16 +21,16 @@ cp "$IOS_INITIALIZE_CMAKE_FILE" "$PATCHED"
 
 # The first branch tests the expression the sed addresses. A module carrying
 # neither form is one the sed cannot reach, and a commented one is patched.
-if grep -qiE '^[[:space:]]*message[[:space:]]*\(FATAL_ERROR' "$PATCHED"; then
-  sed -i '' '/^[[:space:]]*message[[:space:]]*(FATAL_ERROR/I s/^/#/' "$PATCHED"
-elif ! grep -qiE '^#[[:space:]]*message[[:space:]]*\(FATAL_ERROR' "$PATCHED"; then
+if grep -qiE '^[[:space:]]*message[[:space:]]*\([[:space:]]*FATAL_ERROR' "$PATCHED"; then
+  sed -i '' '/^[[:space:]]*message[[:space:]]*([[:space:]]*FATAL_ERROR/I s/^/#/' "$PATCHED"
+elif ! grep -qiE '^#[[:space:]]*message[[:space:]]*\([[:space:]]*FATAL_ERROR' "$PATCHED"; then
   echo "error: no message(FATAL_ERROR call in $IOS_INITIALIZE_CMAKE_FILE" >&2
   exit 1
 fi
 
-# Two shapes the sed cannot reach: a continuation line that leads with the
-# argument, and a call that shares its line with another command.
-if grep -qiE '^[[:space:]]*(FATAL_ERROR([^A-Za-z0-9_]|$)|[^#]*message[[:space:]]*\(FATAL_ERROR)' "$PATCHED"; then
+# A continuation line leading with the argument is the one live call the sed
+# cannot reach, because its address needs the call name on the same line.
+if grep -qiE '^[[:space:]]*FATAL_ERROR([^A-Za-z0-9_]|$)' "$PATCHED"; then
   echo "error: an unpatched FATAL_ERROR line remains in $IOS_INITIALIZE_CMAKE_FILE" >&2
   exit 1
 fi

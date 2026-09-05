@@ -52,6 +52,13 @@ run_fixture() {
     patch=CHANGED
   fi
 
+  # A zero exit has to leave no live call behind. This expression is wider
+  # than the sed's address on purpose, so a shape the sed misses surfaces here.
+  if [ "$first_rc" -eq 0 ] \
+    && grep -qiE '^[^#]*message[[:space:]]*\([[:space:]]*FATAL_ERROR' "$MODULE"; then
+    patch=LIVE
+  fi
+
   # A patched module is the input to the next run, so a second patch has to
   # exit 0 and move nothing.
   repatch=NA
