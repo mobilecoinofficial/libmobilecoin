@@ -28,9 +28,10 @@ elif ! grep -qiE '^#[[:space:]]*message[[:space:]]*\([[:space:]]*FATAL_ERROR' "$
   exit 1
 fi
 
-# A continuation line leading with the argument is the one live call the sed
-# cannot reach, because its address needs the call name on the same line.
-if grep -qiE '^[[:space:]]*FATAL_ERROR([^A-Za-z0-9_]|$)' "$PATCHED"; then
+# A continuation line leading with the argument is the live call the sed cannot
+# reach, because its address needs the call name on the same line. A bracket
+# comment is skipped, because it can sit ahead of an argument on such a line.
+if grep -qiE '^[[:space:]]*(#\[\[[^]]*\]\][[:space:]]*)*FATAL_ERROR([^A-Za-z0-9_]|$)' "$PATCHED"; then
   echo "error: an unpatched FATAL_ERROR line remains in $IOS_INITIALIZE_CMAKE_FILE" >&2
   exit 1
 fi

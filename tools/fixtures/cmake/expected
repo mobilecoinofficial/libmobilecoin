@@ -11,6 +11,7 @@
 # IDENTITY means the un-patch restores the fixture byte for byte. Every
 # fixture but the refusals and patched moves the file, so no row earns its
 # verdict by doing nothing.
+bracketcomment  REFUSED NA         NA
 crlf        CHANGED IDEMPOTENT IDENTITY
 halfwrite   REFUSED NA         NA
 hiddenlive  REFUSED NA         NA
