@@ -40,9 +40,8 @@ include ../tools/strict-make.mk
 
 ALL_ARCHS_IOS = aarch64-apple-ios-sim aarch64-apple-ios x86_64-apple-ios x86_64-apple-darwin aarch64-apple-darwin
 
-# Every arch target stages into the same header directory, so -j lets two
-# copy into it at once. make 3.81 has no target-scoped form, so this
-# covers every target in the file.
+# all names setup and ios with no order between them, so -j starts the build
+# before rustup and the cmake patch finish.
 .NOTPARALLEL:
 
 # Matches the .iOS(.v13) floor in Package.swift and the podspec.
@@ -104,18 +103,14 @@ x86_64-apple-darwin aarch64-apple-darwin: CARGO_ENV_FLAGS += MACOSX_DEPLOYMENT_T
 x86_64-apple-ios x86_64-apple-darwin: LD_ARCH = x86_64
 aarch64-apple-ios aarch64-apple-ios-sim aarch64-apple-darwin: LD_ARCH = arm64
 x86_64-apple-ios-macabi aarch64-apple-ios-sim aarch64-apple-ios-macabi: LEGACY_CARGO_BUILD_FLAGS += -Zbuild-std
-# The staged copy is a replacement, not an addition, so a header dropped from
-# include/ does not linger here. That clears a directory, so the guard leads
-# the one joined shell it needs to stop the work.
+# The recipe writes into out/ios/target, so the guard leads the one joined
+# shell it needs to stop the work.
 $(ALL_ARCHS_IOS):
 	@set -eu; \
 	$(ASSERT_STRICT_MAKE); \
 	$(CARGO_ENV_FLAGS) $(CARGO) build --package $(CARGO_PACKAGE) --target $@ $(LEGACY_CARGO_BUILD_FLAGS); \
 	mkdir -p out/ios/target; \
-	$(call BINARY_copy,$@,target) \
-	rm -rf out/ios/include; \
-	mkdir -p out/ios/include; \
-	cp $(IOS_C_HEADERS) out/ios/include
+	$(call BINARY_copy,$@,target)
 
 
 .PHONY: out/ios/target
@@ -137,9 +132,9 @@ clean:
 ############# Commands #############
 ####################################
 
-# Matches the cbindgen dev-dependency in Cargo.toml. The CLI and the
-# dev-dependency are separate installs, so nothing else holds them equal.
-CBINDGEN_VERSION = 0.24.5
+# Cargo.lock pins 0.24.5 and this CLI is a separate install, so nothing else
+# holds it there. override keeps an outside assignment out of this target.
+override CBINDGEN_VERSION = 0.24.5
 
 # The crate's pinned nightly cannot build cbindgen, so stable installs it.
 .PHONY: setup-dev
@@ -159,4 +154,4 @@ cbindgen:
 	  exit 1; \
 	fi; \
 	cbindgen --crate libmobilecoin -o libmobilecoin_cbindgen.h && \
-	echo "wrote libmobilecoin_cbindgen.h"
+	echo "cbindgen $(CBINDGEN_VERSION) ok"
