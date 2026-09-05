@@ -354,15 +354,27 @@ check-manifest:
 #
 # Each file compiles on its own rather than through libmobilecoin.h. The
 # umbrella is written by hand, so a header it omits reaches no compiler.
+#
+# copy-libs stages out/ios/include and ships that copy, so the staged
+# directory is the one to read whenever a build has produced it.
 .PHONY: check-headers
 check-headers:
 	@set -eu; \
-	for H in $(LIBMOBILECOIN_LIB_DIR)/include/*.h; do \
+	DIR="$(LIBMOBILECOIN_LIB_DIR)/include"; \
+	if [ -d "$(LIBMOBILECOIN_ARTIFACTS_HEADERS)" ]; then \
+		DIR="$(LIBMOBILECOIN_ARTIFACTS_HEADERS)"; \
+	fi; \
+	N=0; \
+	for H in "$$DIR"/*.h; do \
+		[ -f "$$H" ] || continue; \
 		echo "clang $$H"; \
 		clang -fsyntax-only -x c -std=c11 \
 			-Werror=strict-prototypes -Werror=ignored-attributes \
-			-I$(LIBMOBILECOIN_LIB_DIR)/include "$$H"; \
-	done
+			-I"$$DIR" "$$H"; \
+		N=$$((N + 1)); \
+	done; \
+	echo "check-headers: compiled $$N headers in $$DIR"; \
+	test "$$N" -gt 0
 
 # Fail if the module map does not compile. It names its header relative to
 # itself, so the headers and the map stage into one directory first.
