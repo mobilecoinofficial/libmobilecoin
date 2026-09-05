@@ -74,6 +74,11 @@ jobs:
             exit 1
           fi
 
+      # The check reads the checkout alone, so it runs ahead of the vendor
+      # fetch, the dependency install and the five-target Rust build.
+      - name: Assert the public headers compile
+        run: make check-headers
+
       # setup and build both depend on this target, so fetching here only
       # moves a bad rev's failure ahead of the dependency install.
       - name: Fetch the pinned foundation revision
