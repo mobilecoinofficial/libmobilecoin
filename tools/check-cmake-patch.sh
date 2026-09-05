@@ -14,7 +14,12 @@ EXPECTED="$FIXTURES/expected"
 SANDBOX="$(mktemp -d)"
 trap 'rm -rf "$SANDBOX"' EXIT
 mkdir -p "$SANDBOX/bin" "$SANDBOX/share/cmake/Modules/Platform"
-printf '#!/bin/sh\necho fake cmake\n' > "$SANDBOX/bin/cmake"
+
+# The patch loads its own output, so the sandbox needs a working cmake. A
+# wrapper leaves the install directory inside the sandbox, which a symlink would
+# resolve away to the real one.
+REAL_CMAKE="$(command -v cmake)" || { echo "error: cmake not on PATH" >&2; exit 1; }
+printf '#!/bin/sh\nexec "%s" "$@"\n' "$REAL_CMAKE" > "$SANDBOX/bin/cmake"
 chmod +x "$SANDBOX/bin/cmake"
 MODULE="$SANDBOX/share/cmake/Modules/Platform/iOS-Initialize.cmake"
 
@@ -56,7 +61,7 @@ run_fixture() {
   # call the sed address skips, and the second a mode that leads its own line.
   if [ "$first_rc" -eq 0 ] && {
        grep -qE '^[^#]*[Mm][Ee][Ss][Ss][Aa][Gg][Ee][[:space:]]*\([[:space:]]*(FATAL_ERROR|"FATAL_ERROR"|\[=*\[FATAL_ERROR\]=*\])' "$MODULE" \
-    || grep -qE '^[[:space:]]*(#\[=*\[.*\]=*\][[:space:]]*)*("FATAL_ERROR"|\[=*\[FATAL_ERROR\]=*\]|FATAL_ERROR([^A-Za-z0-9_]|$))' "$MODULE"; }
+    || grep -qE '^[[:space:]]*(#\[=*\[.*\]=*\][[:space:]]*)*("FATAL_ERROR"|\[=*\[FATAL_ERROR\]=*\]|FATAL_ERROR)[[:space:]]+[^[:space:]]' "$MODULE"; }
   then
     patch=LIVE
   fi

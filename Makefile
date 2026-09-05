@@ -42,8 +42,10 @@ vendor:
 
 .PHONY: setup
 setup: vendor
-	cd "$(LIBMOBILECOIN_LIB_DIR)" && $(MAKE) setup
-	bundle install
+	@set -eu; \
+	$(ASSERT_STRICT_MAKE); \
+	cd "$(LIBMOBILECOIN_LIB_DIR)" && $(MAKE) setup; \
+	cd "$(CURDIR)" && bundle install
 
 # Unexport conditional environment variables so the build is more predictable
 unexport SGX_MODE
@@ -68,12 +70,17 @@ clean-artifacts:
 .PHONY: copy
 copy: copy-libs generate-xcframework
 
+# The headers this stages are the ones the release zip ships, so the guard
+# leads the recipe. It stops the work only from inside one joined shell.
+#
+# cp -R merges into a directory that is already there, so the destination is
+# cleared to make this copy a replacement.
 .PHONY: copy-libs
 copy-libs: check-headers
-	$(call BINARY_copy,target)
-	# cp -R merges into a directory that is already there, so the destination
-	# is cleared to make this copy a replacement.
-	rm -rf "$(ARTIFACTS_DIR)/include"
+	@set -eu; \
+	$(ASSERT_STRICT_MAKE); \
+	$(call BINARY_copy,target) \
+	rm -rf "$(ARTIFACTS_DIR)/include"; \
 	cp -R "$(LIBMOBILECOIN_ARTIFACTS_HEADERS)" "$(ARTIFACTS_DIR)"
 
 .PHONY: generate
@@ -100,27 +107,32 @@ generate-test-vectors: vendor
 	cd $(TEST_VECTOR_DIR)/vectors && find . -type f -name '*.jsonl' -exec mv -fi '{}' ./ ';'
 	cd $(TEST_VECTOR_DIR)/vectors && find .  -mindepth 1 -maxdepth 1 -type d -exec rm -rf '{}' ';'
 
+# The recipe deletes the xcframework before it builds one, so the guard leads
+# the one joined shell it needs to stop the work.
+#
+# The removal at the end does not run when a step above fails, so the headers
+# directory starts empty rather than carrying leftovers.
 .PHONY: generate-xcframework
 generate-xcframework:
-	rm -rf $(ARTIFACTS_DIR)/LibMobileCoinLibrary.xcframework || true
-	rm libmobilecoin/out/ios/target/libmobilecoin_macos.a || true
-	rm libmobilecoin/out/ios/target/libmobilecoin_iossimulator.a || true
-	# The removal at the end of this recipe does not run when a step below
-	# fails, so the directory starts empty rather than carrying leftovers.
-	rm -rf .build/headers
-	mkdir -p .build/headers
-	cp $(ARTIFACTS_DIR)/include/* .build/headers
-	cp modulemap/module.modulemap .build/headers
-	mkdir -p libmobilecoin/out/ios/target
+	@set -eu; \
+	$(ASSERT_STRICT_MAKE); \
+	rm -rf $(ARTIFACTS_DIR)/LibMobileCoinLibrary.xcframework || true; \
+	rm libmobilecoin/out/ios/target/libmobilecoin_macos.a || true; \
+	rm libmobilecoin/out/ios/target/libmobilecoin_iossimulator.a || true; \
+	rm -rf .build/headers; \
+	mkdir -p .build/headers; \
+	cp $(ARTIFACTS_DIR)/include/* .build/headers; \
+	cp modulemap/module.modulemap .build/headers; \
+	mkdir -p libmobilecoin/out/ios/target; \
 	lipo -create \
 		$(ARTIFACTS_DIR)/target/x86_64-apple-darwin/release/libmobilecoin.a \
 		$(ARTIFACTS_DIR)/target/aarch64-apple-darwin/release/libmobilecoin.a \
-		-output $(LIBMOBILECOIN_ARTIFACTS_DIR)/target/libmobilecoin_macos.a
+		-output $(LIBMOBILECOIN_ARTIFACTS_DIR)/target/libmobilecoin_macos.a; \
 	lipo -create \
 		$(ARTIFACTS_DIR)/target/x86_64-apple-ios/release/libmobilecoin.a \
 		$(ARTIFACTS_DIR)/target/aarch64-apple-ios-sim/release/libmobilecoin.a \
-		-output $(LIBMOBILECOIN_ARTIFACTS_DIR)/target/libmobilecoin_iossimulator.a
-	rm -rf $(LIBMOBILECOIN_ARTIFACTS_DIR)/LibMobileCoinLibrary.xcframework
+		-output $(LIBMOBILECOIN_ARTIFACTS_DIR)/target/libmobilecoin_iossimulator.a; \
+	rm -rf $(LIBMOBILECOIN_ARTIFACTS_DIR)/LibMobileCoinLibrary.xcframework; \
 	xcodebuild -create-xcframework \
 		-library $(LIBMOBILECOIN_ARTIFACTS_DIR)/target/libmobilecoin_macos.a \
 		-headers .build/headers \
@@ -128,7 +140,7 @@ generate-xcframework:
 		-headers .build/headers \
 		-library $(ARTIFACTS_DIR)/target/aarch64-apple-ios/release/libmobilecoin.a \
 		-headers .build/headers \
-		-output $(ARTIFACTS_DIR)/LibMobileCoinLibrary.xcframework
+		-output $(ARTIFACTS_DIR)/LibMobileCoinLibrary.xcframework; \
 	rm -rf .build/headers
 
 
@@ -146,15 +158,7 @@ lint-locally: lint-locally-podspec
 .PHONY: publish
 publish: check-branch publish-preflight check-main-push-rights publish-build stamp commit-stamp push-stamp tag-release upload-release wait-for-asset publish-podspec
 
-# `make -i` and `make -k` run a step after a check refused it, so every step
-# that writes reads the flags itself. A word holding `=` is a command-line
-# variable and a word opening `--` is a long option.
-ASSERT_STRICT_MAKE = for W in $(MAKEFLAGS); do \
-		case "$$W" in \
-			--|--*|*=*) ;; \
-			*i*|*k*) echo 'Error: this step does not run under `make -i` or `make -k`, which run a step after a check refused it.' >&2; exit 1 ;; \
-		esac; \
-	done
+include tools/strict-make.mk
 
 # The same three targets `default` runs, in the same order. They sit behind a
 # guarded target because a release build writes, and `default` keeps them
@@ -304,9 +308,11 @@ check-not-main:
 
 .PHONY: push-generated
 push-generated:
-	git add Sources/GRPC
-	git add Sources/HTTP
-	git add Sources/Common
+	@set -eu; \
+	$(ASSERT_STRICT_MAKE); \
+	git add Sources/GRPC; \
+	git add Sources/HTTP; \
+	git add Sources/Common; \
 	if ! git diff-index --quiet HEAD; then \
 		git commit -m '[skip ci] commit generated protos from build machine'; \
 		git push origin HEAD; \
@@ -351,9 +357,31 @@ check-manifest:
 
 # Fail if a public header does not compile. The release zip carries its own
 # copy of these headers, which is why this copy needs its own check.
+#
+# Each file compiles on its own rather than through libmobilecoin.h. The
+# umbrella is written by hand, so a header it omits reaches no compiler.
+#
+# A build stages a copy of these headers, so both directories compile when both
+# exist. The staged copy alone passes a source header no build has restaged.
 .PHONY: check-headers
 check-headers:
-	clang -fsyntax-only -x c -std=c11 -I$(LIBMOBILECOIN_LIB_DIR)/include $(LIBMOBILECOIN_LIB_DIR)/include/libmobilecoin.h
+	@set -eu; \
+	N=0; \
+	for DIR in "$(LIBMOBILECOIN_LIB_DIR)/include" "$(LIBMOBILECOIN_ARTIFACTS_HEADERS)"; do \
+		[ -d "$$DIR" ] || continue; \
+		D=0; \
+		for H in "$$DIR"/*.h; do \
+			[ -f "$$H" ] || continue; \
+			echo "clang $$H"; \
+			clang -fsyntax-only -x c -std=c11 \
+				-Werror=strict-prototypes -Werror=ignored-attributes \
+				-I"$$DIR" "$$H"; \
+			D=$$((D + 1)); \
+		done; \
+		echo "check-headers: compiled $$D headers in $$DIR"; \
+		N=$$((N + D)); \
+	done; \
+	test "$$N" -gt 0
 
 # Fail if the module map does not compile. It names its header relative to
 # itself, so the headers and the map stage into one directory first.
@@ -370,7 +398,7 @@ check-module:
 		.build/module-check/module.modulemap
 
 # Fail if the cmake patch and un-patch pair does not round trip the fixture
-# set. It drives a fake install, so the cmake on PATH is left alone.
+# set. It drives a fake install directory, so the cmake on PATH is left alone.
 .PHONY: check-cmake-patch
 check-cmake-patch:
 	tools/check-cmake-patch.sh
