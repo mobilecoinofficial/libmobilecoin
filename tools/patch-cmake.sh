@@ -19,25 +19,29 @@ PATCHED="$(mktemp)"
 trap 'rm -f "$PATCHED"' EXIT
 cp "$IOS_INITIALIZE_CMAKE_FILE" "$PATCHED"
 
+# CMake matches a command name in any case and reads a mode argument exactly,
+# so every expression below spells the name out and takes the mode as written.
+MSG='[Mm][Ee][Ss][Ss][Aa][Gg][Ee]'
+
 # The first branch tests the expression the sed addresses. A module carrying
 # neither form is one the sed cannot reach, and a commented one is patched.
-if grep -qiE '^[[:space:]]*message[[:space:]]*\([[:space:]]*FATAL_ERROR' "$PATCHED"; then
-  sed -i '' '/^[[:space:]]*message[[:space:]]*([[:space:]]*FATAL_ERROR/I s/^/#/' "$PATCHED"
-elif ! grep -qiE '^#[[:space:]]*message[[:space:]]*\([[:space:]]*FATAL_ERROR' "$PATCHED"; then
+if grep -qE "^[[:space:]]*${MSG}[[:space:]]*\([[:space:]]*FATAL_ERROR" "$PATCHED"; then
+  sed -i '' "/^[[:space:]]*${MSG}[[:space:]]*([[:space:]]*FATAL_ERROR/ s/^/#/" "$PATCHED"
+elif ! grep -qE "^#[[:space:]]*${MSG}[[:space:]]*\([[:space:]]*FATAL_ERROR" "$PATCHED"; then
   echo "error: no message(FATAL_ERROR call in $IOS_INITIALIZE_CMAKE_FILE" >&2
   exit 1
 fi
 
-# A continuation line leading with the argument is the live call the sed cannot
-# reach, and a bracket comment can sit ahead of that argument.
-if grep -qiE '^[[:space:]]*(#\[=*\[.*\]=*\][[:space:]]*)*FATAL_ERROR([^A-Za-z0-9_]|$)' "$PATCHED"; then
+# A continuation line leading with the mode is the live call the sed cannot
+# reach. A bracket comment can sit ahead of it, and the mode can carry quotes.
+if grep -qE '^[[:space:]]*(#\[=*\[.*\]=*\][[:space:]]*)*("FATAL_ERROR"|\[=*\[FATAL_ERROR\]=*\]|FATAL_ERROR([^A-Za-z0-9_]|$))' "$PATCHED"; then
   echo "error: an unpatched FATAL_ERROR line remains in $IOS_INITIALIZE_CMAKE_FILE" >&2
   exit 1
 fi
 
 # CMake reads the mode through a quoted or a bracket argument, and the sed
 # address takes the bare token, so a call in either form survives the sed.
-if grep -qiE '^[[:space:]]*message[[:space:]]*\([[:space:]]*("FATAL_ERROR"|\[=*\[FATAL_ERROR\]=*\])' "$PATCHED"; then
+if grep -qE "^[[:space:]]*${MSG}[[:space:]]*\([[:space:]]*(\"FATAL_ERROR\"|\[=*\[FATAL_ERROR\]=*\])" "$PATCHED"; then
   echo "error: a quoted FATAL_ERROR call remains in $IOS_INITIALIZE_CMAKE_FILE" >&2
   exit 1
 fi

@@ -3,7 +3,8 @@
 # CHANGED means the patch exits 0 and the file differs. REFUSED means it exits
 # non-zero and the file is untouched. NOOP is a zero exit over an unchanged
 # file, which only an already patched module may report. LIVE is a zero exit
-# that left a message(FATAL_ERROR call in the module, which no row may name.
+# that left a live call in the module, which no row may name. The check reads
+# a call on one line and a mode that leads its own continuation line.
 #
 # IDEMPOTENT means a second patch over the same file exits 0 and moves nothing.
 # FAILED is a refusal, which is what breaks a repeated patch.
@@ -11,27 +12,30 @@
 # IDENTITY means the un-patch restores the fixture byte for byte. Every
 # fixture but the refusals and patched moves the file, so no row earns its
 # verdict by doing nothing.
-bracketarg     REFUSED NA         NA
-bracketcomment  REFUSED NA         NA
-crlf        CHANGED IDEMPOTENT IDENTITY
-eqbracket      REFUSED NA         NA
-halfwrite   REFUSED NA         NA
-hiddenlive  REFUSED NA         NA
-indenthash  CHANGED IDEMPOTENT IDENTITY
-innerbracket   REFUSED NA         NA
-lowerarg    CHANGED IDEMPOTENT IDENTITY
-onehash     CHANGED IDEMPOTENT CHANGED
-parenspace  CHANGED IDEMPOTENT IDENTITY
-patched     NOOP    IDEMPOTENT CHANGED
-policy      CHANGED IDEMPOTENT IDENTITY
-prefixarg   CHANGED IDEMPOTENT IDENTITY
-prose       REFUSED NA         NA
+bracketarg     REFUSED NA NA
+bracketcomment REFUSED NA NA
+crlf           CHANGED IDEMPOTENT IDENTITY
+eqbracket      REFUSED NA NA
+halfwrite      REFUSED NA NA
+hiddenlive     REFUSED NA NA
+indenthash     CHANGED IDEMPOTENT IDENTITY
+innerbracket   REFUSED NA NA
+lowerarg       REFUSED NA NA
+lowermode      CHANGED IDEMPOTENT IDENTITY
+mixedmode      CHANGED IDEMPOTENT IDENTITY
+onehash        CHANGED IDEMPOTENT CHANGED
+parenspace     CHANGED IDEMPOTENT IDENTITY
+patched        NOOP IDEMPOTENT CHANGED
+policy         CHANGED IDEMPOTENT IDENTITY
+prefixarg      CHANGED IDEMPOTENT IDENTITY
+prose          REFUSED NA NA
 quoteddecoy    CHANGED IDEMPOTENT IDENTITY
-quotedmode     REFUSED NA         NA
-shipped     CHANGED IDEMPOTENT IDENTITY
-spaced      CHANGED IDEMPOTENT IDENTITY
-split       REFUSED NA         NA
-tab         CHANGED IDEMPOTENT IDENTITY
-twohash     CHANGED IDEMPOTENT IDENTITY
-twomention  CHANGED IDEMPOTENT IDENTITY
-upper       CHANGED IDEMPOTENT IDENTITY
+quotedmode     REFUSED NA NA
+shipped        CHANGED IDEMPOTENT IDENTITY
+spaced         CHANGED IDEMPOTENT IDENTITY
+split          REFUSED NA NA
+splitquote     REFUSED NA NA
+tab            CHANGED IDEMPOTENT IDENTITY
+twohash        CHANGED IDEMPOTENT IDENTITY
+twomention     CHANGED IDEMPOTENT IDENTITY
+upper          CHANGED IDEMPOTENT IDENTITY
