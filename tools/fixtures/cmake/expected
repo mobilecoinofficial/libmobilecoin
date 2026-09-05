@@ -7,7 +7,7 @@
 # IDEMPOTENT means a second patch over the same file exits 0 and moves nothing.
 # FAILED is a refusal, which is what breaks a repeated patch.
 #
-# IDENTITY means the un-patch restores the fixture byte for byte. Ten rows
+# IDENTITY means the un-patch restores the fixture byte for byte. Eleven rows
 # write, so no row earns its verdict by doing nothing.
 crlf        CHANGED IDEMPOTENT IDENTITY
 halfwrite   REFUSED NA         NA
@@ -16,6 +16,7 @@ indenthash  CHANGED IDEMPOTENT IDENTITY
 lowerarg    CHANGED IDEMPOTENT IDENTITY
 onehash     CHANGED IDEMPOTENT CHANGED
 patched     NOOP    IDEMPOTENT CHANGED
+policy      CHANGED IDEMPOTENT IDENTITY
 prose       REFUSED NA         NA
 shipped     CHANGED IDEMPOTENT IDENTITY
 spaced      CHANGED IDEMPOTENT IDENTITY
