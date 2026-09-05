@@ -5,6 +5,8 @@ set -euo pipefail
 
 command -v cmake >/dev/null || { echo "error: cmake not on PATH" >&2; exit 1; }
 
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+
 CMAKE_DIR="$(perl -MCwd -e 'print Cwd::abs_path shift' "$(which cmake)" | rev | cut -d'/' -f3- | rev)"
 
 echo -e "\n### Patching iOS-Initialize.cmake file in $CMAKE_DIR ###"
@@ -43,6 +45,15 @@ fi
 # address takes the bare token, so a call in either form survives the sed.
 if grep -qE "^[[:space:]]*${MSG}[[:space:]]*\([[:space:]]*(\"FATAL_ERROR\"|\[=*\[FATAL_ERROR\]=*\])" "$PATCHED"; then
   echo "error: a quoted FATAL_ERROR call remains in $IOS_INITIALIZE_CMAKE_FILE" >&2
+  exit 1
+fi
+
+# The greps above read one line at a time. Loading the copy is what decides,
+# because a call spread over several lines or reached through a variable is
+# visible only to cmake itself.
+if ! cmake -DSTUB="$ROOT/tools/cmake-probe" -DMODULE="$PATCHED" \
+     -P "$ROOT/tools/cmake-probe/probe.cmake" >/dev/null; then
+  echo "error: cmake still aborts on the patched $IOS_INITIALIZE_CMAKE_FILE" >&2
   exit 1
 fi
 
