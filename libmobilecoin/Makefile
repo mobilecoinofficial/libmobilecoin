@@ -150,6 +150,7 @@ cbindgen:
 	FOUND="$$(cbindgen --version 2>/dev/null || echo none)"; \
 	if [ "$$FOUND" != "cbindgen $(CBINDGEN_VERSION)" ]; then \
 	  echo "error: cbindgen $(CBINDGEN_VERSION) is required, found $$FOUND" >&2; \
+	  echo "this Makefile fixes the version, so CBINDGEN_VERSION= on the command line is discarded" >&2; \
 	  echo "run: make setup-dev" >&2; \
 	  exit 1; \
 	fi; \
