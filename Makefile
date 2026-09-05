@@ -68,12 +68,17 @@ clean-artifacts:
 .PHONY: copy
 copy: copy-libs generate-xcframework
 
+# The headers this stages are the ones the release zip ships, so the guard
+# leads the recipe. It stops the work only from inside one joined shell.
+#
+# cp -R merges into a directory that is already there, so the destination is
+# cleared to make this copy a replacement.
 .PHONY: copy-libs
 copy-libs: check-headers
-	$(call BINARY_copy,target)
-	# cp -R merges into a directory that is already there, so the destination
-	# is cleared to make this copy a replacement.
-	rm -rf "$(ARTIFACTS_DIR)/include"
+	@set -eu; \
+	$(ASSERT_STRICT_MAKE); \
+	$(call BINARY_copy,target) \
+	rm -rf "$(ARTIFACTS_DIR)/include"; \
 	cp -R "$(LIBMOBILECOIN_ARTIFACTS_HEADERS)" "$(ARTIFACTS_DIR)"
 
 .PHONY: generate
@@ -149,6 +154,11 @@ publish: check-branch publish-preflight check-main-push-rights publish-build sta
 # `make -i` and `make -k` run a step after a check refused it, so every step
 # that writes reads the flags itself. A word holding `=` is a command-line
 # variable and a word opening `--` is a long option.
+#
+# Under `-i` the refusal is ignored like any other error and the run still
+# exits 0, so the guard stops the work rather than the run. It does that as
+# the first clause of one backslash-joined shell, where its exit 1 kills
+# every later clause.
 ASSERT_STRICT_MAKE = for W in $(MAKEFLAGS); do \
 		case "$$W" in \
 			--|--*|*=*) ;; \
