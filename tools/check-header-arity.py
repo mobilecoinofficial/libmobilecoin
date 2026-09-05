@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Compare the parameter count of every function in libmobilecoin/include
-against the committed cbindgen output.
+"""Compare every function in libmobilecoin/include against the committed
+cbindgen output, by parameter count and by presence.
 
 The hand headers are the ones that ship, and nothing else compares them with
 the generated declarations.

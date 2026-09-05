@@ -4,7 +4,8 @@
 # non-zero and the file is untouched. NOOP is a zero exit over an unchanged
 # file, which only an already patched module may report. LIVE is a zero exit
 # that left a live call in the module, which no row may name. The check reads
-# a call on one line and a mode that leads its own continuation line.
+# a call on one line, a mode that leads its own continuation line, and a call
+# that only one side of the SDK test reaches.
 #
 # IDEMPOTENT means a second patch over the same file exits 0 and moves nothing.
 # FAILED is a refusal, which is what breaks a repeated patch.
@@ -37,6 +38,8 @@ prefixarg      CHANGED IDEMPOTENT IDENTITY
 prose          REFUSED NA NA
 quoteddecoy    CHANGED IDEMPOTENT IDENTITY
 quotedmode     REFUSED NA NA
+sdkbranch      REFUSED NA NA
+sdkmissing     REFUSED NA NA
 setmodes       CHANGED IDEMPOTENT IDENTITY
 shipped        CHANGED IDEMPOTENT IDENTITY
 spaced         CHANGED IDEMPOTENT IDENTITY
