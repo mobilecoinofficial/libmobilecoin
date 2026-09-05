@@ -34,6 +34,10 @@ DASH:= -
 
 CARGO_PACKAGE = libmobilecoin
 
+# This file runs with libmobilecoin/ as the working directory, from the root
+# Makefile and standalone alike.
+include ../tools/strict-make.mk
+
 ALL_ARCHS_IOS = aarch64-apple-ios-sim aarch64-apple-ios x86_64-apple-ios x86_64-apple-darwin aarch64-apple-darwin
 
 # Every arch target stages into the same header directory, so -j lets two
@@ -52,8 +56,7 @@ IOS_C_HEADERS = include/*
 
 # First argument $(1) is a build-target, $(2) is the output directory
 define BINARY_copy
-	mkdir -p out/ios/$(2)/$(1)/${CARGO_PROFILE}
-	cp $(CARGO_TARGET_DIR)/$(1)/${CARGO_PROFILE}/libmobilecoin.a out/ios/$(2)/$(1)/${CARGO_PROFILE};
+mkdir -p out/ios/$(2)/$(1)/${CARGO_PROFILE}; cp $(CARGO_TARGET_DIR)/$(1)/${CARGO_PROFILE}/libmobilecoin.a out/ios/$(2)/$(1)/${CARGO_PROFILE};
 endef
 
 ####################################
@@ -101,28 +104,28 @@ x86_64-apple-darwin aarch64-apple-darwin: CARGO_ENV_FLAGS += MACOSX_DEPLOYMENT_T
 x86_64-apple-ios x86_64-apple-darwin: LD_ARCH = x86_64
 aarch64-apple-ios aarch64-apple-ios-sim aarch64-apple-darwin: LD_ARCH = arm64
 x86_64-apple-ios-macabi aarch64-apple-ios-sim aarch64-apple-ios-macabi: LEGACY_CARGO_BUILD_FLAGS += -Zbuild-std
+# The staged copy is a replacement, not an addition, so a header dropped from
+# include/ does not linger here. That clears a directory, so the guard leads
+# the one joined shell it needs to stop the work.
 $(ALL_ARCHS_IOS):
-	$(CARGO_ENV_FLAGS) $(CARGO) build --package $(CARGO_PACKAGE) --target $@ $(LEGACY_CARGO_BUILD_FLAGS)
-
-	mkdir -p out/ios/target
-	$(call BINARY_copy,$@,target)
-
-	# The staged copy is a replacement, not an addition, so a header dropped
-	# from include/ does not linger here.
-	rm -rf out/ios/include
-	mkdir -p out/ios/include
+	@set -eu; \
+	$(ASSERT_STRICT_MAKE); \
+	$(CARGO_ENV_FLAGS) $(CARGO) build --package $(CARGO_PACKAGE) --target $@ $(LEGACY_CARGO_BUILD_FLAGS); \
+	mkdir -p out/ios/target; \
+	$(call BINARY_copy,$@,target) \
+	rm -rf out/ios/include; \
+	mkdir -p out/ios/include; \
 	cp $(IOS_C_HEADERS) out/ios/include
 
 
 .PHONY: out/ios/target
 out/ios/target: $(ALL_ARCHS_IOS)
-	mkdir -p out/ios/target
-	$(foreach arch,$^,$(call BINARY_copy,$(arch),target))
-
-	# The staged copy is a replacement, not an addition, so a header dropped
-	# from include/ does not linger here.
-	rm -rf out/ios/include
-	mkdir -p out/ios/include
+	@set -eu; \
+	$(ASSERT_STRICT_MAKE); \
+	mkdir -p out/ios/target; \
+	$(foreach arch,$^,$(call BINARY_copy,$(arch),target)) \
+	rm -rf out/ios/include; \
+	mkdir -p out/ios/include; \
 	cp $(IOS_C_HEADERS) out/ios/include
 
 
@@ -147,7 +150,9 @@ setup-dev:
 # after a refusal. Discard the Cargo.lock churn while the lock trails Vendor.
 .PHONY: cbindgen
 cbindgen:
-	@FOUND="$$(cbindgen --version 2>/dev/null || echo none)"; \
+	@set -eu; \
+	$(ASSERT_STRICT_MAKE); \
+	FOUND="$$(cbindgen --version 2>/dev/null || echo none)"; \
 	if [ "$$FOUND" != "cbindgen $(CBINDGEN_VERSION)" ]; then \
 	  echo "error: cbindgen $(CBINDGEN_VERSION) is required, found $$FOUND" >&2; \
 	  echo "run: make setup-dev" >&2; \
