@@ -134,9 +134,9 @@ clean:
 ############# Commands #############
 ####################################
 
-# Matches the cbindgen dev-dependency in Cargo.toml. The CLI and the
-# dev-dependency are separate installs, so nothing else holds them equal.
-CBINDGEN_VERSION = 0.24.5
+# Cargo.lock pins 0.24.5 and this CLI is a separate install, so nothing else
+# holds it there. override keeps an outside assignment out of this target.
+override CBINDGEN_VERSION = 0.24.5
 
 # The crate's pinned nightly cannot build cbindgen, so stable installs it.
 .PHONY: setup-dev
@@ -154,4 +154,4 @@ cbindgen:
 	  exit 1; \
 	fi; \
 	cbindgen --crate libmobilecoin -o libmobilecoin_cbindgen.h && \
-	echo "wrote libmobilecoin_cbindgen.h"
+	echo "cbindgen $(CBINDGEN_VERSION) ok"
