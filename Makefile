@@ -351,10 +351,18 @@ check-manifest:
 
 # Fail if a public header does not compile. The release zip carries its own
 # copy of these headers, which is why this copy needs its own check.
+#
+# Each file compiles on its own rather than through libmobilecoin.h. The
+# umbrella is written by hand, so a header it omits reaches no compiler.
 .PHONY: check-headers
 check-headers:
-	clang -fsyntax-only -x c -std=c11 -Werror=strict-prototypes -Werror=ignored-attributes \
-		-I$(LIBMOBILECOIN_LIB_DIR)/include $(LIBMOBILECOIN_LIB_DIR)/include/libmobilecoin.h
+	@set -eu; \
+	for H in $(LIBMOBILECOIN_LIB_DIR)/include/*.h; do \
+		echo "clang $$H"; \
+		clang -fsyntax-only -x c -std=c11 \
+			-Werror=strict-prototypes -Werror=ignored-attributes \
+			-I$(LIBMOBILECOIN_LIB_DIR)/include "$$H"; \
+	done
 
 # Fail if the module map does not compile. It names its header relative to
 # itself, so the headers and the map stage into one directory first.
