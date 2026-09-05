@@ -105,27 +105,32 @@ generate-test-vectors: vendor
 	cd $(TEST_VECTOR_DIR)/vectors && find . -type f -name '*.jsonl' -exec mv -fi '{}' ./ ';'
 	cd $(TEST_VECTOR_DIR)/vectors && find .  -mindepth 1 -maxdepth 1 -type d -exec rm -rf '{}' ';'
 
+# The recipe deletes the xcframework before it builds one, so the guard leads
+# the one joined shell it needs to stop the work.
+#
+# The removal at the end does not run when a step above fails, so the headers
+# directory starts empty rather than carrying leftovers.
 .PHONY: generate-xcframework
 generate-xcframework:
-	rm -rf $(ARTIFACTS_DIR)/LibMobileCoinLibrary.xcframework || true
-	rm libmobilecoin/out/ios/target/libmobilecoin_macos.a || true
-	rm libmobilecoin/out/ios/target/libmobilecoin_iossimulator.a || true
-	# The removal at the end of this recipe does not run when a step below
-	# fails, so the directory starts empty rather than carrying leftovers.
-	rm -rf .build/headers
-	mkdir -p .build/headers
-	cp $(ARTIFACTS_DIR)/include/* .build/headers
-	cp modulemap/module.modulemap .build/headers
-	mkdir -p libmobilecoin/out/ios/target
+	@set -eu; \
+	$(ASSERT_STRICT_MAKE); \
+	rm -rf $(ARTIFACTS_DIR)/LibMobileCoinLibrary.xcframework || true; \
+	rm libmobilecoin/out/ios/target/libmobilecoin_macos.a || true; \
+	rm libmobilecoin/out/ios/target/libmobilecoin_iossimulator.a || true; \
+	rm -rf .build/headers; \
+	mkdir -p .build/headers; \
+	cp $(ARTIFACTS_DIR)/include/* .build/headers; \
+	cp modulemap/module.modulemap .build/headers; \
+	mkdir -p libmobilecoin/out/ios/target; \
 	lipo -create \
 		$(ARTIFACTS_DIR)/target/x86_64-apple-darwin/release/libmobilecoin.a \
 		$(ARTIFACTS_DIR)/target/aarch64-apple-darwin/release/libmobilecoin.a \
-		-output $(LIBMOBILECOIN_ARTIFACTS_DIR)/target/libmobilecoin_macos.a
+		-output $(LIBMOBILECOIN_ARTIFACTS_DIR)/target/libmobilecoin_macos.a; \
 	lipo -create \
 		$(ARTIFACTS_DIR)/target/x86_64-apple-ios/release/libmobilecoin.a \
 		$(ARTIFACTS_DIR)/target/aarch64-apple-ios-sim/release/libmobilecoin.a \
-		-output $(LIBMOBILECOIN_ARTIFACTS_DIR)/target/libmobilecoin_iossimulator.a
-	rm -rf $(LIBMOBILECOIN_ARTIFACTS_DIR)/LibMobileCoinLibrary.xcframework
+		-output $(LIBMOBILECOIN_ARTIFACTS_DIR)/target/libmobilecoin_iossimulator.a; \
+	rm -rf $(LIBMOBILECOIN_ARTIFACTS_DIR)/LibMobileCoinLibrary.xcframework; \
 	xcodebuild -create-xcframework \
 		-library $(LIBMOBILECOIN_ARTIFACTS_DIR)/target/libmobilecoin_macos.a \
 		-headers .build/headers \
@@ -133,7 +138,7 @@ generate-xcframework:
 		-headers .build/headers \
 		-library $(ARTIFACTS_DIR)/target/aarch64-apple-ios/release/libmobilecoin.a \
 		-headers .build/headers \
-		-output $(ARTIFACTS_DIR)/LibMobileCoinLibrary.xcframework
+		-output $(ARTIFACTS_DIR)/LibMobileCoinLibrary.xcframework; \
 	rm -rf .build/headers
 
 
@@ -352,25 +357,25 @@ check-manifest:
 # Each file compiles on its own rather than through libmobilecoin.h. The
 # umbrella is written by hand, so a header it omits reaches no compiler.
 #
-# copy-libs stages out/ios/include and ships that copy, so the staged
-# directory is the one to read whenever a build has produced it.
+# copy-libs stages out/ios/include and ships that copy, so both directories
+# compile whenever a build has produced the staged one. Reading the staged copy
+# alone passes an edited source header that no build has restaged yet.
 .PHONY: check-headers
 check-headers:
 	@set -eu; \
-	DIR="$(LIBMOBILECOIN_LIB_DIR)/include"; \
-	if [ -d "$(LIBMOBILECOIN_ARTIFACTS_HEADERS)" ]; then \
-		DIR="$(LIBMOBILECOIN_ARTIFACTS_HEADERS)"; \
-	fi; \
 	N=0; \
-	for H in "$$DIR"/*.h; do \
-		[ -f "$$H" ] || continue; \
-		echo "clang $$H"; \
-		clang -fsyntax-only -x c -std=c11 \
-			-Werror=strict-prototypes -Werror=ignored-attributes \
-			-I"$$DIR" "$$H"; \
-		N=$$((N + 1)); \
+	for DIR in "$(LIBMOBILECOIN_LIB_DIR)/include" "$(LIBMOBILECOIN_ARTIFACTS_HEADERS)"; do \
+		[ -d "$$DIR" ] || continue; \
+		for H in "$$DIR"/*.h; do \
+			[ -f "$$H" ] || continue; \
+			echo "clang $$H"; \
+			clang -fsyntax-only -x c -std=c11 \
+				-Werror=strict-prototypes -Werror=ignored-attributes \
+				-I"$$DIR" "$$H"; \
+			N=$$((N + 1)); \
+		done; \
 	done; \
-	echo "check-headers: compiled $$N headers in $$DIR"; \
+	echo "check-headers: compiled $$N headers"; \
 	test "$$N" -gt 0
 
 # Fail if the module map does not compile. It names its header relative to

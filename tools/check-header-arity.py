@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Compare the parameter count of every function in libmobilecoin/include
-against the cbindgen output, which states what the Rust declares.
+against the committed cbindgen output.
 
-The hand headers are the ones that ship, and nothing else reads the Rust when
-one of them drifts.
+The hand headers are the ones that ship, and nothing else compares them with
+the generated declarations.
 """
 import pathlib
 import re

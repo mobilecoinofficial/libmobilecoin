@@ -74,8 +74,9 @@ jobs:
             exit 1
           fi
 
-      # Both checks read the checkout alone, so they run ahead of the vendor
-      # fetch, the dependency install and the five-target Rust build.
+      # check-headers reads the checkout alone and check-cmake-patch adds the
+      # cmake the runner image ships, so both run ahead of the vendor fetch, the
+      # dependency install and the five-target Rust build.
       - name: Assert the public headers compile
         run: make check-headers
 

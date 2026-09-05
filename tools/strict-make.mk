@@ -1,5 +1,5 @@
-# `make -i` and `make -k` run a step after a check refused it, so every step
-# that writes reads the flags itself. A word holding `=` is a command-line
+# `make -i` and `make -k` run a step after a check refused it, so a step that
+# writes a shipped artifact reads the flags itself. A word holding `=` is a command-line
 # variable and a word opening `--` is a long option.
 #
 # Under `-i` the refusal is ignored like any other error and the run still

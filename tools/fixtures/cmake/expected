@@ -10,9 +10,9 @@
 # FAILED is a refusal, which is what breaks a repeated patch.
 #
 # IDENTITY means the un-patch restores the fixture byte for byte. Every
-# fixture but the refusals and patched moves the file, so no row earns its
-# verdict by doing nothing. UNPATCH_FAILED is an un-patch that refused, which
-# is what a module carrying a hand commented call reports.
+# fixture but the refusals and the already patched ones moves the file, so no
+# row earns its verdict by doing nothing. UNPATCH_FAILED is an un-patch that
+# refused, which is what a module carrying no marked call reports.
 bracketarg     REFUSED NA NA
 bracketcomment REFUSED NA NA
 crlf           CHANGED IDEMPOTENT IDENTITY
@@ -24,9 +24,9 @@ innerbracket   REFUSED NA NA
 lowerarg       REFUSED NA NA
 lowermode      CHANGED IDEMPOTENT IDENTITY
 mixedmode      CHANGED IDEMPOTENT IDENTITY
-onehash        CHANGED IDEMPOTENT UNPATCH_FAILED
+onehash        CHANGED IDEMPOTENT IDENTITY
 parenspace     CHANGED IDEMPOTENT IDENTITY
-patched        NOOP IDEMPOTENT CHANGED
+patched        NOOP IDEMPOTENT UNPATCH_FAILED
 policy         CHANGED IDEMPOTENT IDENTITY
 prefixarg      CHANGED IDEMPOTENT IDENTITY
 prose          REFUSED NA NA
@@ -45,3 +45,6 @@ upper          CHANGED IDEMPOTENT IDENTITY
 multilineclose REFUSED NA NA
 indentbracket   CHANGED IDEMPOTENT IDENTITY
 setmodes        CHANGED IDEMPOTENT IDENTITY
+handsame       CHANGED IDEMPOTENT IDENTITY
+twoindent      CHANGED IDEMPOTENT IDENTITY
+marked         NOOP IDEMPOTENT CHANGED
