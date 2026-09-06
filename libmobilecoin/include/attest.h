@@ -25,6 +25,11 @@ typedef struct _McAttestAke McAttestAke;
 
 /* ==== McTrustedMrEnclaveIdentity and McTrustedMrSignerIdentity ==== */
 
+/// Create a new mr enclave trusted identity
+///
+/// # Preconditions
+///
+/// * `mr_enclave` - must be 32 bytes in length.
 McTrustedMrEnclaveIdentity* MC_NULLABLE mc_trusted_identity_mr_enclave_create(
   const McBuffer* MC_NONNULL mr_enclave,
   McAdvisories* MC_NONNULL config_advisories,
@@ -32,6 +37,11 @@ McTrustedMrEnclaveIdentity* MC_NULLABLE mc_trusted_identity_mr_enclave_create(
 )
 MC_ATTRIBUTE_NONNULL(1, 2, 3);
 
+/// Create a new mr signer trusted identity
+///
+/// # Preconditions
+///
+/// * `mr_signer` - must be 32 bytes in length.
 McTrustedMrSignerIdentity* MC_NULLABLE mc_trusted_identity_mr_signer_create(
   const McBuffer* MC_NONNULL mr_signer,
   McAdvisories* MC_NONNULL config_advisories,
@@ -50,12 +60,22 @@ void mc_trusted_identity_mr_signer_free(
 );
 
 // MrEnclave to string
+/// # Preconditions
+///
+/// * `mr_enclave_trusted_identity` - valid MrEnclaveTrustedIdentity.
+/// * `out_advisories` - length is dynamic
+///
 ssize_t  mc_trusted_mr_enclave_identity_advisories_to_string(
   const McTrustedMrEnclaveIdentity* MC_NONNULL mr_enclave_trusted_identity,
   McMutableBuffer* MC_NULLABLE out_advisories
 )
 MC_ATTRIBUTE_NONNULL(1);
 
+/// # Preconditions
+///
+/// * `mr_enclave_trusted_identity` - valid MrEnclaveTrustedIdentity.
+/// * `out_enclave_measurement` - length is unknown
+///
 ssize_t  mc_trusted_mr_enclave_identity_to_string(
   const McTrustedMrEnclaveIdentity* MC_NONNULL mr_enclave_trusted_identity,
   McMutableBuffer* MC_NULLABLE out_enclave_measurement
@@ -63,15 +83,25 @@ ssize_t  mc_trusted_mr_enclave_identity_to_string(
 MC_ATTRIBUTE_NONNULL(1);
 
 // MrSigner to string
+/// # Preconditions
+///
+/// * `mr_signer_trusted_identity` - valid MrSignerTrustedIdentity.
+/// * `out_advisories` - length is dynamic
+///
 ssize_t  mc_trusted_mr_signer_identity_advisories_to_string(
   const McTrustedMrSignerIdentity* MC_NONNULL mr_signer_trusted_identity,
   McMutableBuffer* MC_NULLABLE out_advisories
 )
 MC_ATTRIBUTE_NONNULL(1);
 
+/// # Preconditions
+///
+/// * `mr_signer_trusted_identity` - valid MrSignerTrustedIdentity.
+/// * `out_signer_measurement` - length is unknown
+///
 ssize_t  mc_trusted_mr_signer_identity_to_string(
   const McTrustedMrSignerIdentity* MC_NONNULL mr_signer_trusted_identity,
-  McMutableBuffer* MC_NULLABLE out_enclave_measurement
+  McMutableBuffer* MC_NULLABLE out_signer_measurement
 )
 MC_ATTRIBUTE_NONNULL(1);
 
@@ -85,6 +115,15 @@ void mc_advisories_free(
   McAdvisories* MC_NULLABLE advisories
 );
 
+/// Append an advisory ID. A trusted identity carrying it accepts an enclave
+/// that cites the advisory without BIOS configuration changes.
+///
+/// Use this only when the enclave author advises it.
+///
+/// # Preconditions
+///
+/// * `advisories` - a valid McAdvisories vector
+/// * `advisory_id` - must be a nul-terminated C string containing valid UTF-8.
 bool mc_add_advisory(
     McAdvisories* MC_NONNULL advisories,
     const char* MC_NONNULL advisory_id

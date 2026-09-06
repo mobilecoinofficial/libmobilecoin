@@ -80,6 +80,10 @@ impl_into_ffi!(Option<Box<dyn MemoBuilder + Sync + Send>>);
 ///
 /// * `view_private_key` - must be a valid 32-byte Ristretto-format scalar.
 /// * `tx_out_public_key` - must be a valid 32-byte Ristretto-format scalar.
+///
+/// # Errors
+///
+/// * `LibMcError::InvalidInput`
 #[no_mangle]
 pub extern "C" fn mc_tx_out_get_shared_secret(
     view_private_key: FfiRefPtr<McBuffer>,
@@ -107,6 +111,11 @@ pub extern "C" fn mc_tx_out_get_shared_secret(
 /// # Preconditions
 ///
 /// * `view_private_key` - must be a valid 32-byte Ristretto-format scalar.
+///
+/// # Errors
+///
+/// * `LibMcError::InvalidInput`
+/// * `LibMcError::TransactionCrypto`
 #[no_mangle]
 pub extern "C" fn mc_tx_out_reconstruct_commitment(
     tx_out_masked_amount: FfiRefPtr<McTxOutMaskedAmount>,
@@ -520,7 +529,7 @@ pub extern "C" fn mc_transaction_builder_free(
 
 /// # Preconditions
 ///
-/// * `transaction_builder` - must not have been previously consumed by a call
+/// * `transaction_builder` - must not have been consumed by a call
 ///   to `build`.
 /// * `view_private_key` - must be a valid 32-byte Ristretto-format scalar.
 /// * `subaddress_spend_private_key` - must be a valid 32-byte Ristretto-format
@@ -585,13 +594,10 @@ pub extern "C" fn mc_transaction_builder_add_input(
 
 /// # Preconditions
 ///
-/// * `transaction_builder` - must not have been previously consumed by a call
+/// * `transaction_builder` - must not have been consumed by a call
 ///   to `build`.
-/// * `view_private_key` - must be a valid 32-byte Ristretto-format scalar.
-/// * `subaddress_spend_private_key` - must be a valid 32-byte Ristretto-format
-///   scalar.
-/// * `real_index` - must be within bounds of `ring`.
-/// * `ring` - `TxOut` at `real_index` must be owned by account keys.
+/// * `presigned_input_proto_bytes` - serialized proto bytes for a Signed
+///   Contingent Input
 ///
 /// # Errors
 ///
@@ -618,14 +624,14 @@ pub extern "C" fn mc_transaction_builder_add_presigned_input(
 
 /// # Preconditions
 ///
-/// * `transaction_builder` - must not have been previously consumed by a call
+/// * `transaction_builder` - must not have been consumed by a call
 ///   to `build`.
 /// * `recipient_address` - must be a valid `PublicAddress`.
 /// * `out_subaddress_spend_public_key` - length must be >= 32.
 ///
 /// # Errors
 ///
-/// * `LibMcError::AttestationVerification`
+/// * `LibMcError::AttestationVerificationFailed`
 /// * `LibMcError::InvalidInput`
 #[no_mangle]
 pub extern "C" fn mc_transaction_builder_add_output_mixed(
@@ -674,14 +680,14 @@ pub extern "C" fn mc_transaction_builder_add_output_mixed(
 
 /// # Preconditions
 ///
-/// * `transaction_builder` - must not have been previously consumed by a call
+/// * `transaction_builder` - must not have been consumed by a call
 ///   to `build`.
 /// * `recipient_address` - must be a valid `PublicAddress`.
 /// * `out_subaddress_spend_public_key` - length must be >= 32.
 ///
 /// # Errors
 ///
-/// * `LibMcError::AttestationVerification`
+/// * `LibMcError::AttestationVerificationFailed`
 /// * `LibMcError::InvalidInput`
 #[no_mangle]
 pub extern "C" fn mc_transaction_builder_add_output(
@@ -733,13 +739,13 @@ pub extern "C" fn mc_transaction_builder_add_output(
 ///
 /// * `account_key` - must be a valid account key, default change address
 ///   computed from account key
-/// * `transaction_builder` - must not have been previously consumed by a call
+/// * `transaction_builder` - must not have been consumed by a call
 ///   to `build`.
 /// * `out_tx_out_confirmation_number` - length must be >= 32.
 ///
 /// # Errors
 ///
-/// * `LibMcError::AttestationVerification`
+/// * `LibMcError::AttestationVerificationFailed`
 /// * `LibMcError::InvalidInput`
 #[no_mangle]
 pub extern "C" fn mc_transaction_builder_add_change_output_mixed(
@@ -791,13 +797,13 @@ pub extern "C" fn mc_transaction_builder_add_change_output_mixed(
 ///
 /// * `account_key` - must be a valid account key, default change address
 ///   computed from account key
-/// * `transaction_builder` - must not have been previously consumed by a call
+/// * `transaction_builder` - must not have been consumed by a call
 ///   to `build`.
 /// * `out_tx_out_confirmation_number` - length must be >= 32.
 ///
 /// # Errors
 ///
-/// * `LibMcError::AttestationVerification`
+/// * `LibMcError::AttestationVerificationFailed`
 /// * `LibMcError::InvalidInput`
 #[no_mangle]
 pub extern "C" fn mc_transaction_builder_add_change_output(
@@ -850,13 +856,13 @@ pub extern "C" fn mc_transaction_builder_add_change_output(
 ///
 /// * `account_key` - must be a valid account key as the gift code subaddress is
 ///   computed from the account key
-/// * `transaction_builder` - must not have been previously consumed by a call
+/// * `transaction_builder` - must not have been consumed by a call
 ///   to `build`.
 /// * `out_tx_out_confirmation_number` - length must be >= 32.
 ///
 /// # Errors
 ///
-/// * `LibMcError::AttestationVerification`
+/// * `LibMcError::AttestationVerificationFailed`
 /// * `LibMcError::InvalidInput`
 #[no_mangle]
 pub extern "C" fn mc_transaction_builder_fund_gift_code_output(
@@ -897,7 +903,7 @@ pub extern "C" fn mc_transaction_builder_fund_gift_code_output(
 
 /// # Preconditions
 ///
-/// * `transaction_builder` - must not have been previously consumed by a call
+/// * `transaction_builder` - must not have been consumed by a call
 ///   to `build`.
 ///
 /// # Errors

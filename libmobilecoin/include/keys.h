@@ -84,7 +84,7 @@ MC_ATTRIBUTE_NONNULL(1, 2, 4, 5);
 /// # Preconditions
 ///
 /// * `account_key` - must be a valid `AccountKey` with `fog_info`.
-/// * `out_fog_authority_fingerprint_sig` - length must be >= 64.
+/// * `out_fog_authority_sig` - length must be >= 64.
 bool mc_account_key_get_public_address_fog_authority_sig(
   const McAccountKey* MC_NONNULL account_key,
   uint64_t subaddress_index,

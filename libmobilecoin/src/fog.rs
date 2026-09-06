@@ -121,6 +121,9 @@ pub extern "C" fn mc_fully_validated_fog_pubkey_free(
     })
 }
 
+/// # Preconditions
+///
+/// * `out_pubkey` - length must be >= 32.
 #[no_mangle]
 pub extern "C" fn mc_fully_validated_fog_pubkey_get_pubkey(
     fully_validated_fog_pubkey: FfiRefPtr<McFullyValidatedFogPubkey>,

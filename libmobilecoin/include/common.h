@@ -65,10 +65,22 @@ typedef struct {
   const char* MC_NONNULL error_description;
 } McError;
 
+/// All non-null owned pointers of type `McError *` that are returned from a
+/// Rust FFI function to a foreign caller must call this function in order to
+/// free the underlying memory pointed to by the pointer.
+///
+/// It is undefined behavior for foreign code to dereference the pointer after
+/// it has called this method.
 void mc_error_free(McError* MC_NULLABLE error);
 
 /* ==== McString ==== */
 
+/// All non-null values with a `char *` return (or out parameter) type that are
+/// returned to foreign code must call this function in order to free the
+/// underlying memory pointed to by the pointer.
+///
+/// It is undefined behavior for foreign code to dereference the pointer after
+/// it has called this method.
 void mc_string_free(char* MC_NULLABLE string);
 
 /* ==== McBuffer ==== */
