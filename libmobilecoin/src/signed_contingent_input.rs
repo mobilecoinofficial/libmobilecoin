@@ -278,8 +278,7 @@ pub extern "C" fn mc_signed_contingent_input_data_is_valid(
 ) -> bool {
     ffi_boundary_with_error(out_error, || {
 
-        let sci : SignedContingentInput = mc_util_serial::decode(&sci_data)
-            .expect("SignedContingentInput decoding from protobuf data failed");
+        let sci: SignedContingentInput = mc_util_serial::decode(&sci_data)?;
 
         *out_valid.into_mut() = sci.validate().is_ok();
 

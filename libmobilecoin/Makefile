@@ -34,6 +34,10 @@ DASH:= -
 
 CARGO_PACKAGE = libmobilecoin
 
+# The path resolves from this file, so `make -f libmobilecoin/Makefile` reaches
+# the same include the root Makefile does.
+include $(dir $(lastword $(MAKEFILE_LIST)))../tools/strict-make.mk
+
 ALL_ARCHS_IOS = aarch64-apple-ios-sim aarch64-apple-ios x86_64-apple-ios x86_64-apple-darwin aarch64-apple-darwin
 
 # all names setup and ios with no order between them, so -j starts the build
@@ -51,8 +55,7 @@ IOS_C_HEADERS = include/*
 
 # First argument $(1) is a build-target, $(2) is the output directory
 define BINARY_copy
-	mkdir -p out/ios/$(2)/$(1)/${CARGO_PROFILE}
-	cp $(CARGO_TARGET_DIR)/$(1)/${CARGO_PROFILE}/libmobilecoin.a out/ios/$(2)/$(1)/${CARGO_PROFILE};
+mkdir -p out/ios/$(2)/$(1)/${CARGO_PROFILE}; cp $(CARGO_TARGET_DIR)/$(1)/${CARGO_PROFILE}/libmobilecoin.a out/ios/$(2)/$(1)/${CARGO_PROFILE};
 endef
 
 ####################################
@@ -77,10 +80,12 @@ LEGACY_CARGO_BUILD_FLAGS = $(CARGO_BUILD_FLAGS)
 
 .PHONY: setup
 setup:
-	rustup target add x86_64-apple-ios aarch64-apple-ios aarch64-apple-darwin x86_64-apple-darwin
-	rustup component add llvm-tools-preview rust-src
-	rustup run --install stable cargo install cargo-binutils
-	 ../tools/patch-cmake.sh
+	@set -eu; \
+	$(ASSERT_STRICT_MAKE); \
+	rustup target add x86_64-apple-ios aarch64-apple-ios aarch64-apple-darwin x86_64-apple-darwin; \
+	rustup component add llvm-tools-preview rust-src; \
+	rustup run --install stable cargo install cargo-binutils; \
+	../tools/patch-cmake.sh
 
 
 .PHONY: ios
@@ -100,22 +105,24 @@ x86_64-apple-darwin aarch64-apple-darwin: CARGO_ENV_FLAGS += MACOSX_DEPLOYMENT_T
 x86_64-apple-ios x86_64-apple-darwin: LD_ARCH = x86_64
 aarch64-apple-ios aarch64-apple-ios-sim aarch64-apple-darwin: LD_ARCH = arm64
 x86_64-apple-ios-macabi aarch64-apple-ios-sim aarch64-apple-ios-macabi: LEGACY_CARGO_BUILD_FLAGS += -Zbuild-std
+# The recipe writes into out/ios/target, so the guard leads the one joined
+# shell it needs to stop the work.
 $(ALL_ARCHS_IOS):
-	$(CARGO_ENV_FLAGS) $(CARGO) build --package $(CARGO_PACKAGE) --target $@ $(LEGACY_CARGO_BUILD_FLAGS)
-
-	mkdir -p out/ios/target
+	@set -eu; \
+	$(ASSERT_STRICT_MAKE); \
+	$(CARGO_ENV_FLAGS) $(CARGO) build --package $(CARGO_PACKAGE) --target $@ $(LEGACY_CARGO_BUILD_FLAGS); \
+	mkdir -p out/ios/target; \
 	$(call BINARY_copy,$@,target)
 
 
 .PHONY: out/ios/target
 out/ios/target: $(ALL_ARCHS_IOS)
-	mkdir -p out/ios/target
-	$(foreach arch,$^,$(call BINARY_copy,$(arch),target))
-
-	# The staged copy is a replacement, not an addition, so a header dropped
-	# from include/ does not linger here.
-	rm -rf out/ios/include
-	mkdir -p out/ios/include
+	@set -eu; \
+	$(ASSERT_STRICT_MAKE); \
+	mkdir -p out/ios/target; \
+	$(foreach arch,$^,$(call BINARY_copy,$(arch),target)) \
+	rm -rf out/ios/include; \
+	mkdir -p out/ios/include; \
 	cp $(IOS_C_HEADERS) out/ios/include
 
 
@@ -140,11 +147,14 @@ setup-dev:
 # after a refusal. Discard the Cargo.lock churn while the lock trails Vendor.
 .PHONY: cbindgen
 cbindgen:
-	@FOUND="$$(cbindgen --version 2>/dev/null || echo none)"; \
+	@set -eu; \
+	$(ASSERT_STRICT_MAKE); \
+	FOUND="$$(cbindgen --version 2>/dev/null || echo none)"; \
 	if [ "$$FOUND" != "cbindgen $(CBINDGEN_VERSION)" ]; then \
 	  echo "error: cbindgen $(CBINDGEN_VERSION) is required, found $$FOUND" >&2; \
+	  echo "this Makefile fixes the version, so CBINDGEN_VERSION= on the command line is discarded" >&2; \
 	  echo "run: make setup-dev" >&2; \
 	  exit 1; \
 	fi; \
 	cbindgen --crate libmobilecoin -o libmobilecoin_cbindgen.h && \
-	echo "cbindgen $(CBINDGEN_VERSION) ok"
+	echo "wrote libmobilecoin_cbindgen.h with cbindgen $(CBINDGEN_VERSION)"

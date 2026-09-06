@@ -4,33 +4,43 @@
 # non-zero and the file is untouched. NOOP is a zero exit over an unchanged
 # file, which only an already patched module may report. LIVE is a zero exit
 # that left a live call in the module, which no row may name. The check reads
-# a call on one line and a mode that leads its own continuation line.
+# a call on one line, a mode that leads its own continuation line, and a call
+# that only one side of the SDK test reaches.
 #
 # IDEMPOTENT means a second patch over the same file exits 0 and moves nothing.
 # FAILED is a refusal, which is what breaks a repeated patch.
 #
 # IDENTITY means the un-patch restores the fixture byte for byte. Every
-# fixture but the refusals and patched moves the file, so no row earns its
-# verdict by doing nothing.
+# fixture but the refusals and the already patched ones moves the file, so no
+# row earns its verdict by doing nothing. UNPATCH_FAILED is an un-patch that
+# refused, which is what a module carrying no marked call reports.
 bracketarg     REFUSED NA NA
 bracketcomment REFUSED NA NA
 crlf           CHANGED IDEMPOTENT IDENTITY
 eqbracket      REFUSED NA NA
 halfwrite      REFUSED NA NA
+handsame       CHANGED IDEMPOTENT IDENTITY
 hiddenlive     REFUSED NA NA
+indentbracket  CHANGED IDEMPOTENT IDENTITY
 indenthash     CHANGED IDEMPOTENT IDENTITY
 innerbracket   REFUSED NA NA
 lowerarg       REFUSED NA NA
 lowermode      CHANGED IDEMPOTENT IDENTITY
+marked         NOOP IDEMPOTENT CHANGED
 mixedmode      CHANGED IDEMPOTENT IDENTITY
-onehash        CHANGED IDEMPOTENT CHANGED
+modealone      REFUSED NA NA
+multilineclose REFUSED NA NA
+onehash        CHANGED IDEMPOTENT IDENTITY
 parenspace     CHANGED IDEMPOTENT IDENTITY
-patched        NOOP IDEMPOTENT CHANGED
+patched        NOOP IDEMPOTENT UNPATCH_FAILED
 policy         CHANGED IDEMPOTENT IDENTITY
 prefixarg      CHANGED IDEMPOTENT IDENTITY
 prose          REFUSED NA NA
 quoteddecoy    CHANGED IDEMPOTENT IDENTITY
 quotedmode     REFUSED NA NA
+sdkbranch      REFUSED NA NA
+sdkmissing     REFUSED NA NA
+setmodes       CHANGED IDEMPOTENT IDENTITY
 shipped        CHANGED IDEMPOTENT IDENTITY
 spaced         CHANGED IDEMPOTENT IDENTITY
 split          REFUSED NA NA
@@ -39,5 +49,6 @@ splitmixed     CHANGED IDEMPOTENT IDENTITY
 splitquote     REFUSED NA NA
 tab            CHANGED IDEMPOTENT IDENTITY
 twohash        CHANGED IDEMPOTENT IDENTITY
+twoindent      CHANGED IDEMPOTENT IDENTITY
 twomention     CHANGED IDEMPOTENT IDENTITY
 upper          CHANGED IDEMPOTENT IDENTITY

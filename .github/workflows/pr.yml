@@ -97,6 +97,36 @@ jobs:
           }
           "${RUNNER_TEMP}/actionlint" "${FILES[@]}"
 
+  header-arity:
+    name: Public headers against the generated declarations
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # The script reads the committed headers and nothing else, so it needs no
+      # vendor fetch and no Rust toolchain.
+      - name: Compare the parameter counts
+        run: ./tools/check-header-arity.py
+
+  cargo-lock:
+    name: Cargo.lock against the pinned vendor revision
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # The path dependencies live in the vendored monorepo, so the lock cannot
+      # resolve without it.
+      - name: Fetch the pinned vendor revision
+        run: ./tools/fetch-vendor.sh
+
+      # cargo metadata resolves the graph and runs no build script, so this
+      # needs neither libclang nor an SGX setup. libmobilecoin/rust-toolchain
+      # selects the toolchain, and a newer cargo writes a lock format that one
+      # cannot read.
+      - name: Assert the lock matches the vendor manifests
+        working-directory: libmobilecoin
+        run: cargo metadata --locked --format-version 1 > /dev/null
+
   manifest:
     name: Manifest and checkout shape
     runs-on: macos-26
@@ -191,7 +221,7 @@ jobs:
         run: make check-module
 
       # A guard that disagrees with its own sed reports a no-op as success, so
-      # the check drives the real scripts over a fake cmake install.
+      # the check drives the real scripts over a fake cmake install directory.
       - name: Assert the cmake patch pair round trips
         run: make check-cmake-patch
 

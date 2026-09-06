@@ -72,11 +72,13 @@ void mc_fully_validated_fog_pubkey_free(
 bool mc_fully_validated_fog_pubkey_get_pubkey(
     const McFullyValidatedFogPubkey* MC_NONNULL fully_validated_fog_pubkey,
     McMutableBuffer* MC_NONNULL out_pubkey
-);
+)
+MC_ATTRIBUTE_NONNULL(1, 2);
 
 uint64_t mc_fully_validated_fog_pubkey_get_pubkey_expiry(
     const McFullyValidatedFogPubkey* MC_NONNULL fully_validated_fog_pubkey
-);
+)
+MC_ATTRIBUTE_NONNULL(1);
 
 /* ==== McFogRng ==== */
 

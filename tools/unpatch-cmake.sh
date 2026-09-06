@@ -13,14 +13,13 @@ echo -e "\n### Un-Patching iOS-Initialize.cmake file in $CMAKE_DIR ###"
 IOS_INITIALIZE_CMAKE_FILE="$CMAKE_DIR/share/cmake/Modules/Platform/iOS-Initialize.cmake"
 
 [ -f "$IOS_INITIALIZE_CMAKE_FILE" ] || { echo "error: no $IOS_INITIALIZE_CMAKE_FILE" >&2; exit 1; }
-# The guard tests the expression the sed addresses, so an un-patch of an
-# unpatched module exits 1 here.
+# The patch marks each line it comments, so the address below reaches those
+# lines and no other. An un-patch of an unpatched module exits 1 here.
 MSG='[Mm][Ee][Ss][Ss][Aa][Gg][Ee]'
-grep -qE "^#[[:space:]]*${MSG}[[:space:]]*\([[:space:]]*FATAL_ERROR" "$IOS_INITIALIZE_CMAKE_FILE" \
-  || { echo "error: no commented message(FATAL_ERROR call in $IOS_INITIALIZE_CMAKE_FILE" >&2; exit 1; }
-# The address needs a single hash and then the call, so prose that names the
-# symbol keeps its marker and a run of hashes is left alone.
-sed -i '' "/^#[[:space:]]*${MSG}[[:space:]]*([[:space:]]*FATAL_ERROR/ s/^#//" "$IOS_INITIALIZE_CMAKE_FILE"
+grep -qE "^#libmobilecoin#[[:space:]]*${MSG}[[:space:]]*\([[:space:]]*FATAL_ERROR" "$IOS_INITIALIZE_CMAKE_FILE" \
+  || { echo "error: no marked message(FATAL_ERROR call in $IOS_INITIALIZE_CMAKE_FILE" >&2; exit 1; }
+
+sed -i '' "/^#libmobilecoin#[[:space:]]*${MSG}[[:space:]]*([[:space:]]*FATAL_ERROR/ s/^#libmobilecoin#//" "$IOS_INITIALIZE_CMAKE_FILE"
 
 echo -e "### $IOS_INITIALIZE_CMAKE_FILE Un-Patched ###"
 
