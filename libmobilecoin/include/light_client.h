@@ -11,7 +11,7 @@ extern "C"
 {
 #endif
 
-/* ==================== LightClientVerifer ==================== */
+/* ==================== LightClientVerifier ==================== */
 
 typedef struct _LightClientVerifier McLightClientVerifier;
 

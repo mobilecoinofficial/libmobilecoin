@@ -7,7 +7,7 @@ release_settings = File.readlines(File.join(__dir__, "release.env"))
 
 Pod::Spec.new do |s|
 
-  # ―――  Spec Metadata  ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
+  # Spec Metadata
 
   s.name         = "LibMobileCoin"
   s.version      = release_settings.fetch("VERSION")
@@ -22,7 +22,7 @@ Pod::Spec.new do |s|
     :tag => "v#{s.version}"
   }
 
-  # ――― Prebuilt binary ―――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
+  # Prebuilt binary
 
   # The xcframework is downloaded and checksum-verified at install time. The
   # same archive and checksum back the SwiftPM binaryTarget in Package.swift,
@@ -34,8 +34,8 @@ Pod::Spec.new do |s|
     set -eu
     mkdir -p Artifacts
     # The stamp carries the checksum, so a tree left over from a different
-    # version - or a half-extracted one from an interrupted unzip - re-downloads
-    # instead of being silently accepted. Written only after unzip succeeds.
+    # version, or a half-extracted one from an interrupted unzip, re-downloads.
+    # Written only after unzip succeeds.
     stamp="Artifacts/.xcframework-#{xcframework_checksum}"
     if [ ! -f "$stamp" ]; then
       rm -rf Artifacts/LibMobileCoinLibrary.xcframework
@@ -59,20 +59,20 @@ Pod::Spec.new do |s|
     cp Artifacts/LibMobileCoinLibrary.xcframework/ios-arm64/Headers/*.h Artifacts/include/
   CMD
 
-  # ――― Platform Specifics ――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
+  # Platform Specifics
 
   # Matches the .iOS(.v13) floor in Package.swift. Xcode 15 and later reject a
   # deployment target below 12.0 outright.
   s.platform     = :ios, "13.0"
 
-  # ――― Privacy manifest ―――――――――――――――――――――――――――――――――――――――――――――――――――――― #
+  # Privacy manifest
 
   # resource_bundles is NOT inherited. A name shared across two subspecs, or
   # across a subspec and the root spec, makes CocoaPods write duplicate UUIDs
   # into Pods.xcodeproj. Each subspec names its own bundle.
   privacy_manifest = ["Sources/Common/PrivacyInfo.xcprivacy"]
 
-  # ――― Subspecs ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
+  # Subspecs
 
   s.default_subspecs = "CoreHTTP"
 
@@ -115,23 +115,17 @@ Pod::Spec.new do |s|
      subspec.dependency "SwiftProtobuf", ">= 1.36.1", "< 1.38"
    end
 
-  # ――― Project Settings ――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
+  # Project Settings
 
   s.swift_version = "5.2"
 
   s.pod_target_xcconfig = {
     "GCC_OPTIMIZATION_LEVEL" => "z",
-    # "LLVM_LTO" => "YES",
-    # Rust bitcode is not verified to be compatible with Apple Xcode's LLVM bitcode,
-    # so this is disabled to be on the safe side.
+    # Rust bitcode is not verified as compatible with Xcode's LLVM bitcode.
     "ENABLE_BITCODE" => "YES",
-    # Mac Catalyst is not supported since tjis library includes a vendored binary
-    # that only includes support for iOS archictures.
+    # The xcframework carries ios, ios-simulator and macos slices. It carries no
+    # Mac Catalyst variant, so a Catalyst build finds nothing to link against.
     "SUPPORTS_MACCATALYST" => "NO",
-    # The vendored binary doesn't include support for 32-bit architectures or arm64
-    # for iphonesimulator. This must be manually configured to avoid Xcode's default
-    # setting of building 32-bit and Xcode 12's default setting of including the
-    # arm64 simulator. Note: 32-bit is officially dropped in iOS 11
 
     "HEADER_SEARCH_PATHS": "$(PODS_TARGET_SRCROOT)/Artifacts/include",
     "SWIFT_INCLUDE_PATHS": "$(HEADER_SEARCH_PATHS)",
@@ -146,14 +140,18 @@ Pod::Spec.new do |s|
     "VALID_ARCHS[sdk=iphonesimulator*]" => "x86_64 arm64",
     "ARCHS[sdk=iphonesimulator*]": "x86_64 arm64",
     "ARCHS[sdk=iphoneos*]": "arm64",
+    # The vendored binary carries no 32-bit slice, so Xcode has to be told not
+    # to ask for one.
     "EXCLUDED_ARCHS[sdk=iphoneos*]" => "armv7",
     "EXCLUDED_ARCHS[sdk=iphonesimulator*]" => "i386",
   }
 
-  # `user_target_xcconfig` should only be set when the setting needs to propogate to
+  # `user_target_xcconfig` should only be set when the setting needs to propagate to
   # all targets that depend on this library.
   s.user_target_xcconfig = {
     "SUPPORTS_MACCATALYST" => "NO",
+    # The vendored binary carries no 32-bit slice, so Xcode has to be told not
+    # to ask for one.
     "EXCLUDED_ARCHS[sdk=iphoneos*]" => "armv7",
     "EXCLUDED_ARCHS[sdk=iphonesimulator*]" => "i386",
     "VALID_ARCHS[sdk=iphoneos*]" => "arm64",

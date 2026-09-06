@@ -77,7 +77,8 @@ MC_ATTRIBUTE_NONNULL(1);
 
 /* ==== McAdvisories ==== */
 
-/// Construct a new advisories vector to hold strings
+/// Construct a new McAdvisories vector for holding config and hardening
+/// advisories.
 McAdvisories* MC_NULLABLE mc_advisories_create(void);
 
 void mc_advisories_free(
@@ -92,21 +93,22 @@ MC_ATTRIBUTE_NONNULL(1, 2);
 
 /* ==== McTrustedIdentities ==== */
 
-/// Construct a new trusted identities vector to hold TrustedIdentity structs
+/// Construct a new TrustedIdentities vector that holds enclave or signer
+/// identities.
 McTrustedIdentities* MC_NULLABLE mc_trusted_identities_create(void);
 
 void mc_trusted_identities_free(
   McTrustedIdentities* MC_NULLABLE verifier
 );
 
-/// Verify the given MrEnclave-based status verifier succeeds
+/// Append an MrEnclave identity to the vector.
 bool mc_trusted_identities_add_mr_enclave(
   McTrustedIdentities* MC_NONNULL trusted_identities,
   const McTrustedMrEnclaveIdentity* MC_NONNULL mr_enclave_trusted_identity
 )
 MC_ATTRIBUTE_NONNULL(1, 2);
 
-/// Verify the given MrSigner-based status trusted_identities succeeds
+/// Append an MrSigner identity to the vector.
 bool mc_trusted_identities_add_mr_signer(
   McTrustedIdentities* MC_NONNULL trusted_identities,
   const McTrustedMrSignerIdentity* MC_NONNULL mr_signer_trusted_identity

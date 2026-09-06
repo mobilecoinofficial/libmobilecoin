@@ -6,8 +6,6 @@
 
 ### Project Environment Variables
 
-# Goto cargo command
-#export SGX_MODE ?= SW
 export SGX_MODE ?= HW
 export IAS_MODE ?= PROD
 

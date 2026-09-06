@@ -1,19 +1,8 @@
-//
-//  TestVectorImports.swift
-//  
-//
-//  Created by Adam Mork on 4/25/23.
-//
-
 import XCTest
 import Foundation
 import LibMobileCoinTestVector
 
-///
-/// Importing eact test-vector file to ensure proper SPM packaging.
-/// Testing one file would likely give the same signal but doing all
-/// for completeness
-///
+/// Reads every test-vector file, so a packaging failure fails the suite.
 final class TestVectorImports: XCTestCase {
     func testAcctPrivKeysFromBip39() throws {
         let filename = "acct_priv_keys_from_bip39"

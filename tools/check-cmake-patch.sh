@@ -51,7 +51,7 @@ run_fixture() {
     fi
   elif cmp -s "$fixture" "$MODULE"; then
     # Legitimate only for a module that is already patched, so the row for
-    # every other fixture names CHANGED and a silent no-op fails against it.
+    # every other fixture names CHANGED and a no-op fails against it.
     patch=NOOP
   else
     patch=CHANGED

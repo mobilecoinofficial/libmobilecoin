@@ -53,34 +53,25 @@ where
 }
 
 fn ffi_boundary_impl<R>(f: impl (FnOnce() -> Result<R, LibMcError>)) -> Result<R, LibMcError> {
-    // Run f within catch_unwind
+    // AssertUnwindSafe: the `Box<dyn ... + Send + Sync>` types the builders hold
+    // cannot be UnwindSafe, because interior mutability is possible. Dropping
+    // `+ Send + Sync` to gain it makes those types illegal behind a Mutex, which
+    // breaks the android bindings. Boxing is what keeps the builders from taking
+    // a generic parameter, which would multiply the types needing bindings.
     //
-    // Note: this is using AssertUnwindSafe because some of the TransactionBuilder
-    // types are abstracted behind Box<dyn ... + Send + Sync>, but rust does not
-    // allow such types to be UnwindSafe because they may exhibit interior
-    // mutability. OTOH if we do not put + Send + Sync, then it is illegal to
-    // put TransactionBuilder behind a Mutex, which prevents the android
-    // bindings from building.
-    //
-    // The reason we use Box<dyn + ...> at all is to avoid making everything
-    // a generic parameter of transaction builder, which multiplies the number of
-    // types that might have to have cross-language bindings.
-    //
-    // UnwindSafe is too restrictive -- the goal of UnwindSafe is that if a panic is
-    // caught, we cannot "easily" observe a broken invariant. However, the only
-    // thing we actually need at an ffi boundary is to prevent unwinding across
-    // stackframes into swift etc.
+    // UnwindSafe guards against observing a broken invariant after a caught
+    // panic. This boundary needs only to stop the unwind before it crosses the
+    // C ABI.
     catch_unwind(AssertUnwindSafe(f))
-        // Return a `LibMcError` if we panic. However, we still need to be mindful of panics while
-        // formatting the panic error so that we don't accidentally unwind across the FFI boundary.
+        // Formatting the payload into a `LibMcError` can itself panic, so that
+        // step is caught as well.
         .unwrap_or_else(|panic_error| {
-            // We assert `panic_error` is unwind safe because, since we won't be modifying
-            // it, we know that no harm will come if we panic while trying to
-            // process it.
+            // AssertUnwindSafe: the payload is read and never modified, so a panic
+            // here leaves no broken invariant behind.
             let panic_error = AssertUnwindSafe(panic_error);
             catch_unwind(|| Err(LibMcError::Panic(format!("{:?}", *panic_error))))
-                // If this also panics then we just abort because at this point it's likely
-                // something terrible has gone wrong and the situation is no longer tenable.
+                // A panic here leaves no route that reports the failure, so the
+                // process aborts rather than unwind across the C ABI.
                 .unwrap_or_else(|_| abort())
         })
 }
@@ -104,17 +95,13 @@ fn error_handling_ffi_boundary(f: impl FnOnce()) {
         f();
         Ok(())
     })
-    // If we fail while handling the original error, it necessarily must have been from a panic
-    // while doing so (and possibly we panicked while trying to format the panic).
-    // Let's try to just print out the panic. If we panic while doing that, not much can be done
-    // except fail silently and move on (we could also abort, but we're trying to avoid doing that).
+    // Reaching here means the error handling itself panicked. The payload is printed and
+    // then dropped, because aborting would take the host process down.
     .map_err(|panic_error| {
         let panic_error = AssertUnwindSafe(panic_error);
         // guard against panics while printing
         let _ = catch_unwind(|| {
             let panic_error = panic_error.0;
-            // In theory, we should still have the original err at this point, but move
-            // semantics make it difficult to hold onto if we panicked.
             eprintln!(
                 "LibMobileCoin panicked during error handling: {}",
                 panic_error
