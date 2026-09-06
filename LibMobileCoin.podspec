@@ -121,12 +121,10 @@ Pod::Spec.new do |s|
 
   s.pod_target_xcconfig = {
     "GCC_OPTIMIZATION_LEVEL" => "z",
-    # "LLVM_LTO" => "YES",
-    # Rust bitcode is not verified to be compatible with Apple Xcode's LLVM bitcode,
-    # so this is disabled to be on the safe side.
+    # Rust bitcode is not verified as compatible with Xcode's LLVM bitcode.
     "ENABLE_BITCODE" => "YES",
-    # The vendored binary carries iOS slices only, so Mac Catalyst cannot link
-    # against it.
+    # The xcframework carries ios, ios-simulator and macos slices. It carries no
+    # Mac Catalyst variant, so a Catalyst build finds nothing to link against.
     "SUPPORTS_MACCATALYST" => "NO",
 
     "HEADER_SEARCH_PATHS": "$(PODS_TARGET_SRCROOT)/Artifacts/include",

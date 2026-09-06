@@ -53,13 +53,15 @@ where
 }
 
 fn ffi_boundary_impl<R>(f: impl (FnOnce() -> Result<R, LibMcError>)) -> Result<R, LibMcError> {
-    // AssertUnwindSafe: the `Box<dyn ... + Send + Sync>` types inside
-    // TransactionBuilder cannot be UnwindSafe, because interior mutability is
-    // possible. Dropping `+ Send + Sync` to gain it makes TransactionBuilder
-    // illegal behind a Mutex, which breaks the android bindings.
+    // AssertUnwindSafe: the `Box<dyn ... + Send + Sync>` types the builders hold
+    // cannot be UnwindSafe, because interior mutability is possible. Dropping
+    // `+ Send + Sync` to gain it makes those types illegal behind a Mutex, which
+    // breaks the android bindings. Boxing is what keeps the builders from taking
+    // a generic parameter, which would multiply the types needing bindings.
     //
     // UnwindSafe guards against observing a broken invariant after a caught
-    // panic. This boundary needs only to stop the unwind before it reaches Swift.
+    // panic. This boundary needs only to stop the unwind before it crosses the
+    // C ABI.
     catch_unwind(AssertUnwindSafe(f))
         // Formatting the payload into a `LibMcError` can itself panic, so that
         // step is caught as well.
@@ -69,7 +71,7 @@ fn ffi_boundary_impl<R>(f: impl (FnOnce() -> Result<R, LibMcError>)) -> Result<R
             let panic_error = AssertUnwindSafe(panic_error);
             catch_unwind(|| Err(LibMcError::Panic(format!("{:?}", *panic_error))))
                 // A panic here leaves no route that reports the failure, so the
-                // process aborts rather than unwind into Swift.
+                // process aborts rather than unwind across the C ABI.
                 .unwrap_or_else(|_| abort())
         })
 }
