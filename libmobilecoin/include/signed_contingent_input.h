@@ -51,13 +51,13 @@ void mc_signed_contingent_input_builder_free(
 
 /// # Preconditions
 ///
-/// * `signed_contingent_input_builder` - must not have been previously consumed by a call to `build`.
+/// * `signed_contingent_input_builder` - must not have been consumed by a call to `build`.
 /// * `recipient_address` - must be a valid `PublicAddress`.
 /// * `out_subaddress_spend_public_key` - length must be >= 32.
 ///
 /// # Errors
 ///
-/// * `LibMcError::AttestationVerification`
+/// * `LibMcError::AttestationVerificationFailed`
 /// * `LibMcError::InvalidInput`
 McData* MC_NULLABLE mc_signed_contingent_input_builder_add_required_output(
   McSignedContingentInputBuilder* MC_NONNULL signed_contingent_input_builder,
@@ -72,14 +72,14 @@ MC_ATTRIBUTE_NONNULL(1, 4, 6);
 
 /// # Preconditions
 ///
-/// * `account_kay` - must be a valid account key, default change address computed from account key
-/// * `signed_contingent_input_builder` - must not have been previously consumed by a call
+/// * `account_key` - must be a valid account key, default change address computed from account key
+/// * `signed_contingent_input_builder` - must not have been consumed by a call
 ///   to `build`.
 /// * `out_tx_out_confirmation_number` - length must be >= 32.
 ///
 /// # Errors
 ///
-/// * `LibMcError::AttestationVerification`
+/// * `LibMcError::AttestationVerificationFailed`
 /// * `LibMcError::InvalidInput`
 McData* MC_NULLABLE mc_signed_contingent_input_builder_add_required_change_output(
   const McAccountKey* MC_NONNULL account_key,
@@ -94,7 +94,7 @@ MC_ATTRIBUTE_NONNULL(1, 2, 6);
 
 /// # Preconditions
 ///
-/// * `signed_contingent_input_builder` - must not have been previously consumed by a call to `build`.
+/// * `signed_contingent_input_builder` - must not have been consumed by a call to `build`.
 ///
 /// # Errors
 ///
@@ -109,13 +109,13 @@ MC_ATTRIBUTE_NONNULL(1);
 
 /// # Preconditions
 ///
-/// * `signed_contingent_input` - must be valid signed contingent input data.
+/// * `sci_data` - must be valid signed contingent input data.
 ///
 /// # Errors
 ///
 /// * `LibMcError::InvalidInput`
 bool mc_signed_contingent_input_data_is_valid(
-  const McBuffer* MC_NONNULL signed_contingent_input,
+  const McBuffer* MC_NONNULL sci_data,
   bool* MC_NONNULL out_valid,
   McError* MC_NULLABLE * MC_NULLABLE out_error
 )

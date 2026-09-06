@@ -45,7 +45,6 @@ typedef struct _McTxOutMemoBuilder McTxOutMemoBuilder;
 /// # Errors
 ///
 /// * `LibMcError::InvalidInput`
-/// * `LibMcError::TransactionCrypto`
 bool mc_tx_out_get_shared_secret(
   const McBuffer* MC_NONNULL view_private_key,
   const McBuffer* MC_NONNULL tx_out_public_key,
@@ -226,7 +225,7 @@ void mc_transaction_builder_free(
 
 /// # Preconditions
 ///
-/// * `transaction_builder` - must not have been previously consumed by a call to `build`.
+/// * `transaction_builder` - must not have been consumed by a call to `build`.
 /// * `view_private_key` - must be a valid 32-byte Ristretto-format scalar.
 /// * `subaddress_spend_private_key` - must be a valid 32-byte Ristretto-format scalar.
 /// * `real_index` - must be within bounds of `ring`.
@@ -247,9 +246,9 @@ MC_ATTRIBUTE_NONNULL(1, 2, 3, 5);
 
 /// # Preconditions
 ///
-/// * `transaction_builder` - must not have been previously consumed by a call to `build`.
-/// * `presigned_input_proto_bytes` - serialized proto bytes for a Signed Contingent Input
-/// * `ring` - `TxOut` at `real_index` must be owned by account keys.
+/// * `transaction_builder` - must not have been consumed by a call to `build`.
+/// * `presigned_input_proto_bytes` - serialized proto bytes for a Signed
+///   Contingent Input
 ///
 /// # Errors
 ///
@@ -263,13 +262,13 @@ MC_ATTRIBUTE_NONNULL(1, 2);
 
 /// # Preconditions
 ///
-/// * `transaction_builder` - must not have been previously consumed by a call to `build`.
+/// * `transaction_builder` - must not have been consumed by a call to `build`.
 /// * `recipient_address` - must be a valid `PublicAddress`.
 /// * `out_subaddress_spend_public_key` - length must be >= 32.
 ///
 /// # Errors
 ///
-/// * `LibMcError::AttestationVerification`
+/// * `LibMcError::AttestationVerificationFailed`
 /// * `LibMcError::InvalidInput`
 McData* MC_NULLABLE mc_transaction_builder_add_output_mixed(
   McTransactionBuilder* MC_NONNULL transaction_builder,
@@ -285,14 +284,14 @@ MC_ATTRIBUTE_NONNULL(1, 4, 6, 7);
 
 /// # Preconditions
 ///
-/// * `account_kay` - must be a valid account key, default change address computed from account key
-/// * `transaction_builder` - must not have been previously consumed by a call
+/// * `account_key` - must be a valid account key, default change address computed from account key
+/// * `transaction_builder` - must not have been consumed by a call
 ///   to `build`.
 /// * `out_tx_out_confirmation_number` - length must be >= 32.
 ///
 /// # Errors
 ///
-/// * `LibMcError::AttestationVerification`
+/// * `LibMcError::AttestationVerificationFailed`
 /// * `LibMcError::InvalidInput`
 McData* MC_NULLABLE mc_transaction_builder_add_change_output(
   const McAccountKey* MC_NONNULL account_key,
@@ -307,13 +306,13 @@ MC_ATTRIBUTE_NONNULL(1, 2, 6, 7);
 
 /// # Preconditions
 ///
-/// * `transaction_builder` - must not have been previously consumed by a call to `build`.
+/// * `transaction_builder` - must not have been consumed by a call to `build`.
 /// * `recipient_address` - must be a valid `PublicAddress`.
 /// * `out_subaddress_spend_public_key` - length must be >= 32.
 ///
 /// # Errors
 ///
-/// * `LibMcError::AttestationVerification`
+/// * `LibMcError::AttestationVerificationFailed`
 /// * `LibMcError::InvalidInput`
 McData* MC_NULLABLE mc_transaction_builder_add_output(
   McTransactionBuilder* MC_NONNULL transaction_builder,
@@ -328,14 +327,14 @@ MC_ATTRIBUTE_NONNULL(1, 4, 6, 7);
 
 /// # Preconditions
 ///
-/// * `account_kay` - must be a valid account key, default change address computed from account key
-/// * `transaction_builder` - must not have been previously consumed by a call
+/// * `account_key` - must be a valid account key, default change address computed from account key
+/// * `transaction_builder` - must not have been consumed by a call
 ///   to `build`.
 /// * `out_tx_out_confirmation_number` - length must be >= 32.
 ///
 /// # Errors
 ///
-/// * `LibMcError::AttestationVerification`
+/// * `LibMcError::AttestationVerificationFailed`
 /// * `LibMcError::InvalidInput`
 McData* MC_NULLABLE mc_transaction_builder_add_change_output_mixed(
   const McAccountKey* MC_NONNULL account_key,
@@ -352,13 +351,13 @@ MC_ATTRIBUTE_NONNULL(1, 2, 6, 7);
 ///
 /// * `account_key` - must be a valid account key as the gift code subaddress
 ///   is computed from the account key
-/// * `transaction_builder` - must not have been previously consumed by a call
+/// * `transaction_builder` - must not have been consumed by a call
 ///   to `build`.
 /// * `out_tx_out_confirmation_number` - length must be >= 32.
 ///
 /// # Errors
 ///
-/// * `LibMcError::AttestationVerification`
+/// * `LibMcError::AttestationVerificationFailed`
 /// * `LibMcError::InvalidInput`
 McData* MC_NULLABLE mc_transaction_builder_fund_gift_code_output(
         const McAccountKey* MC_NONNULL account_key,
@@ -373,7 +372,7 @@ MC_ATTRIBUTE_NONNULL(1, 2, 6);
 
 /// # Preconditions
 ///
-/// * `transaction_builder` - must not have been previously consumed by a call to `build`.
+/// * `transaction_builder` - must not have been consumed by a call to `build`.
 ///
 /// # Errors
 ///
@@ -388,14 +387,14 @@ MC_ATTRIBUTE_NONNULL(1);
 
 /// # Preconditions
 ///
-/// * `account_key` - must be a valid `AccountKey` with `fog_info`.
+/// * `account_key` - must be a valid `AccountKey`
 McTxOutMemoBuilder* MC_NULLABLE mc_memo_builder_sender_and_destination_create(
   const McAccountKey* MC_NONNULL account_key)
 MC_ATTRIBUTE_NONNULL(1);
 
 /// # Preconditions
 ///
-/// * `account_key` - must be a valid `AccountKey` with `fog_info`.
+/// * `account_key` - must be a valid `AccountKey`
 McTxOutMemoBuilder* MC_NULLABLE mc_memo_builder_sender_payment_request_and_destination_create(
   uint64_t payment_request_id,
   const McAccountKey* MC_NONNULL account_key
@@ -404,7 +403,7 @@ MC_ATTRIBUTE_NONNULL(2);
 
 /// # Preconditions
 ///
-/// * `account_key` - must be a valid `AccountKey` with `fog_info`.
+/// * `account_key` - must be a valid `AccountKey`
 McTxOutMemoBuilder* MC_NULLABLE mc_memo_builder_sender_payment_intent_and_destination_create(
   uint64_t payment_intent_id,
   const McAccountKey* MC_NONNULL account_key

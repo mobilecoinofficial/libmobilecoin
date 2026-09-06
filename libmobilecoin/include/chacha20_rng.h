@@ -38,6 +38,7 @@ ChaCha20Rng* MC_NULLABLE mc_chacha20_rng_create_with_long(
 ///
 /// # Errors
 ///
+/// * `LibMcError::InvalidInput`
 /// * `LibMcError::Poison`
 ChaCha20Rng* MC_NULLABLE mc_chacha20_rng_create_with_bytes(
     const McBuffer* MC_NONNULL bytes,

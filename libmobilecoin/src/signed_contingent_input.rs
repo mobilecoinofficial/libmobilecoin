@@ -38,6 +38,13 @@ use mc_util_ffi::*;
 pub type McSignedContingentInputBuilder = Option<SignedContingentInputBuilder<FogResolver>>;
 impl_into_ffi!(Option<SignedContingentInputBuilder<FogResolver>>);
 
+/// # Preconditions
+///
+/// * `view_private_key` - must be a valid 32-byte Ristretto-format scalar.
+/// * `subaddress_spend_private_key` - must be a valid 32-byte Ristretto-format
+///   scalar.
+/// * `real_index` - must be within bounds of `ring`.
+/// * `ring` - `TxOut` at `real_index` must be owned by account keys.
 ///
 /// # Errors
 ///
@@ -131,13 +138,14 @@ pub extern "C" fn mc_signed_contingent_input_builder_free(
 
 /// # Preconditions
 ///
-/// * `signed_contingent_input_builder` - must not have been previously consumed by a call
+/// * `signed_contingent_input_builder` - must not have been consumed by a call
 ///   to `build`.
 /// * `recipient_address` - must be a valid `PublicAddress`.
 /// * `out_subaddress_spend_public_key` - length must be >= 32.
 ///
 /// # Errors
 ///
+/// * `LibMcError::AttestationVerificationFailed`
 /// * `LibMcError::InvalidInput`
 #[no_mangle]
 pub extern "C" fn mc_signed_contingent_input_builder_add_required_output(
@@ -183,12 +191,13 @@ pub extern "C" fn mc_signed_contingent_input_builder_add_required_output(
 ///
 /// * `account_key` - must be a valid account key, default change address
 ///   computed from account key
-/// * `transaction_builder` - must not have been previously consumed by a call
-///   to `build`.
+/// * `signed_contingent_input_builder` - must not have been consumed
+///   by a call to `build`.
 /// * `out_tx_out_confirmation_number` - length must be >= 32.
 ///
 /// # Errors
 ///
+/// * `LibMcError::AttestationVerificationFailed`
 /// * `LibMcError::InvalidInput`
 #[no_mangle]
 pub extern "C" fn mc_signed_contingent_input_builder_add_required_change_output(
@@ -231,7 +240,7 @@ pub extern "C" fn mc_signed_contingent_input_builder_add_required_change_output(
 
 /// # Preconditions
 ///
-/// * `signed_contingent_input_builder` - must not have been previously consumed by a call
+/// * `signed_contingent_input_builder` - must not have been consumed by a call
 ///   to `build`.
 ///
 /// # Errors
@@ -265,7 +274,7 @@ pub extern "C" fn mc_signed_contingent_input_builder_build(
 
 /// # Preconditions
 ///
-/// * `sci_data` - valid sci data
+/// * `sci_data` - must be valid signed contingent input data.
 ///
 /// # Errors
 ///

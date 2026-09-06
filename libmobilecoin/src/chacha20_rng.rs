@@ -129,7 +129,7 @@ pub extern "C" fn mc_chacha20_rng_next_long(
     ffi_boundary_with_error(out_error, || Ok(chacha20_rng.lock()?.next_u64()))
 }
 
-/// frees the ChaCha20Rng
+/// Frees the ChaCha20Rng
 ///
 /// # Preconditions
 ///
