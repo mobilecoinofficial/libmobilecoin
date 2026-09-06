@@ -1,17 +1,8 @@
-//
-//  StaticLibraryAPI.swift
-//  
-//
-//  Created by Adam Mork on 4/26/23.
-//
-
 import XCTest
 import LibMobileCoin
 
-///
-/// Testing one function from each rust file to make sure they're all available in the
-/// static library. Some data is invalid and will throw errors, thats ok.
-///
+/// Calls one function from each Rust source, so a symbol the static library
+/// does not export fails the link. Invalid input is fine, the call is the test.
 final class StaticLibraryAPI: XCTestCase {
     func testAttestHeader() throws {
         let advisories = mc_advisories_create()

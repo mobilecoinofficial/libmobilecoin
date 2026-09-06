@@ -1,7 +1,7 @@
 // swift-tools-version:6.1
 import PackageDescription
 // release.env is the single source of truth for these two. `make stamp` writes
-// them in here; a manifest cannot read a sidecar file at resolve time.
+// them in here, because a manifest cannot read a sidecar file at resolve time.
 //
 // SwiftPM compiles a dependency's manifest through a VFS overlay that presents
 // it at "/Package.swift", so both #filePath and Context.packageDirectory give
@@ -23,7 +23,7 @@ let package = Package(
             name: "LibMobileCoinCoreHTTP",
             targets: ["LibMobileCoinHTTP", "LibMobileCoinCommon", "LibMobileCoinLibrary"]),
         // Test fixtures, kept out of the products above so a shipping app does
-        // not carry the vectors bundle. The podspec already splits them this way.
+        // not carry the vectors bundle.
         .library(
             name: "LibMobileCoinTestVectors",
             targets: ["LibMobileCoinTestVector"])

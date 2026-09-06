@@ -1,17 +1,8 @@
-//
-//  HTTPClientImports.swift
-//  
-//
-//  Created by Adam Mork on 4/26/23.
-//
-
 import XCTest
 import LibMobileCoinHTTP
 import LibMobileCoinCommon
 
-///
-/// Importing one class from each file to ensure proper SPM packaging.
-///
+/// Imports one class from each file, so a packaging failure fails the suite.
 final class HTTPClientImports: XCTestCase {
     func testAttestRestClient() throws {
         let client = Attest_AttestedApiRestClient()

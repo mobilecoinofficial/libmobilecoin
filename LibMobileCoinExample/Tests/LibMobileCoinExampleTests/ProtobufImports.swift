@@ -1,18 +1,7 @@
-//
-//  ProtobufImports.swift
-//  
-//
-//  Created by Adam Mork on 4/24/23.
-//
-
 import XCTest
 import LibMobileCoinCommon
 
-///
-/// Importing one class from each file to ensure proper SPM packaging.
-/// Testing one file would likely give the same signal but doing one 
-/// from each for completeness
-///
+/// Imports one class from each file, so a packaging failure fails the suite.
 final class ProtobufImports: XCTestCase {
     func testAttest() throws {
         let proto = Attest_AuthMessage()

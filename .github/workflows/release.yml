@@ -5,10 +5,9 @@
 # build produces, so a release is a two-step affair whenever the checksum moves:
 # a pull request that restamps release.env and Package.swift, then a dispatch.
 #
-# The pod is not pushed from here. SENTZ-5561 deprecates the LibMobileCoin pod
-# and SENTZ-5551 moves the remaining consumer to SwiftPM, so a trunk token is
-# not recreated on this repository. `make publish-podspec` still pushes one by
-# hand for anyone who needs it.
+# The pod is not pushed from here. This repository holds no CocoaPods trunk
+# token, so `make publish-podspec` is the one route that pushes a pod, run by
+# hand.
 #
 # Runs on workflow_dispatch, not on a tag push, because the tag has to point at
 # a commit whose manifest already matches the built asset, and that is only
@@ -64,8 +63,8 @@ jobs:
           echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
           echo "tag=v${VERSION}" >> "$GITHUB_OUTPUT"
 
-      # A dry run creates no tag, so the released version the tree still
-      # carries is not a collision here.
+      # A dry run creates no tag, so the released version the tree carries is
+      # not a collision here.
       - name: Refuse to reuse an existing tag
         if: ${{ !inputs.dry_run }}
         env:
@@ -216,7 +215,7 @@ jobs:
       #
       # Not writing means the tree has to already carry the checksum this build
       # produced. The repack check above proves the packager is deterministic
-      # over one xcframework; nothing here proves two Rust builds produce the
+      # over one xcframework. Nothing here proves two Rust builds produce the
       # same xcframework. So a mismatch is either a real defect or a build input
       # that moved, and both need the same restamping pull request.
       #
@@ -255,11 +254,11 @@ jobs:
             .build/LibMobileCoinLibrary.xcframework.zip
 
       # `gh release create` returns before the asset is servable, so the resolve
-      # below 404s on a release that is fine. The v6.1.0 run failed that way.
+      # below 404s on a release that is fine.
       #
-      # Poll the URL rather than retry the resolve. The resolve spends about
-      # thirty seconds on the dependency graph before it reaches the asset, so
-      # every retry pays that again. The 404 itself took 137 ms.
+      # Poll the URL rather than retry the resolve. The resolve walks the whole
+      # dependency graph before it reaches the asset, and every retry pays that
+      # walk again. A probe of the URL pays nothing but the request.
       #
       # --max-time is what bounds the wait. curl's own status is tolerated here,
       # so without a transfer limit a connection that accepts and never answers

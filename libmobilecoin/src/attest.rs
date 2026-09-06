@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2022 The MobileCoin Foundatio, timen
+// Copyright (c) 2018-2022 The MobileCoin Foundation
 
 use crate::{common::*, LibMcError};
 use aes_gcm::Aes256Gcm;
@@ -32,7 +32,7 @@ pub extern "C" fn mc_trusted_identity_mr_enclave_free(
     })
 }
 
-/// Create a new mr enclave trusted identity 
+/// Create a new mr enclave trusted identity
 ///
 /// # Preconditions
 ///
@@ -65,7 +65,7 @@ pub extern "C" fn mc_trusted_identity_mr_signer_free(
     })
 }
 
-/// Create a new mr signer trusted identity 
+/// Create a new mr signer trusted identity
 ///
 /// # Preconditions
 ///
@@ -197,11 +197,8 @@ pub extern "C" fn mc_trusted_mr_signer_identity_to_string(
     })
 }
 
-/// Construct a new McAdvisories vector for holding config & hardening advisories
-///
-/// Advisories are used when an enclave with the specified measurement does not need
-/// BIOS configuration changes to address the provided advisory ID.
-///
+/// Construct a new McAdvisories vector for holding config and hardening
+/// advisories.
 #[no_mangle]
 pub extern "C" fn mc_advisories_create() -> FfiOptOwnedPtr<McAdvisories> {
     ffi_boundary(|| {
@@ -217,17 +214,15 @@ pub extern "C" fn mc_advisories_free(advisories: FfiOptOwnedPtr<McAdvisories>) {
     })
 }
 
-/// Assume an enclave with the specified measurement does not need
-/// BIOS configuration changes to address the provided advisory ID.
+/// Append an advisory ID. A trusted identity carrying it accepts an enclave
+/// that cites the advisory without BIOS configuration changes.
 ///
-/// This method should only be used when advised by an enclave author.
+/// Use this only when the enclave author advises it.
 ///
 /// # Preconditions
 ///
 /// * `advisories` - a valid McAdvisories vector
 /// * `advisory_id` - must be a nul-terminated C string containing valid UTF-8.
-///
-/// TODO: update comments above
 #[no_mangle]
 pub extern "C" fn mc_add_advisory(
     advisories: FfiMutPtr<McAdvisories>,
@@ -248,8 +243,8 @@ impl_into_ffi!(McTrustedIdentities);
 pub struct McAdvisories (Vec<String>);
 impl_into_ffi!(McAdvisories);
 
-/// Construct a new TrustedIdentities vector that holds TrustedIdentity's (enclave or signer)
-///
+/// Construct a new TrustedIdentities vector that holds enclave or signer
+/// identities.
 #[no_mangle]
 pub extern "C" fn mc_trusted_identities_create() -> FfiOptOwnedPtr<McTrustedIdentities> {
     ffi_boundary(|| {
@@ -265,7 +260,7 @@ pub extern "C" fn mc_trusted_identities_free(trusted_identities: FfiOptOwnedPtr<
     })
 }
 
-/// 
+/// Append an MrEnclave identity to the vector.
 #[no_mangle]
 pub extern "C" fn mc_trusted_identities_add_mr_enclave(
     trusted_identities: FfiMutPtr<McTrustedIdentities>,
@@ -276,7 +271,7 @@ pub extern "C" fn mc_trusted_identities_add_mr_enclave(
         trusted_identities.into_mut().0.push(trusted_identity);
     })
 }
-/// 
+/// Append an MrSigner identity to the vector.
 #[no_mangle]
 pub extern "C" fn mc_trusted_identities_add_mr_signer(
     trusted_identities: FfiMutPtr<McTrustedIdentities>,

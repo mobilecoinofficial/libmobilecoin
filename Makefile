@@ -64,7 +64,6 @@ clean-artifacts:
 	rm -r "$(ARTIFACTS_DIR)" 2>/dev/null || true
 	mkdir -p "$(ARTIFACTS_DIR)"
 
-	# Create arch specific folders for each lib
 	$(foreach arch,$(IOS_TARGETS),mkdir -p $(ARTIFACTS_DIR)/target/$(arch)/release;) 
 
 .PHONY: copy

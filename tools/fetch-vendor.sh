@@ -15,7 +15,7 @@ REV="$(tr -d '[:space:]' < "$REV_FILE")"
 
 # A full SHA, not a branch name. A branch would never equal the rev-parse output
 # below, so the up-to-date fast path could never hit: every build would fetch,
-# force-checkout, and silently re-pin to wherever the branch had moved.
+# force-checkout, and re-pin to wherever the branch had moved, printing nothing.
 if [[ ! "$REV" =~ ^[0-9a-f]{40}$ ]]; then
     echo "error: $REV_FILE must hold a full 40-character SHA, found: $REV" >&2
     exit 1
@@ -24,7 +24,7 @@ fi
 # Serialize against another make process on the same checkout. Two concurrent
 # runs would otherwise race the rm -rf below against an in-flight checkout and
 # leave a half-populated tree with no error. mkdir is atomic on every filesystem
-# we build on; flock is not on macOS.
+# we build on, and flock is not on macOS.
 LOCK_DIR="$REPO_ROOT/Vendor/.mobilecoin.lock"
 # is_locked tracks OUR mkdir, so the loop below can tell "we hold the lock"
 # from "somebody else does" and time out on the second.
@@ -66,7 +66,7 @@ if [ -e "$VENDOR_DIR/.git" ]; then
         echo "       Anything uncommitted in there is lost, so check it first." >&2
         exit 1
     fi
-    # set-url so MOBILECOIN_REMOTE reaches an existing checkout; the add
+    # set-url so MOBILECOIN_REMOTE reaches an existing checkout, and the add
     # covers a tree that has no origin yet.
     git -C "$VENDOR_DIR" remote set-url origin "$REMOTE" 2>/dev/null || \
         git -C "$VENDOR_DIR" remote add origin "$REMOTE"
@@ -118,7 +118,7 @@ fi
 
 # A single-revision fetch, so the 4GB of foundation history never lands here.
 # Fetching a bare SHA needs uploadpack.allowAnySHA1InWant on the remote. GitHub
-# has it on; a self-hosted mirror set through MOBILECOIN_REMOTE may not, and
+# has it on. A self-hosted mirror set through MOBILECOIN_REMOTE may not, and
 # fails with "couldn't find remote ref <sha>".
 git -C "$VENDOR_DIR" fetch -q --depth 1 origin "$REV"
 git -C "$VENDOR_DIR" checkout -q --force FETCH_HEAD

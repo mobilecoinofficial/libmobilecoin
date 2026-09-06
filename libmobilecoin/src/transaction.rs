@@ -481,9 +481,8 @@ pub extern "C" fn mc_transaction_builder_create(
             fog_resolver
                 .as_ref()
                 .map_or_else(FogResolver::default, |fog_resolver| {
-                    // It is safe to add an expect here (which should never occur) because
-                    // fogReportUrl is already checked in mc_fog_resolver_add_report_response
-                    // to be convertible to FogUri
+                    // Every report URL the resolver holds parsed as a FogUri when it
+                    // was added, so the construction below cannot fail.
                     let trusted_identities: Vec<TrustedIdentity> = fog_resolver.1.clone();
                     FogResolver::new(fog_resolver.0.clone(), &trusted_identities)
                         .expect("FogResolver could not be constructed from the provided materials")
@@ -708,8 +707,8 @@ pub extern "C" fn mc_transaction_builder_add_output(
             .as_slice_mut_of_len(TxOutConfirmationNumber::size())
             .expect("out_tx_out_confirmation_number length is insufficient");
 
-        // TODO (GH #1867): If you want to support mixed transactions, use something
-        // other than fee_token_id here.
+        // TODO: supporting mixed transactions needs a token id per output rather
+        // than the fee token id.
         let amount = Amount {
             value: amount,
             token_id: transaction_builder.get_fee_token_id(),
@@ -825,8 +824,8 @@ pub extern "C" fn mc_transaction_builder_add_change_output(
             .as_slice_mut_of_len(TxOutConfirmationNumber::size())
             .expect("out_tx_out_confirmation_number length is insufficient");
 
-        // TODO (GH #1867): If you want to support mixed transactions, use something
-        // other than fee_token_id here.
+        // TODO: supporting mixed transactions needs a token id per output rather
+        // than the fee token id.
         let amount = Amount {
             value: amount,
             token_id: transaction_builder.get_fee_token_id(),
@@ -1135,9 +1134,7 @@ pub extern "C" fn mc_memo_sender_memo_get_address_hash(
     })
 }
 
-/********************************************************************
- * DestinationMemo
- */
+/* ==== DestinationMemo ==== */
 
 /// # Preconditions
 ///
@@ -1299,9 +1296,7 @@ pub extern "C" fn mc_memo_destination_memo_get_total_outlay(
     })
 }
 
-/********************************************************************
- * DestinationWithPaymentIntentIdMemo
- */
+/* ==== DestinationWithPaymentIntentIdMemo ==== */
 
 /// # Preconditions
 ///
@@ -1492,9 +1487,7 @@ pub extern "C" fn mc_memo_destination_with_payment_intent_memo_get_payment_inten
     })
 }
 
-/********************************************************************
- * DestinationWithPaymentRequestIdMemo
- */
+/* ==== DestinationWithPaymentRequestIdMemo ==== */
 
 /// # Preconditions
 ///
@@ -1686,9 +1679,7 @@ pub extern "C" fn mc_memo_destination_with_payment_request_memo_get_payment_requ
 }
 
 
-/********************************************************************
- * SenderWithPaymentRequestMemo
- */
+/* ==== SenderWithPaymentRequestMemo ==== */
 
 /// # Preconditions
 ///
@@ -1853,9 +1844,7 @@ pub extern "C" fn mc_memo_sender_with_payment_request_memo_get_payment_request_i
     })
 }
 
-/********************************************************************
- * SenderWithPaymentIntentMemo
- */
+/* ==== SenderWithPaymentIntentMemo ==== */
 
 /// # Preconditions
 ///
@@ -2366,9 +2355,7 @@ pub extern "C" fn mc_memo_gift_code_cancellation_memo_get_fee(
     })
 }
 
-/********************************************************************
- * Decrypt Memo Payload
- */
+/* ==== Decrypt Memo Payload ==== */
 
 /// # Preconditions
 ///
@@ -2407,9 +2394,7 @@ pub extern "C" fn mc_memo_decrypt_e_memo_payload(
     })
 }
 
-/********************************************************************
- * Trait Implementations
- */
+/* ==== Trait Implementations ==== */
 
 impl<'a> TryFromFfi<&McBuffer<'a>> for CompressedCommitment {
     type Error = LibMcError;

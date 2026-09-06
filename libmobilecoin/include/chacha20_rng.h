@@ -100,9 +100,9 @@ MC_ATTRIBUTE_NONNULL(1);
 /// Frees the ChaCha20Rng
 ///
 /// # Preconditions
-/// 
+///
 /// * The ChaCha20Rng is no longer in use
-/// 
+///
 /// # Arguments
 ///
 /// * `chacha20_rng` - must be a valid ChaCha20Rng

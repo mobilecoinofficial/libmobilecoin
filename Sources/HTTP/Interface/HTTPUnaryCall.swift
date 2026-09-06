@@ -32,6 +32,6 @@ public struct HTTPUnaryCall<
     public var responseType: ResponsePayload.Type
     public var responsePayload: ResponsePayload?
 
-    /// The final status of the the RPC.
+    /// The final status of the RPC.
     public var status: HTTPStatus?
 }
