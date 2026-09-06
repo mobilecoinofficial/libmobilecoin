@@ -280,47 +280,42 @@ ssize_t mc_trusted_mr_signer_identity_to_string(FfiRefPtr<McTrustedMrSignerIdent
                                                 FfiOptMutPtr<McMutableBuffer> out_signer_measurement);
 
 /**
- * Construct a new McAdvisories vector for holding config & hardening advisories
- *
- * Advisories are used when an enclave with the specified measurement does not need
- * BIOS configuration changes to address the provided advisory ID.
- *
+ * Construct a new McAdvisories vector for holding config and hardening
+ * advisories.
  */
 FfiOptOwnedPtr<McAdvisories> mc_advisories_create(void);
 
 void mc_advisories_free(FfiOptOwnedPtr<McAdvisories> advisories);
 
 /**
- * Assume an enclave with the specified measurement does not need
- * BIOS configuration changes to address the provided advisory ID.
+ * Append an advisory ID. A trusted identity carrying it accepts an enclave
+ * that cites the advisory without BIOS configuration changes.
  *
- * This method should only be used when advised by an enclave author.
+ * Use this only when the enclave author advises it.
  *
  * # Preconditions
  *
  * * `advisories` - a valid McAdvisories vector
  * * `advisory_id` - must be a nul-terminated C string containing valid UTF-8.
- *
- * TODO: update comments above
  */
 bool mc_add_advisory(FfiMutPtr<McAdvisories> advisories, FfiStr advisory_id);
 
 /**
- * Construct a new TrustedIdentities vector that holds TrustedIdentity's (enclave or signer)
- *
+ * Construct a new TrustedIdentities vector that holds enclave or signer
+ * identities.
  */
 FfiOptOwnedPtr<McTrustedIdentities> mc_trusted_identities_create(void);
 
 void mc_trusted_identities_free(FfiOptOwnedPtr<McTrustedIdentities> trusted_identities);
 
 /**
- *
+ * Append an MrEnclave identity to the vector.
  */
 bool mc_trusted_identities_add_mr_enclave(FfiMutPtr<McTrustedIdentities> trusted_identities,
                                           FfiRefPtr<McTrustedMrEnclaveIdentity> trusted_mr_enclave_identity);
 
 /**
- *
+ * Append an MrSigner identity to the vector.
  */
 bool mc_trusted_identities_add_mr_signer(FfiMutPtr<McTrustedIdentities> trusted_identities,
                                          FfiRefPtr<McTrustedMrSignerIdentity> trusted_mr_signer_identity);
@@ -514,7 +509,7 @@ uint64_t mc_chacha20_rng_next_long(FfiMutPtr<Mutex<McChaCha20Rng>> chacha20_rng,
                                    FfiOptMutPtr<FfiOptOwnedPtr<McError>> out_error);
 
 /**
- * frees the ChaCha20Rng
+ * Frees the ChaCha20Rng
  *
  * # Preconditions
  *
@@ -627,6 +622,11 @@ bool mc_fog_resolver_add_report_response(FfiMutPtr<McFogResolver> fog_resolver,
 
 void mc_fully_validated_fog_pubkey_free(FfiOptOwnedPtr<McFullyValidatedFogPubkey> fully_validated_fog_pubkey);
 
+/**
+ * # Preconditions
+ *
+ * * `out_pubkey` - length must be >= 32.
+ */
 bool mc_fully_validated_fog_pubkey_get_pubkey(FfiRefPtr<McFullyValidatedFogPubkey> fully_validated_fog_pubkey,
                                               FfiMutPtr<McMutableBuffer> out_pubkey);
 
@@ -759,6 +759,13 @@ bool mc_account_key_get_short_address_hash(FfiRefPtr<McPublicAddress> public_add
 bool mc_get_burn_address_view_private(FfiMutPtr<McMutableBuffer> out_view_private_key);
 
 /**
+ * # Preconditions
+ *
+ * * `view_private_key` - must be a valid 32-byte Ristretto-format scalar.
+ * * `subaddress_spend_private_key` - must be a valid 32-byte Ristretto-format
+ *   scalar.
+ * * `real_index` - must be within bounds of `ring`.
+ * * `ring` - `TxOut` at `real_index` must be owned by account keys.
  *
  * # Errors
  *
@@ -779,13 +786,14 @@ void mc_signed_contingent_input_builder_free(FfiOptOwnedPtr<McSignedContingentIn
 /**
  * # Preconditions
  *
- * * `signed_contingent_input_builder` - must not have been previously consumed by a call
+ * * `signed_contingent_input_builder` - must not have been consumed by a call
  *   to `build`.
  * * `recipient_address` - must be a valid `PublicAddress`.
  * * `out_subaddress_spend_public_key` - length must be >= 32.
  *
  * # Errors
  *
+ * * `LibMcError::AttestationVerificationFailed`
  * * `LibMcError::InvalidInput`
  */
 FfiOptOwnedPtr<McData> mc_signed_contingent_input_builder_add_required_output(FfiMutPtr<McSignedContingentInputBuilder> signed_contingent_input_builder,
@@ -801,12 +809,13 @@ FfiOptOwnedPtr<McData> mc_signed_contingent_input_builder_add_required_output(Ff
  *
  * * `account_key` - must be a valid account key, default change address
  *   computed from account key
- * * `transaction_builder` - must not have been previously consumed by a call
- *   to `build`.
+ * * `signed_contingent_input_builder` - must not have been consumed
+ *   by a call to `build`.
  * * `out_tx_out_confirmation_number` - length must be >= 32.
  *
  * # Errors
  *
+ * * `LibMcError::AttestationVerificationFailed`
  * * `LibMcError::InvalidInput`
  */
 FfiOptOwnedPtr<McData> mc_signed_contingent_input_builder_add_required_change_output(FfiRefPtr<McAccountKey> account_key,
@@ -820,7 +829,7 @@ FfiOptOwnedPtr<McData> mc_signed_contingent_input_builder_add_required_change_ou
 /**
  * # Preconditions
  *
- * * `signed_contingent_input_builder` - must not have been previously consumed by a call
+ * * `signed_contingent_input_builder` - must not have been consumed by a call
  *   to `build`.
  *
  * # Errors
@@ -835,7 +844,7 @@ FfiOptOwnedPtr<McData> mc_signed_contingent_input_builder_build(FfiMutPtr<McSign
 /**
  * # Preconditions
  *
- * * `sci_data` - valid sci data
+ * * `sci_data` - must be valid signed contingent input data.
  *
  * # Errors
  *
@@ -867,6 +876,10 @@ bool mc_slip10_account_private_keys_from_mnemonic(FfiStr mnemonic,
  *
  * * `view_private_key` - must be a valid 32-byte Ristretto-format scalar.
  * * `tx_out_public_key` - must be a valid 32-byte Ristretto-format scalar.
+ *
+ * # Errors
+ *
+ * * `LibMcError::InvalidInput`
  */
 bool mc_tx_out_get_shared_secret(FfiRefPtr<McBuffer> view_private_key,
                                  FfiRefPtr<McBuffer> tx_out_public_key,
@@ -877,6 +890,11 @@ bool mc_tx_out_get_shared_secret(FfiRefPtr<McBuffer> view_private_key,
  * # Preconditions
  *
  * * `view_private_key` - must be a valid 32-byte Ristretto-format scalar.
+ *
+ * # Errors
+ *
+ * * `LibMcError::InvalidInput`
+ * * `LibMcError::TransactionCrypto`
  */
 bool mc_tx_out_reconstruct_commitment(FfiRefPtr<McTxOutMaskedAmount> tx_out_masked_amount,
                                       FfiRefPtr<McBuffer> tx_out_public_key,
@@ -1024,7 +1042,7 @@ void mc_transaction_builder_free(FfiOptOwnedPtr<McTransactionBuilder> transactio
 /**
  * # Preconditions
  *
- * * `transaction_builder` - must not have been previously consumed by a call
+ * * `transaction_builder` - must not have been consumed by a call
  *   to `build`.
  * * `view_private_key` - must be a valid 32-byte Ristretto-format scalar.
  * * `subaddress_spend_private_key` - must be a valid 32-byte Ristretto-format
@@ -1046,13 +1064,10 @@ bool mc_transaction_builder_add_input(FfiMutPtr<McTransactionBuilder> transactio
 /**
  * # Preconditions
  *
- * * `transaction_builder` - must not have been previously consumed by a call
+ * * `transaction_builder` - must not have been consumed by a call
  *   to `build`.
- * * `view_private_key` - must be a valid 32-byte Ristretto-format scalar.
- * * `subaddress_spend_private_key` - must be a valid 32-byte Ristretto-format
- *   scalar.
- * * `real_index` - must be within bounds of `ring`.
- * * `ring` - `TxOut` at `real_index` must be owned by account keys.
+ * * `presigned_input_proto_bytes` - serialized proto bytes for a Signed
+ *   Contingent Input
  *
  * # Errors
  *
@@ -1065,14 +1080,14 @@ bool mc_transaction_builder_add_presigned_input(FfiMutPtr<McTransactionBuilder> 
 /**
  * # Preconditions
  *
- * * `transaction_builder` - must not have been previously consumed by a call
+ * * `transaction_builder` - must not have been consumed by a call
  *   to `build`.
  * * `recipient_address` - must be a valid `PublicAddress`.
  * * `out_subaddress_spend_public_key` - length must be >= 32.
  *
  * # Errors
  *
- * * `LibMcError::AttestationVerification`
+ * * `LibMcError::AttestationVerificationFailed`
  * * `LibMcError::InvalidInput`
  */
 FfiOptOwnedPtr<McData> mc_transaction_builder_add_output_mixed(FfiMutPtr<McTransactionBuilder> transaction_builder,
@@ -1087,14 +1102,14 @@ FfiOptOwnedPtr<McData> mc_transaction_builder_add_output_mixed(FfiMutPtr<McTrans
 /**
  * # Preconditions
  *
- * * `transaction_builder` - must not have been previously consumed by a call
+ * * `transaction_builder` - must not have been consumed by a call
  *   to `build`.
  * * `recipient_address` - must be a valid `PublicAddress`.
  * * `out_subaddress_spend_public_key` - length must be >= 32.
  *
  * # Errors
  *
- * * `LibMcError::AttestationVerification`
+ * * `LibMcError::AttestationVerificationFailed`
  * * `LibMcError::InvalidInput`
  */
 FfiOptOwnedPtr<McData> mc_transaction_builder_add_output(FfiMutPtr<McTransactionBuilder> transaction_builder,
@@ -1110,13 +1125,13 @@ FfiOptOwnedPtr<McData> mc_transaction_builder_add_output(FfiMutPtr<McTransaction
  *
  * * `account_key` - must be a valid account key, default change address
  *   computed from account key
- * * `transaction_builder` - must not have been previously consumed by a call
+ * * `transaction_builder` - must not have been consumed by a call
  *   to `build`.
  * * `out_tx_out_confirmation_number` - length must be >= 32.
  *
  * # Errors
  *
- * * `LibMcError::AttestationVerification`
+ * * `LibMcError::AttestationVerificationFailed`
  * * `LibMcError::InvalidInput`
  */
 FfiOptOwnedPtr<McData> mc_transaction_builder_add_change_output_mixed(FfiRefPtr<McAccountKey> account_key,
@@ -1133,13 +1148,13 @@ FfiOptOwnedPtr<McData> mc_transaction_builder_add_change_output_mixed(FfiRefPtr<
  *
  * * `account_key` - must be a valid account key, default change address
  *   computed from account key
- * * `transaction_builder` - must not have been previously consumed by a call
+ * * `transaction_builder` - must not have been consumed by a call
  *   to `build`.
  * * `out_tx_out_confirmation_number` - length must be >= 32.
  *
  * # Errors
  *
- * * `LibMcError::AttestationVerification`
+ * * `LibMcError::AttestationVerificationFailed`
  * * `LibMcError::InvalidInput`
  */
 FfiOptOwnedPtr<McData> mc_transaction_builder_add_change_output(FfiRefPtr<McAccountKey> account_key,
@@ -1155,13 +1170,13 @@ FfiOptOwnedPtr<McData> mc_transaction_builder_add_change_output(FfiRefPtr<McAcco
  *
  * * `account_key` - must be a valid account key as the gift code subaddress is
  *   computed from the account key
- * * `transaction_builder` - must not have been previously consumed by a call
+ * * `transaction_builder` - must not have been consumed by a call
  *   to `build`.
  * * `out_tx_out_confirmation_number` - length must be >= 32.
  *
  * # Errors
  *
- * * `LibMcError::AttestationVerification`
+ * * `LibMcError::AttestationVerificationFailed`
  * * `LibMcError::InvalidInput`
  */
 FfiOptOwnedPtr<McData> mc_transaction_builder_fund_gift_code_output(FfiRefPtr<McAccountKey> account_key,
@@ -1175,7 +1190,7 @@ FfiOptOwnedPtr<McData> mc_transaction_builder_fund_gift_code_output(FfiRefPtr<Mc
 /**
  * # Preconditions
  *
- * * `transaction_builder` - must not have been previously consumed by a call
+ * * `transaction_builder` - must not have been consumed by a call
  *   to `build`.
  *
  * # Errors

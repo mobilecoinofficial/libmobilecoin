@@ -133,6 +133,40 @@ jobs:
         working-directory: libmobilecoin
         run: cargo metadata --locked --format-version 1 > /dev/null
 
+  cbindgen:
+    name: Generated header against the Rust sources
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # cbindgen expands the crate with cargo, so it compiles every path
+      # dependency in the vendored monorepo.
+      - name: Fetch the pinned vendor revision
+        run: ./tools/fetch-vendor.sh
+
+      # mc-attest-verifier-types builds its protos with prost-build, which
+      # shells out to protoc. The runner image ships none.
+      - name: Install protoc
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y protobuf-compiler
+
+      # The Makefile fixes the cbindgen version, and a different one reorders
+      # the output.
+      - name: Install cbindgen
+        run: make -C libmobilecoin setup-dev
+
+      # The generator writes the committed path, so this runs the command a
+      # contributor runs and the diff below reports the drift. Scoped to the
+      # header, because cargo may touch the lock and the cargo-lock job owns
+      # that.
+      - name: Assert the committed header matches the sources
+        run: |
+          set -euo pipefail
+          make -C libmobilecoin cbindgen
+          git diff --exit-code -- libmobilecoin/libmobilecoin_cbindgen.h
+
   manifest:
     name: Manifest and checkout shape
     runs-on: macos-26
