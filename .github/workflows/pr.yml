@@ -88,7 +88,7 @@ jobs:
           }
           # An unmatched glob arrives as a literal path, so nullglob drops the
           # suffix that is absent. The count check then fails an empty
-          # directory here rather than inside actionlint.
+          # directory at this step, so actionlint will never see one.
           shopt -s nullglob
           FILES=(.github/workflows/*.yml .github/workflows/*.yaml)
           [ ${#FILES[@]} -gt 0 ] || {
@@ -287,8 +287,9 @@ jobs:
               dependencies: [.package(url: "$DEP/libmobilecoin", exact: "$VERSION")],
               targets: [.target(name: "App")])
           EOF
-          # resolve, not dump-package: dump-package reads only the ROOT manifest and
-          # exits 0 even when the dependency's manifest cannot compile.
+          # resolve reads the dependency manifest. dump-package reads only the
+          # ROOT manifest and exits 0 even when the dependency's manifest
+          # cannot compile.
           # The artifact is not published yet at release time, so only a manifest
           # error is fatal here. The consumer resolve after publish covers the rest.
           cd "$APP"

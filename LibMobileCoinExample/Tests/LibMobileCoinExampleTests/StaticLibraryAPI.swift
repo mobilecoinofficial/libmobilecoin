@@ -81,11 +81,13 @@ final class StaticLibraryAPI: XCTestCase {
     
     func testSCIHeader() throws {
         let sci = Data()
+        var isValid = false
         var errorPtr: UnsafeMutablePointer<McError>?
         
         let _ = sci.asMcBuffer { sciPtr in
             mc_signed_contingent_input_data_is_valid(
                 sciPtr,
+                &isValid,
                 &errorPtr
             )
         }

@@ -194,8 +194,9 @@ jobs:
               dependencies: [.package(url: "$DEP/libmobilecoin", exact: "$VERSION")],
               targets: [.target(name: "App")])
           EOF
-          # resolve, not dump-package: dump-package reads only the ROOT manifest and
-          # exits 0 even when the dependency's manifest cannot compile.
+          # resolve reads the dependency manifest. dump-package reads only the
+          # ROOT manifest and exits 0 even when the dependency's manifest
+          # cannot compile.
           # The artifact is not published yet at release time, so only a manifest
           # error is fatal here. The consumer resolve after publish covers the rest.
           cd "$APP"
@@ -256,9 +257,13 @@ jobs:
       # `gh release create` returns before the asset is servable, so the resolve
       # below 404s on a release that is fine.
       #
-      # Poll the URL rather than retry the resolve. The resolve walks the whole
-      # dependency graph before it reaches the asset, and every retry pays that
-      # walk again. A probe of the URL pays nothing but the request.
+      # The probe carries the wait. The resolve walks the whole dependency graph
+      # before it reaches the asset, and every try pays that walk again.
+      #
+      # The probe reads a byte of the body, so a URL whose headers are ready
+      # before its body will keep it waiting. A server that ignores the range
+      # header sends the whole asset and answers 200, so both codes count as
+      # servable.
       #
       # --max-time is what bounds the wait. curl's own status is tolerated here,
       # so without a transfer limit a connection that accepts and never answers
@@ -274,10 +279,10 @@ jobs:
           DELAY=10
           CODE=""
           for i in $(seq "${ATTEMPTS}"); do
-            CODE="$(curl --silent --location --head --output /dev/null \
+            CODE="$(curl --silent --location --range 0-0 --output /dev/null \
               --connect-timeout 10 --max-time 15 \
               --write-out '%{http_code}' "$URL")" || CODE="curl exited $?"
-            if [ "${CODE}" = "200" ]; then
+            if [ "${CODE}" = "200" ] || [ "${CODE}" = "206" ]; then
               echo "asset servable on try ${i} of ${ATTEMPTS}"
               exit 0
             fi
@@ -312,4 +317,16 @@ jobs:
               ]
           )
           EOF
-          swift build --package-path "${CONSUMER}"
+          # SwiftPM caches a downloaded artifact before it checks the checksum,
+          # so --cache-path puts the cache in the package, where each try
+          # removes it with the build directory.
+          for i in 1 2 3; do
+            if swift build --package-path "${CONSUMER}" \
+              --cache-path "${CONSUMER}/.spm-cache"; then
+              exit 0
+            fi
+            echo "resolve try ${i} of 3 failed"
+            rm -rf "${CONSUMER}/.build" "${CONSUMER}/.spm-cache"
+            sleep 15
+          done
+          exit 1
