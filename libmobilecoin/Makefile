@@ -46,7 +46,6 @@ ALL_ARCHS_IOS = aarch64-apple-ios-sim aarch64-apple-ios x86_64-apple-ios x86_64-
 IOS_DEPLOYMENT_TARGET = 13.0
 
 IOS_LIB = libmobilecoin.a
-IOS_LIB_STRIPPED = libmobilecoin_stripped.a
 IOS_C_HEADERS = include/*
 
 ### Helper Function
@@ -76,13 +75,13 @@ endif
 
 LEGACY_CARGO_BUILD_FLAGS = $(CARGO_BUILD_FLAGS)
 
+# The macabi and ios-sim targets pass -Zbuild-std, which needs rust-src.
 .PHONY: setup
 setup:
 	@set -eu; \
 	$(ASSERT_STRICT_MAKE); \
 	rustup target add x86_64-apple-ios aarch64-apple-ios aarch64-apple-darwin x86_64-apple-darwin; \
-	rustup component add llvm-tools-preview rust-src; \
-	rustup run --install stable cargo install cargo-binutils; \
+	rustup component add rust-src; \
 	../tools/patch-cmake.sh
 
 
