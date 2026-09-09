@@ -233,9 +233,8 @@ jobs:
             exit 1
           }
 
-      # The tag survives a failure in any step below it. A re-dispatch then needs
-      # the tag and the release deleted, because the refusal step above rejects a
-      # tag that already exists. The other route bumps VERSION in release.env.
+      # A failed run will leave the tag in place, so a re-dispatch needs the tag and
+      # the release deleted, or a new VERSION in release.env.
       - name: Tag
         if: ${{ !inputs.dry_run }}
         env:
