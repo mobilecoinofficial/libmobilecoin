@@ -64,11 +64,6 @@ COPY Vendor/mobilecoin/fog/api/proto/fog_common.proto \
 
 RUN mkdir -p Sources/Common
 
-COPY Vendor/misty-swap/api/proto/mistyswap_offramp.proto \
-    Vendor/misty-swap/api/proto/mistyswap_onramp.proto \
-    Vendor/misty-swap/api/proto/mistyswap_common.proto \
-    Vendor/misty-swap/api/proto/
-
 RUN protoc \
     --swift_out=Sources/Common \
     --swift_opt=Visibility=Public \
@@ -77,7 +72,6 @@ RUN protoc \
     -IVendor/mobilecoin/consensus/api/proto \
     -IVendor/mobilecoin/fog/api/proto \
     -IVendor/mobilecoin/fog/report/api/proto \
-    -IVendor/misty-swap/api/proto \
     external.proto \
     blockchain.proto \
     printable.proto \
@@ -91,9 +85,6 @@ RUN protoc \
     fog_common.proto \
     kex_rng.proto \
     ledger.proto \
-    mistyswap_offramp.proto \
-    mistyswap_onramp.proto \
-    mistyswap_common.proto \
     view.proto \
     legacyview.proto
 
@@ -109,7 +100,6 @@ RUN protoc \
     -IVendor/mobilecoin/consensus/api/proto \
     -IVendor/mobilecoin/fog/api/proto \
     -IVendor/mobilecoin/fog/report/api/proto \
-    -IVendor/misty-swap/api/proto \
     external.proto \
     blockchain.proto \
     printable.proto \
@@ -123,9 +113,6 @@ RUN protoc \
     fog_common.proto \
     kex_rng.proto \
     ledger.proto \
-    mistyswap_offramp.proto \
-    mistyswap_onramp.proto \
-    mistyswap_common.proto \
     view.proto \
     legacyview.proto
 
