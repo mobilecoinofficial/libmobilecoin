@@ -52,7 +52,8 @@ rm -f "$OUTPUT"
 OUTPUT_ABS="$(cd "$(dirname "$OUTPUT")" && pwd)/$(basename "$OUTPUT")"
 
 # -X drops uid/gid and the mtime attribute field, so the zip will stay independent
-# of the packer's timezone. -D drops directory entries. The sorted file list fixes entry order.
+# of the packer's timezone. -D drops directory entries. The sorted file list
+# fixes entry order.
 (
     cd "$STAGING"
     find "$FRAMEWORK_NAME" -type f | LC_ALL=C sort | zip -q -X -D -o "$OUTPUT_ABS" -@
