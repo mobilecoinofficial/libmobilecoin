@@ -233,6 +233,8 @@ jobs:
             exit 1
           }
 
+      # A failed run will leave the tag in place, so a re-dispatch needs the tag and
+      # the release deleted, or a new VERSION in release.env.
       - name: Tag
         if: ${{ !inputs.dry_run }}
         env:
