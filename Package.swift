@@ -6,7 +6,7 @@ import PackageDescription
 // SwiftPM compiles a dependency's manifest through a VFS overlay that presents
 // it at "/Package.swift", so both #filePath and Context.packageDirectory give
 // "/" and any read fails with "error: Invalid manifest".
-let version = "6.3.0"
+let version = "7.0.0"
 let xcframeworkChecksum = "9e537945626b441644f7323f9b30cfa8acb4b3e7a616a0827e7847afdfe99560"
 
 let package = Package(
